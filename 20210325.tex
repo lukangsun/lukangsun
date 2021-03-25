@@ -1,53 +1,70 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+
+\usepackage{fullpage}
+
+\title{On Nonconvex SVGD}
+\author{Lukang Sun}
+
+
+
 \begin{document}
+
+\maketitle
 	
-	\begin{array}{l}
-		F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \quad \pi \sim e^{-F .} \\
-		f_{n}=\frac{1}{n_{0}} \sum_{i \in I} f_{i}, \# I=n_{0}, \quad \sigma_{n} \sim e^{-f_{n}} . \\
-		\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \quad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n} \\
-		\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t},
- 	\end{array}
+\section{Setup}	
+
+		$$F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \sim e^{-F }$$
+		
+		$$f_{n}=\frac{1}{n_{0}} \sum_{i \in I} f_{i},  \qquad \# I=n_{0}, \qquad \sigma_{n} \sim e^{-f_{n}} $$
+		
+		$$\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n} $$
+		
+	$$	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t} $$
 	
-	then we have,
 	
-	$$\begin{aligned}
-		\phi(\gamma)\leq \phi(0)+\gamma <S_{\mu_n}\nabla\log\(\frac{\mu_n}{\pi},S_{mu_n}\nabla\log\(\frac{\mu_n}{\sigma_n}\)>_H+
-		\frac{C\cdot \gamma^2}{2}<S_{\mu_n}\nabla\log\(\frac{\mu_n}{\sigma_n},S_{\mu_n}\nabla\log\(\frac{
-			\mu_n}{\sigma_n}\)>_H
-		\end{aligned}$$
+\section{PAGE}
+
+We define the update rule as:
+	$$S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\left\{
+		\begin{array}{rcl}
+			S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & & {p},\\
+			S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & &{1-p}
+		\end{array} \right,$$	
+   where  $\sigma_{I^{\prime}}\sim \exp^{-f_{I^{\prime}}}, f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.
+   
+   	
+\section{Main Proof}
+
+$$
+		\phi(\gamma)\leq \phi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
+		\frac{C\cdot \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
+	$$
 	
 	then by similar calculation as in PAGE, we have,
 	
 	
 	$$\begin{aligned} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{c}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{aligned}$$
-	
-	define the update rule as:
 
-	
-	
-
-		$$S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\left\{
-		\begin{array}{rcl}
-			S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & & {p},\\
-			S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & &{1-p}
-		\end{array} \right.$$
-	
-   where  $\sigma_{I^{\prime}}\sim \exp^{-f_{I^{\prime}}}, f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.
     Then a direct calculation now reveals that,
    
    $$
-  \textbf{E}\left\[\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)\right\|_{H}^{2}\right\] $$
+  \textbf{E} 
+\left[ 
+  \left\| 
+  S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) - S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)
+  \right\|_{H}^{2}
+  \right] 
+  $$
   
   $ =p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
    	 +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}
-   
-   $
+      $
    
    $
    =(1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
@@ -55,6 +72,12 @@
    
    $ 
    S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) ||_{H}^{2}+（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2}$
+
+\section{Inequality}
+	
+		
+
+
    
    we need to estimate
    $$\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}$$
