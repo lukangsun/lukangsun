@@ -31,12 +31,11 @@
 \section{PAGE}
 
 We define the update rule as:
-	$$S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\left\{
-		\begin{array}{rcl}
-			S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & & {p},\\
-			S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & &{1-p}
-		\end{array} \right,$$	
-   where  $\sigma_{I^{\prime}}\sim \exp^{-f_{I^{\prime}}}, f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.
+	$$S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
+			S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
+			S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
+			\end{cases}$$	
+   where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.
    
    	
 \section{Main Proof}
@@ -51,35 +50,39 @@ $$
 	
 	$$\begin{aligned} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{c}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{aligned}$$
 
-    Then a direct calculation now reveals that,
-   
-   $$
+Let   
+   $$  G_{n+1} := 
   \textbf{E} 
 \left[ 
   \left\| 
-  S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) - S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)
+ S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) - S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)
   \right\|_{H}^{2}
   \right] 
   $$
   
-  $ =p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
-   	 +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}
-      $
-   
-   $
-   =(1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
-   +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-$
-   
-   $ 
-   S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) ||_{H}^{2}+（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2}$
+      Then a direct calculation now reveals that
 
-\section{Inequality}
+  {\tiny 
+  
+\begin{eqnarray*}G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
+   	 +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}\\
+&=&(1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) 
+   +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) -       S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) \right\|_{H}^{2} \\
+&& \qquad +（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2}
+\end{eqnarray*}
+	 
+}
+      
+
+
+
+\section{Key Inequality}
 	
 		
 
 
    
-   we need to estimate
+We need to estimate
    $$\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}$$
     and
 	
