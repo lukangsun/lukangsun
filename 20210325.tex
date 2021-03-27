@@ -1,3 +1,4 @@
+
 \documentclass[10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -209,57 +210,253 @@ Problem:is $\int |x|^2\mu_n(x)dx$ weakly continuous?
 If we cannot prove this, then we need more assumption on $\pi$, that is : there exists a constant $a>0$  and a point $x_0$ such that $\int e^{a d\left(x_{0}, x\right)^{2}} \pi(d x)<+\infty$, then by a theorem from Vilani's book "optimal transport old and new" page 592.
 we have $T_1$ inequality $W_{p}(\mu, \nu) \leq \sqrt{\frac{2 H_{\nu}(\mu)}{\lambda}}$, $p=1$,$\lambda$ is some constant. So we have $W_1(\mu_n,\pi)\leq C$, by L-smoothness of F we have $\int|\nabla\log(\pi(x))|\mu_n(x)dx\leq C\cdot \int |x|\mu_n(x)dx\leq C$
 
+\clearpage
+\part*{???}
 
+\section{Setup}	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		$$F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \sim e^{-F }$$
+		
+		$$f_{n}=\frac{1}{n_{0}} \sum_{i \in I} f_{i},  \qquad \# I=n_{0}, \qquad \sigma_{n} \sim e^{-f_{n}} $$
+		
+		$$\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n} $$
+		
+	$$	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t} $$
 	
 	
+\section{PAGE}
+
+We define the update rule as:
+	$$S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
+			S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
+			S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
+			\end{cases}$$	
+   where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.
+   
+   	
+\section{Main Proof}
+
+$$
+		\phi(\gamma)\leq \phi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
+		\frac{C\cdot \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
+	$$
 	
+	then by similar calculation as in PAGE, we have,
+	
+	
+	$$\begin{aligned} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{c}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{aligned}$$
+
+Let   
+   $$  G_{n+1} := 
+  \textbf{E} 
+\left[ 
+  \left\| 
+ S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) - S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)
+  \right\|_{H}^{2}
+  \right] 
+  $$
+  
+      Then a direct calculation now reveals that
+
+  {\tiny 
+  
+\begin{eqnarray*}G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
+   	 +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}\\
+&=&(1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) 
+   +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) -       S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) \right\|_{H}^{2} \\
+&& \qquad +（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2}
+\end{eqnarray*}
+	 
+}
+      
+
+
+
+\section{Key Inequality}
+	
+		
+
+\begin{theorem}
+	
+	There exists stepsize $\gamma_n$(in the following for simplicity we write as $\gamma$) only depending on $\int |\nabla\log(\pi(x))\mu_n(x)dx|$ and \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx, such that  
+	$$\textbf{E}(\Phi_{n+1})\leq \textbf{E}(\Phi_n)-\frac{\gamma}{2}\textbf{E}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi}})\right\|_H^2,$$
+
+where
+
+
+$\Phi_n:=KL(\mu_n|\pi)+\frac{\gamma}{2p}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})-S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2$
+	
+	
+\end{theorem}
+
+\begin{proof}
+	We need to estimate
+	$$\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}$$
+	and
+	
+	$$\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}$$
+
+$S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}}}\right)$
+
+$=\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx$
+
+$+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))\mu_n(x)dx-\int k(y,\cdot)\nabla\log(\pi(y))\mu_{n+1}(y)dy$
+$+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx-\int k(x,\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx=I + II + III$
+
+
+
+$\left\|II\rignt\|_{H}^{2}$
+$=\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))\mu(x)\mu(x^{\prime})dxdx^{\prime}$
+since F is L-smooth, so
+
+$|\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|\leq L\cdot |x-\phi_{\gamma}(x)|=L\cdot\gamma\cdot|P_{\mu_{\gamma}}\nabla\log(\frac{\mu_n(x)}{\sigma_n(x)})|\leq C\cdot\gamma\cdot\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_{H}}$
+
+then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded, we derive
+$$\left\|II\right\|_{H}^{2}\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_{H}^{2}$$
+
+$\left\|I\right\|_{H}^{2}=\left\|\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx\right\|_{H}^{2}$
+
+$=\int\int k(y,y^{\prime})\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_{n+1}(y^{\prime}))\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$ 
+
+$
+-\int\int k(y,\phi_{\gamma}(x))\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_n(x^{\prime}))\mu_{n+1}(y)\mu_n(x)dydx^{\prime}
+$
+
+$
+-\int\int k(\phi_{\gamma}(x),y^{\prime})\nabla\log(\mu_{n+1}(y^{\prime}))\nabla\log(\mu_n(x))\mu_{n+1}(y^{\prime})\mu_n(x)dy^{\prime}dx
+$
+
+$
++\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))\nabla\log(\mu_n(x))\nabla\log(\mu_n(x^{\prime}))\mu_{n}(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+
+$=\int\int tr\nabla_{1,2}^2k(y,y^{\prime})\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$
+
+$-\int\int tr(\nabla_{1,2}^2k(y,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime}))\mu_{n+1}(y)\mu_{n}(x^{\prime})dydx^{\prime}$
+
+$-\int\int tr(\nabla_{1,2}^2k(\phi_{\gamma}(x),y^{\prime})J\phi_{\gamma}(x))\mu_n(x)\mu_{n+1}(y^{\prime})dxdy^{\prime}$
+
+$+\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)J\phi_{\gamma}(x^{\prime}))\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}$
+
+$=\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+
+
+assume $|\nabla_{1,2}^2K(\cdot,\cdot)|\leq C$, then
+$tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_{H}^2$
+
+
+so $\left\|I\right\|_{H}^2\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_{H}^2$
+
+$\left\|III\right\|_{H}^2=\int\int (k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime}))\nabla\log(\frac{\mu_n(x)}{\pi(x)})\nabla\log(\frac{\mu_n(x^{\prime})}{\pi(x^{\prime})})$
+
+$\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}.$
+
+denote $F(x,x^{\prime}):=k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})$
+
+then by integration by part, we have 
+
+$\left\|III\right\|_{H}^2=\int\int (tr(\nabla_{1,2}^2F(x,x^{\prime}))+\nabla_2F(x,x^{\prime})\nabla\log(\pi(x))+\nabla_1F(x,x^{\prime})\nabla\log(\pi(x^{\prime}))+F(x,x^{\prime})\nabla\log(\pi(x))\nabla\log(\pi(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+
+We need to know the order of $F(x,x^{\prime}),\nabla_1F(x,x^{\prime}),\nabla_2F(x,x^{\prime}),\nabla_{1,2}^2F(x,x^{\prime})$
+
+in the following we assume supremum norm the second,third and fourth order derivatives of k are finite, and we miss $O(|\phi_{\gamma}(x)-x|^2)$ and $O(|\phi_{\gamma}(x^{\prime})-x^{\prime}|^2)$ in the derivation.
+
+$|F(x,x^{\prime})|=|<\phi_{\gamma}(x^{\prime}-x^{\prime}),\nabla_2k(\phi_{\gamma}(x),x^{\prime})>+<x^{\prime}-\phi_{\gamma}(x^{\prime})),\nabla_2k(x,x^{\prime})>|$
+
+$\leq |\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x)-x)(\phi_{\gamma}(x^{\prime})-x^{\prime})|\leq C\cdot \gamma^2\cdot \left \| S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2$
+
+
+$|\nabla_1F(x,x^{\prime})|=|\nabla_1k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)-\nabla_1k(\phi_{\gamma}(x),x^{\prime})J\phi_{\gamma}(x)-\nabla_1k(x,\phi_{\gamma}(x^{\prime}))+\nabla_1k(x,x^{\prime})|$
+
+$=|\nabla_{1,2}^2k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime}-x^{\prime}))J\phi_{\gamma}(x)-\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})|$
+
+$=|\nabla_{11,2}^3k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})(\phi_{\gamma}(x)-x)+\nabla_{1,2}^2k(\phi_{\gamma}(x),x)(\phi_{\gamma}(x^{\prime})-x^{\prime})(J\phi_{\gamma}(x)-I)|\leq C\cdot \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$	
+
+similarly $|\nabla_2F(x,x^{\prime})|\leq C\cdot \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+
+$tr\nabla_{1,2}^2F(x,x^{\prime})=tr(J\phi_{\gamma}(x)\nabla_{1,2}^2k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime})-J\phi_{\gamma}(x)\nabla_{1,2}^2k(\phi_{\gamma}(x),x^{\prime})-\nabla_{1,2}^2k(x,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime})+\nabla_{1,2}^2k(x,x^{\prime})),$
+
+
+denote $J\phi_{\gamma}(x^{\prime})=I-\gamma JP_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x^{\prime})=I-\gamma P^{\prime}, J\phi_{\gamma}(x)=I-\gamma JP_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x)=I-\gamma P^$
+
+
+then
+
+$tr\nabla_{1,2}^2F(x,x^{\prime})=tr((I-\gamma P)\nabla_{1,22}^3k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})-(I-\gamma P)\nabla_{1,2}^2k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\gamma P^{\prime})$
+
+$-\nabla_{1,22}^3k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})+(\gamma P^{\prime})\nabla_{1,2}^2k(x,\phi_{\gamma}(x^{\prime})))$
+
+$=tr(\nabla_{11,22}^4k(x,x^{\prime})(\phi_{\gamma}(x)-x)(\phi_{\gamma}(x^{\prime})-x^{\prime})-(\gamma P^{\prime})\nabla_{11,2}^3k(x,\phi_{\gamma}(x^{\prime}))(\phi_{\gamma}(x)-x)-(\gamma P)\nabla_{1,22}^3k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})+(\gamma P)\nabla_{1,2}^2k(x,x^{\prime})(\gamma P^{\prime}))$
+
+$|tr\nabla_{1,2}^2F(x,x^{\prime})|\leq C\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+
+then, we know,
+
+$\left\|III\right\|_H^2\leq (C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+
+
+similarly, since the set of $\{\sigma_{I^{\prime}}\}\}$ is finite and have similar property with $\pi$, so
+
+$\left\|S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}})-S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{I^{\prime}}})\right\|_H^2\leq (C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+
+Finally,
+
+$\textbf{E}\left\|S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\pi})-S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\sigma_{n+1}})\right\|_H^2\leq (1-p)\cdot \left\|S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\pi})-S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_H^2+ (C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2+C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+
+
+So if $\gamma$ is small enough,s.t $\frac{\gamma}{2p}\cdot(C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2+C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)-(\frac{1}{2\gamma}-\frac{C}{2})\leq 0$, then
+
+$\textbf{E}(\Phi_{n+1})\leq \textbf{E}(\Phi_n)-\frac{\gamma}{2}\textbf{E}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi}})\right\|_H^2,$
+\end{proof}
+
+
+   
+
+
+where
+
+
+$\Phi_n:=KL(\mu_n|\pi)+\frac{\gamma}{2p}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})-S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2$
+
+
+
+
+
+
+\begin{lemma}
+	If there exists a constant $a>0$  and a point $x_0$ such that $\int e^{a d\left(x_{0}, x\right)^{2}} \pi(d x)<+\infty$, then 
+	we have we have $T_1$ inequality $$W_{1}(\mu, \pi) \leq C\cdot \sqrt{KL(\mu|\pi)}$$.
+\end{lemma}
+
+\begin{proof}
+	see "optimal transport old and new" page 592.
+	
+\end{proof}
+
+We assume there exists a constant $a>0$  and a point $x_0$ such that $\int e^{a d\left(x_{0}, x\right)^{2}} \pi(d x)<+\infty$, so the last lemma holds.
+
+\begin{lemma}
+	if we have $\Phi_n\leq C$, then we have \int|\nabla\log(\pi(x))|\mu_n(x)dx\leq \tilde{C}$
+\end{lemma}
+\begin{proof}
+	$KL(\mu_n|\pi)\leq \Phi_n\leq C$, so $W_1(\mu_n,\pi)\leq C\cdot\sqrt{KL(\mu_n,\pi)}\leq C_1$, so by L-smoothness of $F$, we have $\int|\nabla\log(\pi(x))|\mu_n(x)dx\leq C\int|x|\mu_n(x)dx=CW_1(\mu_n,\delta_0)\leq C(W_1(\mu_n,\pi)+W_1(\pi,\delta))\leq \tilde{C}$
+\end{proof}
+
+
+\begin{lemma}
+	if $\Phi_n\leq A$, then we can choose$\gamma_n\geq \gamma_0$, where $\gamma_0$ depend on $A$(as you see in proof of the main theorem, it depends on $\int||\nabla\log(\pi)\mu_ndx$, as you see in the last lemma ,$\int||\nabla\log(\pi)\mu_ndx$ depends on $\Phi_n$), such that $\Phi_{n+1}\leq A$ 
+\end{lemma}
+
+\begin{proof}
+	(note $\mu_{n+1}=（(I-\gamma_nP_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n}))_{\sharp}\mu_n$, so you see $\mu_n$ is independent of $\gamma_n$,but depend on $\gamma_{n-1}$).from the last lemma we can choose $\gamma_n\geq \gamma_0$, such that $\Phi_{n+1}\leq \Phi_n-\frac{\gamma_n}{2}I^2_{stein}(\mu_n|\pi)$, so $KL(\mu_{n+1}|\pi)\leq \Phi_{n+1}\leq\Phi_n\leq A$
+\end{proof}
+
+\begin{theorem}
+	if we set a constant A, s.t $\Phi_0\leq A$, then we can set $\gamma_n=\gamma_0$, for all $n$, such that,
+	$$$\Phi_{n+1}\leq \Phi_n-\frac{\gamma_0}{2}I^2_{Stein}(\mu_n|\pi)$
+\end{theorem}
+
+\begin{proof}
+	we can use the last lemma recursively, so finish the proof.
+\end{proof}
+
 \end{document}
