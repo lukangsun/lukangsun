@@ -476,12 +476,12 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 \adil{
 \begin{equation}
 		\phi(\gamma)\leq \phi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
-		\frac{C\cdot \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
+		\frac{C \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
 \end{equation}}
 	then by similar calculation as in PAGE, we have,
 	
 	
-\begin{align} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{c}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{align}
+\begin{align} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{C}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{align}
 
 Let   
 \begin{equation}
@@ -536,50 +536,58 @@ G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\
       \begin{equation}
     \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
       \end{equation}
-    
-  \begin{equation}
-    S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}}\right)
-  \end{equation}
-  $=\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx$
+    First,
+  \begin{align}
+    &S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\\
+  =&\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx\\
+  &+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))\mu_n(x)dx-\int k(y,\cdot)\nabla\log(\pi(y))\mu_{n+1}(y)dy\\
+  &+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx-\int k(x,\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx\\
+  =&I + II + III.
+\end{align}
   
-  $+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))\mu_n(x)dx-\int k(y,\cdot)\nabla\log(\pi(y))\mu_{n+1}(y)dy$
-  $+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx-\int k(x,\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx=I + II + III$
+We bound each term separately.
   
+\begin{align}
+  &\left\|II\rignt\|_{H}^{2}\\
+  =&\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))\mu(x)\mu(x^{\prime})dxdx^{\prime}
+\end{align}
+  since F is $L$-smooth, so
   
-  
-  $\left\|II\rignt\|_{H}^{2}$
-  $=\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))\mu(x)\mu(x^{\prime})dxdx^{\prime}$
-  since F is L-smooth, so
-  
-  $|\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|\leq L\cdot |x-\phi_{\gamma}(x)|=L\cdot\gamma\cdot|P_{\mu_{\gamma}}\nabla\log(\frac{\mu_n(x)}{\sigma_n(x)})|\leq C\cdot\gamma\cdot\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_{H}}$
-  
+\begin{align}
+  &|\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|\\
+\leq &L |x-\phi_{\gamma}(x)|\\
+=& L\gamma|P_{\mu_{\gamma}}\nabla\log(\frac{\mu_n(x)}{\sigma_n(x)})|\\
+\leq& C \gamma\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_{H},
+\end{align}
   then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded, we derive
-  $$\left\|II\right\|_{H}^{2}\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_{H}^{2}$$
   
-  $\left\|I\right\|_{H}^{2}=\left\|\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx\right\|_{H}^{2}$
-  
-  $=\int\int k(y,y^{\prime})\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_{n+1}(y^{\prime}))\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$ 
-  
-  $
-  -\int\int k(y,\phi_{\gamma}(x))\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_n(x^{\prime}))\mu_{n+1}(y)\mu_n(x)dydx^{\prime}
-  $
-  
-  $
-  -\int\int k(\phi_{\gamma}(x),y^{\prime})\nabla\log(\mu_{n+1}(y^{\prime}))\nabla\log(\mu_n(x))\mu_{n+1}(y^{\prime})\mu_n(x)dy^{\prime}dx
-  $
-  
-  $
-  +\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))\nabla\log(\mu_n(x))\nabla\log(\mu_n(x^{\prime}))\mu_{n}(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
-  
-  $=\int\int tr\nabla_{1,2}^2k(y,y^{\prime})\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$
-  
-  $-\int\int tr(\nabla_{1,2}^2k(y,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime}))\mu_{n+1}(y)\mu_{n}(x^{\prime})dydx^{\prime}$
-  
-  $-\int\int tr(\nabla_{1,2}^2k(\phi_{\gamma}(x),y^{\prime})J\phi_{\gamma}(x))\mu_n(x)\mu_{n+1}(y^{\prime})dxdy^{\prime}$
-  
-  $+\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)J\phi_{\gamma}(x^{\prime}))\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}$
-  
-  $=\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+  \begin{equation}
+  \left\|II\right\|_{H}^{2}\leq C \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_{H}^{2}.
+  \end{equation}
+  Now,
+  \begin{align}
+
+  \left\|I\right\|_{H}^{2}\\
+
+  =\left\|\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx\right\|_{H}^{2}\\
+
+  =\int\int k(y,y^{\prime})\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_{n+1}(y^{\prime}))\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime} 
+  -\int\int k(y,\phi_{\gamma}(x))\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_n(x^{\prime}))\mu_{n+1}(y)\mu_n(x)dydx^{\prime}\\
+
+  -\int\int k(\phi_{\gamma}(x),y^{\prime})\nabla\log(\mu_{n+1}(y^{\prime}))\nabla\log(\mu_n(x))\mu_{n+1}(y^{\prime})\mu_n(x)dy^{\prime}dx\\
+
+  +\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))\nabla\log(\mu_n(x))\nabla\log(\mu_n(x^{\prime}))\mu_{n}(x)\mu_{n}(x^{\prime})dxdx^{\prime}\\
+
+  =\int\int tr\nabla_{1,2}^2k(y,y^{\prime})\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}\\
+
+  -\int\int tr(\nabla_{1,2}^2k(y,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime}))\mu_{n+1}(y)\mu_{n}(x^{\prime})dydx^{\prime}\\
+
+  -\int\int tr(\nabla_{1,2}^2k(\phi_{\gamma}(x),y^{\prime})J\phi_{\gamma}(x))\mu_n(x)\mu_{n+1}(y^{\prime})dxdy^{\prime}\\
+
+  +\int\int tr(\nabla_{1,2}^2k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)J\phi_{\gamma}(x^{\prime}))\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}\\
+
+  =\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}
+  \end{align}
   
   
   assume $|\nabla_{1,2}^2K(\cdot,\cdot)|\leq C$, then
