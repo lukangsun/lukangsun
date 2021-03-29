@@ -16,6 +16,8 @@
 
 % to avoid loading the natbib package, add option nonatbib:
 %    \usepackage[nonatbib]{neurips_2021}
+\usepackage{xcolor}         % colors
+
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -25,7 +27,57 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
-\usepackage{xcolor}         % colors
+
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2020} with \usepackage[nohyperref]{icml2020} above.
+\usepackage{hyperref}
+\usepackage{times}		
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} 
+\DeclareUnicodeCharacter{00A0}{~}
+\usepackage{amssymb,amsmath,amscd,amsfonts,amsthm,bbm,mathrsfs,yhmath}
+
+\usepackage[shortlabels]{enumitem}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{graphics}
+\usepackage{mathtools}
+\usepackage{cleveref}
+\usepackage{comment}
+
+\usepackage{paralist}                                       
+%\usepackage{tabto}
+\usepackage{pdfpages}
+
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{condition}{Condition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{example}{Example}
+
+\newcommand{\subscript}[2]{$#1 _ #2$}
+\newlist{assumplist}{enumerate}{1}
+\setlist[assumplist]{label=(\subscript{\textbf{A}}{{\arabic*}})}
+\Crefname{assumplisti}{Assumption}{Assumptions}
+
+
+\newlist{assumplist2}{enumerate}{1}
+\setlist[assumplist2]{label=(\subscript{\textbf{B}}{{\arabic*}})}
+\setcounter{assumption}{3}
+\Crefname{assumplist2i}{Assumption}{Assumptions}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
 
 
@@ -34,8 +86,10 @@
 \newcommand{\prnote}[1]{\todo[color=cyan!20]{#1}}
 \newcommand{\asnote}[1]{\todo[color=green!]{#1}}
 \newcommand{\lsnote}[1]{\todo[color=magenta]{#1}}
+\newcommand{\adil}[1]{{\color{green!} #1}}
 \newcommand{\cF}{{\mathcal F}}
 \newcommand{\cB}{{\mathcal B}}
+\newcommand{\cO}{{\mathcal O}}
 \newcommand{\cG}{{\mathcal G}}
 \newcommand{\cP}{{\mathcal P}}
 \newcommand{\X}{{\mathcal X}} 
@@ -59,8 +113,8 @@
 \newcommand{\KL}{\mathop{\mathrm{KL}}\nolimits}
 \newcommand{\tr}{\mathop{\mathrm{tr}}\nolimits}
 \newcommand{\ps}[1]{\langle #1 \rangle}
-% \DeclareMathOperator*{\argmax}{arg\,max}
-% \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 
 
@@ -113,23 +167,489 @@
   
 \end{abstract}
 
+\section{Copy-Paste from Adil's paper}
+In this section, we analyze SVGD in discrete time, in the infinite number of particles regime~\eqref{eq:svgd_update}. We propose to study the dissipation of the KL along the SVGD algorithm. The Stein Fisher Information once again  quantifies this dissipation, as in the continuous time case. Before going further, note that discrete time analyses often require more assumptions that continuous time analyses. In optimization, these assumptions typically require some smoothness of the objective function. Here, we assume the following. 
+%In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
+\newcounter{contlist}
+\begin{assumplist}
+	\setlength\itemsep{0.2em}
+		\item \label{ass:k_bounded}
+	Assume that $\exists B>0$ s.t. for all $x \in \X$,\\
+	$\|k(x,.)\|_{\cH_0}\le B$ and $\|\nabla _xk(x,.)\|_{\cH}=(\sum_{i=1}^d \|\partial_{x_i}k(x_i,.)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
+	\item 	\label{ass:V_Lipschitz} The Hessian  $H_V$ of $V=-\log\pi$ is well-defined and $\exists M>0$ s.t. $\|H_V\|_{op}\le M$.
+	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
+	\item \label{ass:bounded_I_Stein}	Assume  that $\exists$ is $C>0$ s.t.  $I_{Stein}(\mu_n|\pi)<C$ for all $n$.
 
+\end{assumplist}
+\setcounter{contlist}{\value{enumi}}
+
+
+
+%In this section we assume \Cref{ass:k_bounded} holds, i.e. the norms of the kernel $k(x,x)$ and $  \nabla_1.\nabla_2 k(x,x)$ are bounded by some positive constant $B^2$.  We will also rely on \Cref{ass:bounded_I_Stein}, that states that the Stein Fisher information remains bounded at all iterations by some $C>0$.
+
+%\subsection{A descent lemma}
+
+%The following lemma states that the boundedness of the kernel, its gradient and the Hessian of $\pi$, as well as a the moments along the trajectory, are sufficient to satisfy the boundedness of the Stein Fisher information for all $n\ge0$. 
+
+ Under \Cref{ass:V_Lipschitz,ass:k_bounded}, a sufficient condition for~\Cref{ass:bounded_I_Stein} is $\sup_n \int \Vert x \Vert \mu_n(x)dx < \infty$. Bounded moment assumptions such as these are commonly used in stochastic optimization, for instance in some analysis of the stochastic gradient descent~\citep{moulines2011non}. Given our assumptions, we quantify the decreasing of the KL along the SVGD algorithm, also called a descent lemma in optimization.
+ 
+
+
+\begin{proposition}\label{prop:descent}
+	%Define $\mu_{n+1} =   (I-\gamma K \nabla f_{\pi,\mu_n}   )_{\#}\mu_n $ and 
+ Assume that \Cref{ass:V_Lipschitz,ass:k_bounded,ass:bounded_I_Stein} hold. % and that $\int \Vert x \Vert \mu_n(x)dx $ remains bounded for all $n$.
+		  Let $\alpha>1$ and choose $ \gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} } $. Then:
+	\begin{align}\label{eq:descent}
+	\KL(\mu_{n+1}|\pi)-\KL(\mu_{n}|\pi)\leq -\gamma \left(1- \gamma \frac{(\alpha^2 + M)B^2}{2}\right)I_{stein}(\mu_n|\pi).
+	\end{align}
+\end{proposition}
+%  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
+%  for the complete proof.
+\begin{proof}
+    %	Let $\cF:\cP_2(\X)\to \R$ defined by $\cF(\mu)=KL(\mu|\pi)$.
+    Our goal is to prove a discrete dissipation of the form $(\KL(\mu_{n+1}|\pi)-\KL(\mu_{n}|\pi))/\gamma \leq -I_{stein}(\mu_n|\pi) + \text{error term}$. 
+    %\begin{equation}
+        %$\frac{KL(\mu_{n+1}|\pi)-KL(\mu_{n}|\pi)}{\gamma} \leq -I_{stein}(\mu_n|\pi) + \text{error term}$. 
+   % \end{equation}    
+    Our assumptions will control the error term. 
+    Fix $n \ge 0$ and denote $g = P_{\mu_n}\nabla \log(\frac{\mu_n}{\pi})$, $\phi_t = I - t g$ for $t \in [0,\gamma]$ and $\rho_t = (\phi_t)_{\#}\mu_n$. Note that $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
+    
+    Under our assumptions, one can show that for any $x \in \X$, $\|g(x)\|^2\le B^2 I_{Stein}(\mu_n|\pi)$ and $\|Jg(x)\|_{HS}^2 \le B^2 I_{Stein}(\mu_n|\pi)$, using the reproducing property and Cauchy-Schwartz in $\cH$. Hence, $\|t Jg(x)\|_{op} < 1$ and $\phi_t$ is a diffeomorphism for every $t \in [0,\gamma]$. Moreover, $\|(J \phi_t)^{-1}(x)\|_{op} \leq \alpha$. Using~\cite[Theorem 5.34]{villani2003topics}, the velocity field ruling the time evolution of $\rho_t$ is $w_t \in L^2(\rho_t)$ defined by $w_t(x) = -g(\phi_t^{-1}(x))$. %Note that $w_0 = -g\in \cH$.    
+    
+    Denote $\varphi(t) = \KL(\rho_t|\pi)$. Using a Taylor expansion,
+        $\varphi(\gamma) = \varphi(0) + \gamma \varphi'(0) + \int_{0}^{\gamma} (\gamma - t)\varphi''(t)dt$.
+        We now identify each term. First, 
+        \begin{equation*}
+    \varphi(0) = \KL(\mu_n|\pi)\; \text{ and } \;\varphi(\gamma) = \KL(\mu_{n+1}|\pi).
+        \end{equation*} 
+        Then, using the chain rule~\cite[Section 8.2]{villani2003topics}, 
+        \begin{equation*}
+            \varphi'(t)=\ps{\nabla_{W_2} \KL(\rho_t|\pi),w_t}_{L^2(\rho_t)}\; \text{ and } \;\varphi''(t) = \ps{w_t,Hess_{\KL(.|\pi)}(\rho_t)w_t}_{L^2(\rho_t)}.
+        \end{equation*}
+        Therefore, $\varphi'(0) = -\ps{\nabla \log\left(\frac{\mu_n}{\pi}\right),g}_{L^2(\mu_n)}%=-\ps{g,g}_{\cH}
+        =-I_{Stein}(\mu_n|\pi)$. %, using $g \in \cH$. 
+        Moreover, $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where
+        \begin{equation*}
+        \psi_1(t) = \E_{x \sim \rho_t} \left[ \ps{w_t(x), H_V(x) w_t(x)}\right] \; \text{ and } \; \psi_2(t) = \E_{x \sim \rho_t} \left[ \|J w_t(x)\|_{HS}^2 \right].
+        \end{equation*}
+    The first term $\psi_1(t)$ is bounded using~\Cref{ass:V_Lipschitz}, $\psi_1(t) \leq M \|g\|_{L^2(\mu_n)}^2 \leq M B^2 I_{Stein}(\mu_n|\pi)$. The second term $\psi_2(t)$ is the most challenging to bound as $\|J w\|_{HS}$ cannot be controlled by $\|w\|$ for a general $w$. However, in our case, $w_t = -g \circ (\phi_t)^{-1}$, and $-J w_t \circ \phi_t = Jg (J \phi_t)^{-1}$. Therefore, $\|J w_t\circ \phi_t(x)\|_{HS}^2 \leq \|Jg(x)\|_{HS}^2 \|(J \phi_t)^{-1}(x)\|_{op}^2 \leq \alpha^2 B^2 I_{Stein}(\mu_n|\pi)$.
+    %The second term , the first term is easily bounded by
+    % $\ps{v,H_V v} \leq M \|v\|^2$. Then since $\rho_t = \phi_{t\#} \mu_n$ and $v_t = -g(\phi_t^{-1})$, by the transfer lemma $\mathbb{E}_{x \sim \rho_t}[\| v_t(x)\|^2]=\mathbb{E}_{x\sim \mu_n}[\|g(x)\|^2]\le B^2I_{Stein}(\mu_n|\pi)$, hence 
+    %$
+    %\E_{x\sim \rho_t}[ \ps{v_t(x), H_V(x) v_t(x)}]\le M B^2 I_{Stein}(\mu_n|\pi)$.
+    %  The second term is the most challenging to bound.  
+    %  By the chain rule 
+    %  %for any $x$ we have $-J v_t(x)=Jg(\phi_t^{-1}(x))(J\phi_t)^{-1}(\phi_t^{-1}(x))$; hence by 
+    %  and the transfer lemma, we first have
+    %   $\E_{x \sim \rho_t} \left[\|J v_t(x)\|_{HS}^2\right]= \E_{x \sim \mu_n} \left[\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\right]$. Then,  for any $x$, $ \|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2 \le B^2I_{Stein}(\mu_n|\pi) \| (J\phi_t)^{-1}(x)\|_{op}^2$. On the other hand, $J\phi_t=I-tJg$, and if $t<\frac{1}{B\sqrt{C}}$ then $t\|Jg(x)\|<1$ and it can be shown that $\|(I - t Jg(x))^{-1}\| \le \alpha$ for $\gamma$ chosen as in \Cref{prop:descent}. Therefore $\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\le \alpha^2 B^2 I_{Stein}(\mu_n|\pi)$ and $\varphi''(t)\le (\alpha^2+M)B^2I_{Stein}(\mu_n|\pi)$. 
+    Combining each of the quantity in the Taylor expansion gives the desired result.
+        %Sufficiently, we shall bound the term $\|Jg)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. 
+    \end{proof}
+Although the Hessian of $\KL(.|\pi)$ is not bounded over the whole tangent space, our proof relies on controlling the Hessian when restricted to $\cH$. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of \Cref{prop:descent}}\label{sec:proof_descent}
+
+We justify each step of the sketch of the proof of \Cref{sec:descent_lemma_Rd}. %For notation purposes we will omit the injection $\iota$ when taking the $L^2$ scalar product with an element of $\cH$.
+
+Consider $n \geq 0$ fixed and $\gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} }$. Denote $g = P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right)$ and  for every $t \in [0,\gamma]$,  $\phi_t = (I - t  g)$. Denote $\rho_t = \phi_{t\#} \mu_n$. Then, $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
+
+
+
+\begin{lemma}\label{lem:inequalities}
+	Suppose \Cref{ass:k_bounded} holds, i.e. the kernel and its gradient are bounded by some positive constant $B$. Then for any $x\in \X$:
+	\begin{align}
+&	\|g(x)\| \leq B I_{Stein}(\mu_n|\pi)^{\frac{1}{2}}\\
+&	\Vert J g(x)\Vert_{HS}\leq B I_{Stein}(\mu_n|\pi)^{\frac{1}{2}} 
+	\end{align}
+	
+\end{lemma}
+\begin{proof}
+	This is a consequence of the reproducing property and Cauchy-Schwarz inequality in the RKHS space. Let $g'=S_{\mu_n}\nabla \log(\frac{\mu_n}{\pi})$, hence for any $x\in \X$, $g(x)=g'(x)$ and:
+	\begin{equation*}
+	\|g(x)\|^2=\sum_{i=1}^d \ps{k(x,.),g'_i}^2_{\cH_0}\le \|k(x,.)\|_{\cH_0}^2 \|g'\|_{\cH}^2\le B^2 I_{Stein}(\mu_n|\pi).
+	\end{equation*}
+	Similarly:
+	\begin{align*}
+	\|Jg(x)\|_{HS}^2&=\sum_{i,j=1}^d \left|\frac{\partial g_i(x)}{\partial x_j} \right|^2=\sum_{i,j=1}^d \ps{\partial_{x_j}k(x,.), g'_i}_{\cH_0}\le \sum_{i,j=1}^d \| \partial_{x_j}k(x,.)\|^2_{\cH_0} \|g'_i\|_{\cH_0}^2\\
+	&=\| \nabla k(x,.)\|^2_{\cH}\|g'\|^2_{\cH}\le B^2 I_{Stein}(\mu_n|\pi).
+	\end{align*}
+\end{proof}
+
+
+
+
+\begin{lemma}\label{lem:diffeo}
+	Suppose that~\Cref{ass:k_bounded} and~\Cref{ass:bounded_I_Stein} hold. Then, for any $x\in \X$, $\|t Jg(x)\|_{op} \leq t B\sqrt{C}$ and for every $t < \frac{1}{B\sqrt{C}}$, $\phi_t$ is a diffeomorphism. Moreover, $\|(J\phi_t(x))^{-1}\|_{op} \leq \alpha$. 
+	%$\phi_t = I-t\gamma P_{\mu_n}\nabla \log(\frac{\mu}{\pi})(x)$ for $t\in [0,1]$. Fix $\alpha >1$,  Then for $\gamma< \frac{\alpha-1}{\alpha BC^{\frac{1}{2}}} $, $\phi_t$ is a diffeomorphism.
+\end{lemma}
+\begin{proof}
+	First, by \Cref{lem:inequalities} and \Cref{ass:bounded_I_Stein} we have $\|J g(x)\|_{op} \leq \|J g(x)\|_{HS} \leq B\sqrt{C}$.
+	If $t < \frac{1}{B\sqrt{C}}$, then $\|t Jg(x)\|_{op} < 1$. Therefore, $J(\phi_t)(x) = I - t Jg(x)$ is regular for every $x$ and $\phi_t$ is a diffeomorphism. Moreover, 
+	\begin{equation}
+		\|(J\phi_t(x))^{-1}\|_{op} \leq \sum_{k=0}^\infty \|t Jg(x)\|_{op}^k \leq \sum_{k=0}^\infty \|t Jg(x)\|_{HS}^k \leq \sum_{k=0}^\infty (t B \sqrt{C})^k \leq \alpha,
+	\end{equation}
+	where we used $\gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} }$.
+\end{proof}
+    %From \Cref{lem:velocity_field}, 
+    % Using~\cite[Theorem 5.34]{villani2003topics}, 
+    % the velocity field of $\rho_t$ is $v_t \in L^2(\rho_t)$ defined by $v_t(x) = -g(\phi_t^{-1}(x))$. In particular, $v_0 = -g$.
+
+Denote $\varphi(t) = \KL(\rho_t|\pi)$. Using Taylor expansion,
+\begin{equation}
+    \label{eq:Taylor-integral-remainder-appendix}
+    \varphi(\gamma) = \varphi(0) + \gamma \varphi'(0) + \int_{0}^{\gamma} (\gamma - t)\varphi''(t)dt.
+\end{equation}
+We now identify each term. First, $\varphi(0) = \KL(\mu_n|\pi)$ and $\varphi(\gamma) = \KL(\mu_{n+1}|\pi)$.
+
+
+To compute $\varphi'(t)$ and $\varphi''(t)$ we have two options. Either we check the assumptions of the optimal transport theorems allowing to apply the chain rule~\cite{villani2003topics,ambrosio2008gradient}, or we do a direct computation. The latter is preferred, although differential calculus over the Wasserstein space is a powerful way to guess the formulas.
+
+\begin{lemma} Denote $w_t(x) = -g(\phi_t^{-1}(x))$. Then,
+	\begin{equation*}
+		\varphi'(0)=\ps{\nabla_{W_2} \KL(\rho_0|\pi), w_0}_{L^2(\mu_n)} = -I_{Stein}(\mu_n|\pi),
+	\end{equation*}
+	and,
+	\begin{equation*}
+		\varphi''(t) = \ps{ w_t,Hess_{\KL(.|\pi)}(\rho_t) w_t}_{L^2(\rho_t)} = \int \left[\|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2 + \ps{g(x), H_V (\phi_t(x)) g(x)}\right] \mu_n(x)dx.
+	\end{equation*}
+\end{lemma}
+\begin{proof}
+We know by \Cref{lem:diffeo} that $\phi_t$ is a diffeomorphism, therefore, $\rho_t$ admits a density given by the change of variables formula:
+	\begin{align}
+	\rho_t(x) = \vert J \phi_t(\phi_t^{-1}(x))  \vert^{-1} \mu_n(\phi_{t}^{-1}(x)). 
+	\end{align}
+	Using the transfer lemma with $\rho_t=\phi_{t\#}\mu_n$, $\varphi(t)$ is given by:
+	\begin{align*}
+	\varphi(t) &= \int \log \left( \frac{\rho_t(y)}{\pi(y)}\right) \rho_t(y)dy\\
+	&=  \int \log\left( \frac{\mu_n(x) \vert  J\phi_t(x) \vert^{-1}}{\pi(\phi_t(x))}\right) \mu_n(x)dx.
+	\end{align*}
+	We can now take the time derivative of $\varphi(t)$ which gives:
+	\begin{equation*}
+	\varphi'(t) = - \int tr\left(J\phi_t(x)^{-1} \frac{dJ\phi_t(x)}{dt}\right)\mu_n(x)dx - \int \ps{\nabla \log \pi(\phi_t(x)),\frac{d\phi_t(x)}{dt}} \mu_n(x)dx.  
+	\end{equation*}
+	Hence, we can use the explicit expression of $\phi_t$ to write:
+	\begin{equation*}
+		\varphi'(t) = \int tr(J\phi_t(x)^{-1} Jg(x))\mu_n(x)dx + \int \ps{\nabla \log \pi(\phi_t(x)), g(x)  }\mu_n(x)dx.  
+	\end{equation*}
+	The Jacobian at time $t=0$ is simply equal to the identity since $\phi_0=I$. It follows that $tr(J\phi_0(x)^{-1} Jg(x)) =tr(Jg(x))= div(g)(x)$ by definition of the divergence operator. Using an integration by parts:
+	\begin{align*}
+		\varphi'(0) &= -\int \left[-div( g )(x)- \ps{\nabla \log \pi(x),g(x)}\right]\mu_n(x)dx\\
+	&= -\int\ps{ \nabla \log\left(\frac{\mu_n}{\pi}\right)(x), g(x)}\mu_n(x)dx
+	= -I_{Stein}(\mu_n|\pi).
+	\end{align*}
+	Now, we prove the second statement. First, 
+	\begin{align*}
+	\varphi''(t)= \int \left[tr((Jg(x)(J\phi_t(x))^{-1})^2) + \ps{g(x), H_V (\phi_t(x)) g(x)}\right] \mu_n(x)dx. 
+	\end{align*}
+	Since $Jg(x)$ and $J\phi_t(x)$ commutes, $tr((Jg(x)(J\phi_t(x))^{-1})^2) = \|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2$. Moreover, using the chain rule, 
+	\begin{equation}
+		-J w_t(x) = J (g \circ \phi_t^{-1})(x) = Jg(\phi_t^{-1}(x)) J(\phi_t^{-1})(x) = Jg(\phi_t^{-1}(x)) (J\phi_t)^{-1}(\phi_t^{-1}(x)).
+	\end{equation}
+		Therefore, $\|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2 = \|J w_t(\phi_t(x))\|_{HS}^2$, which proves the second part of the second statement. Using the transfer lemma,
+		\begin{align*}
+			\varphi''(t)&= \int \left[\|J w_t(y)\|_{HS}^2 +\ps{ w_t(y),H_V (y) w_t(y)}\right] \rho_t(y)dy\\
+			&=\ps{ w_t,Hess_{\KL(.|\pi)}(\rho_t) w_t}_{L^2(\rho_t)},
+			\end{align*}
+			which concludes the proof.
+\end{proof}
+Denote
+\begin{equation*}
+        \psi_1(t) = \int \left[\|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2\right] \mu_n(x)dx \; \text{ and } \; \psi_2(t) = \int \ps{g(x), H_V (\phi_t(x)) g(x)}\mu_n(x)dx.
+		\end{equation*}
+	Then, $\varphi''(t) = \psi_1(t) + \psi_2(t)$.
+% Second, using the chain rule in the Wasserstein space, 
+% \begin{multline*}
+% \varphi'(0) = \ps{\nabla_{W_2} \KL(\rho_0|\pi),v_0}_{L^2(\rho_0)} = \ps{P_{\rho_0}\nabla_{W_2} \KL(\rho_0|\pi),v_0}_{\cH}
+%  = -\|g\|_{\cH}^2=-I_{Stein}(\mu_n|\pi)
+% \end{multline*}
+%  using $v_0 \in \cH$. 
+% Finally, recall that the Hessian of $\KL(.|\pi)$ at $\mu$ is the operator $H_{\KL(.|\pi)}(\mu) : L^2(\mu) \to L^2(\mu)$ defined by 
+% \begin{equation}
+%     \ps{v, H_{\KL(.|\pi)}(\mu) v}_{\mu} = E_{X \sim \mu} \left[\|J v(X)\|_{HS}^2 + \ps{v(X), H_V(X) v(X)}\right],
+% \end{equation}
+% where $H_V$ is the Hessian matrix of $V = -\log(\pi)$ and $Jv$ the Jacobian matrix of $v \in L^2(\mu)$. Hence,
+% \begin{equation}
+%     \varphi''(t) %= \ps{v(t),H_{\cF}(\mu(t)) v(t)}_{\mu(t)} 
+%     = E_{x_t \sim \rho_t} \left[ \|J v_t(x_t)\|_{HS}^2 + \ps{v_t(x_t), H_V(x_t) v_t(x_t)}\right].
+% \end{equation}
+We bound $\psi_1$ and $\psi_2$ separately. First, since the potential $V$ is $M$-smooth, 
+\begin{align*}
+	\psi_2(t) \leq M\int \|g(x)\|^2 \mu_n(x)dx \leq M B^2 I_{Stein}(\mu_n|\pi),
+\end{align*}
+by using \Cref{lem:inequalities}.
+%$\ps{v,H_V v} \leq M \|v\|^2$. Therefore, 
+% \begin{align*}
+%     E_{x_t\sim \rho_t} \left[ \ps{ v_t(x_t), H_V(x_t) v_t(x_t) } \right] &= E_{x_0\sim \rho_0} \left[ \ps{v_t(\phi_t(x_0)), H_V(\phi_t(x_0)) v_t(\phi_t(x_0))}\right] \\
+%     &= E_{x_0\sim \rho_0} \left[\ps{v_0, H_V(\phi_t(x_0)) v_0}\right]\\
+%     &\leq M \|g\|_{L^2(\mu_n)}^2 \le M B^2 I_{Stein}(\mu_n|\pi).
+% \end{align*}
+%by domination of the RKHS norm over the $L^2$ norm.\aknote{add this in background}
+% For the second term, note that by the chain rule :
+% \begin{equation}
+% -J v_t(x) = J (g \circ \phi_t^{-1})(x) = Jg(\phi_t^{-1}(x)) J(\phi_t^{-1})(x) = Jg(\phi_t^{-1}(x)) (J\phi_t)^{-1}(\phi_t^{-1}(x)),
+% \end{equation}
+% therefore $E_{x_t \sim \mu_t} \left(\|J v_t(x_t)\|_{HS}^2\right) = E_{x_0 \sim \rho_0} \left(\|Jg(x_0) J(\phi_t)^{-1}(x_0)\|_{HS}^2\right)$. Sufficiently, we shall bound the term $\|J(g)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. First,
+Now, we bound $\psi_1(t)$ using \Cref{lem:diffeo} and \ref{lem:inequalities}:
+\begin{equation}
+    \|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2 \leq \|Jg(x)\|_{HS}^2 \| (J\phi_t(x))^{-1}\|_{op}^2 \leq \alpha^2 B^2 I_{Stein}(\mu_n|\pi).
+\end{equation}
+
+
+% Then, $J\phi_t(x) = I - t Jg(x)$ and, since $t < \frac{1}{B\sqrt{C}}$, we have $t\|Jg(x)\| < 1$. Therefore, 
+% \begin{equation}
+% \|(I - t Jg(x))^{-1}\|_{op} \leq \sum_{k=0}^{+\infty} \|t Jg(x)\|_{op}^k = \frac{1}{1-t\|Jg(x)\|_{op}} \leq \frac{1}{1-t\|Jg(x)\|_{HS}} \leq \frac{1}{1-\gamma B\sqrt{C}}.
+% \end{equation}
+% Therefore, 
+% \begin{equation}
+%     \|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2 \leq B^2 I_{Stein}(\mu_n|\pi) \frac{1}{(1-\gamma B\sqrt{C})^2}.
+% \end{equation}
+% Hence, if $\alpha > 1$ and $\gamma \leq \frac{\alpha - 1}{\alpha B \sqrt{C}}$, then $\frac{1}{1-\gamma B\sqrt{C}} \leq \alpha$ and 
+% \begin{equation}
+%     \|Jg(x) J(\phi_t)^{-1}(x)\|_{HS}^2 \leq \alpha^2 B^2 I_{Stein}(\mu_n|\pi).
+% \end{equation}
+Finally, $\varphi''(t) \leq (\alpha^2 + M)B^2 I_{Stein}(\mu_n|\pi)$. Plugging into~\eqref{eq:Taylor-integral-remainder-appendix} gives the result.
+
+
+\begin{lemma}\label{lem:bounded_stein}
+	Suppose \Cref{ass:k_bounded} holds, i.e. the kernel and its gradient are bounded by some positive constant $B$. Moreover,  assume that $\nabla \log(\pi)$ is $M$-Lipschitz  and that $\int \Vert x \Vert \mu_n(x)dx $ is uniformly bounded on $n$.	Then $I_{Stein}(\mu_n|\pi)$ remains bounded by some $C>0$, i.e. \Cref{ass:bounded_I_Stein} holds.%\aknote{this also holds under the stronger \Cref{ass:V_bounded}}
+\end{lemma}
+\begin{proof}
+	For any $\mu$, we have :
+	\begin{equation*}
+	I_{Stein}(\mu|\pi)=\ps{\int \nabla \log \pi(x)k(x,.) + \nabla_1 k(x,.)d\mu(x), \int \nabla \log \pi(y)k(y,.) + \nabla_1 k(y,.)d\mu(y)}_{\cH}
+	\end{equation*}
+	Using the reproducing property and integration by parts it is possible to write $I_{Stein}(\mu|\pi)$ as:
+	\begin{align*}
+	I_{Stein}(\mu|\pi) =& \int \nabla_1.\nabla_2 k(x,y)d\mu(x)d\mu(y)\\ &+ \int \ps{\nabla \log \pi(y),\nabla_1 k(x,y)}d\mu(x)d\mu(y)+\int \ps{\nabla \log \pi(x),\nabla_1 k(y,x)}d\mu(x)d\mu(y)\\ 
+	&+ \int \ps{\nabla \log \pi(x),\nabla \log \pi(y)} k(x,y)d\mu(x)d\mu(y).
+	\end{align*}
+	The terms involving the kernel are easily bounded since the kernel is bounded  with bounded derivatives.
+		Using that $\nabla \log \pi$ is $M$-Lipschitz, it is easy to see that
+		\begin{align}
+		\Vert \nabla \log \pi(x) \Vert \leq \Vert \nabla \log \pi(0) \Vert + M \Vert x\Vert.	
+		\end{align}
+		Using the above inequality, one can directly conclude  that  $\int \Vert x \Vert \mu_n(x)dx $ remains bounded.
+\end{proof}
+
+
 
 \appendix
 
-\section{Appendix}
+\section{Appendix: Lukang's Draft}
 
 \subsection{Setup}
 
-$$F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \sim e^{-F }$$
-		
-		$$f_{n}=\frac{1}{n_{0}} \sum_{i \in I} f_{i},  \qquad \# I=n_{0}, \qquad \sigma_{n} \sim e^{-f_{n}} $$
-		
-		$$\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n} $$
-		
-	$$	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t} $$
+\begin{equation}
+F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
+\end{equation}
+\begin{equation}
+		F_{n}=\frac{1}{|I_{n}|} \sum_{i \in I_n} f_{i},  \qquad \sigma_{n} \propto e^{-F_{n}}
+  \end{equation}
+    \begin{equation}
+		\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n}
+  \end{equation}
+    
+    \begin{equation}   
+	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t}
+\end{equation}
+  
 	
+  \section{PAGE}
+
+  We define the update rule as:
+    
+  \begin{equation}
+  S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
+        S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
+        S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
+        \end{cases}
+      \end{equation}
+\adil{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
+     
+
+     This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed, ...
+
+
+        	
+\section{Main Proof}
+\adil{
+\begin{equation}
+		\phi(\gamma)\leq \phi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
+		\frac{C\cdot \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
+\end{equation}}
+	then by similar calculation as in PAGE, we have,
+	
+	
+\begin{align} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{c}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{align}
+
+Let   
+\begin{equation}
+   G_{n} := 
+  \textbf{E} 
+\left[ 
+  \left\| 
+ S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) - S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
+  \right\|_{H}^{2}
+  \right] 
+\end{equation}
+  
+      Then a direct calculation now reveals that
+
+  \adil{
+\begin{eqnarray*}
+G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}\\
+              & = & (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) 
+   +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) -       S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) \right\|_{H}^{2} \\
+              &    & \qquad +（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2} .
+\end{eqnarray*}
+  }
+
+
+
+  \section{Key Inequality}
+	
+		
+
+  \begin{theorem}
+    
+    If $\gamma_n \cO(\bE \Phi_n) \leq C$, then
+    \begin{equation}
+      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{\gamma}{2}\bE\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)\right\|_H^2,
+    \end{equation}
+  
+  where
+  
+  
+  $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma}{2p}\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_H^2$
+    
+    
+  \end{theorem}
+  
+  \begin{proof}
+    We need to estimate
+    \begin{equation}
+      \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}
+    \end{equation}
+    
+      and
+      \begin{equation}
+    \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
+      \end{equation}
+    
+  \begin{equation}
+    S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}}\right)
+  \end{equation}
+  $=\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx$
+  
+  $+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))\mu_n(x)dx-\int k(y,\cdot)\nabla\log(\pi(y))\mu_{n+1}(y)dy$
+  $+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx-\int k(x,\cdot)\nabla\log(\frac{\mu_n(x)}{\pi(x)})\mu_n(x)dx=I + II + III$
+  
+  
+  
+  $\left\|II\rignt\|_{H}^{2}$
+  $=\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))\mu(x)\mu(x^{\prime})dxdx^{\prime}$
+  since F is L-smooth, so
+  
+  $|\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|\leq L\cdot |x-\phi_{\gamma}(x)|=L\cdot\gamma\cdot|P_{\mu_{\gamma}}\nabla\log(\frac{\mu_n(x)}{\sigma_n(x)})|\leq C\cdot\gamma\cdot\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_{H}}$
+  
+  then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded, we derive
+  $$\left\|II\right\|_{H}^{2}\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_{H}^{2}$$
+  
+  $\left\|I\right\|_{H}^{2}=\left\|\int k(y,\cdot)\nabla\log(\mu_{n+1}(y))\mu_{n+1}(y)dy-\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\mu_n(x))\mu_n(x)dx\right\|_{H}^{2}$
+  
+  $=\int\int k(y,y^{\prime})\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_{n+1}(y^{\prime}))\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$ 
+  
+  $
+  -\int\int k(y,\phi_{\gamma}(x))\nabla\log(\mu_{n+1}(y))\nabla\log(\mu_n(x^{\prime}))\mu_{n+1}(y)\mu_n(x)dydx^{\prime}
+  $
+  
+  $
+  -\int\int k(\phi_{\gamma}(x),y^{\prime})\nabla\log(\mu_{n+1}(y^{\prime}))\nabla\log(\mu_n(x))\mu_{n+1}(y^{\prime})\mu_n(x)dy^{\prime}dx
+  $
+  
+  $
+  +\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))\nabla\log(\mu_n(x))\nabla\log(\mu_n(x^{\prime}))\mu_{n}(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+  
+  $=\int\int tr\nabla_{1,2}^2k(y,y^{\prime})\mu_{n+1}(y)\mu_{n+1}(y^{\prime})dydy^{\prime}$
+  
+  $-\int\int tr(\nabla_{1,2}^2k(y,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime}))\mu_{n+1}(y)\mu_{n}(x^{\prime})dydx^{\prime}$
+  
+  $-\int\int tr(\nabla_{1,2}^2k(\phi_{\gamma}(x),y^{\prime})J\phi_{\gamma}(x))\mu_n(x)\mu_{n+1}(y^{\prime})dxdy^{\prime}$
+  
+  $+\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)J\phi_{\gamma}(x^{\prime}))\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}$
+  
+  $=\int\int tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+  
+  
+  assume $|\nabla_{1,2}^2K(\cdot,\cdot)|\leq C$, then
+  $tr(\nabla_{1,2}^2K(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(I-J\phi_{\gamma}(x))(I-J\phi_{\gamma}(x^{\prime})))\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_{H}^2$
+  
+  
+  so $\left\|I\right\|_{H}^2\leq C\cdot \gamma^2\cdot \left\|S_{\mu_n}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_{H}^2$
+  
+  $\left\|III\right\|_{H}^2=\int\int (k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime}))\nabla\log(\frac{\mu_n(x)}{\pi(x)})\nabla\log(\frac{\mu_n(x^{\prime})}{\pi(x^{\prime})})$
+  
+  $\mu_n(x)\mu_n(x^{\prime})dxdx^{\prime}.$
+  
+  denote $F(x,x^{\prime}):=k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})$
+  
+  then by integration by part, we have 
+  
+  $\left\|III\right\|_{H}^2=\int\int (tr(\nabla_{1,2}^2F(x,x^{\prime}))+\nabla_2F(x,x^{\prime})\nabla\log(\pi(x))+\nabla_1F(x,x^{\prime})\nabla\log(\pi(x^{\prime}))+F(x,x^{\prime})\nabla\log(\pi(x))\nabla\log(\pi(x^{\prime})))\mu_n(x)\mu_{n}(x^{\prime})dxdx^{\prime}$
+  
+  We need to know the order of $F(x,x^{\prime}),\nabla_1F(x,x^{\prime}),\nabla_2F(x,x^{\prime}),\nabla_{1,2}^2F(x,x^{\prime})$
+  
+  in the following we assume supremum norm the second,third and fourth order derivatives of k are finite, and we miss $O(|\phi_{\gamma}(x)-x|^2)$ and $O(|\phi_{\gamma}(x^{\prime})-x^{\prime}|^2)$ in the derivation.
+  
+  $|F(x,x^{\prime})|=|<\phi_{\gamma}(x^{\prime}-x^{\prime}),\nabla_2k(\phi_{\gamma}(x),x^{\prime})>+<x^{\prime}-\phi_{\gamma}(x^{\prime})),\nabla_2k(x,x^{\prime})>|$
+  
+  $\leq |\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x)-x)(\phi_{\gamma}(x^{\prime})-x^{\prime})|\leq C\cdot \gamma^2\cdot \left \| S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2$
+  
+  
+  $|\nabla_1F(x,x^{\prime})|=|\nabla_1k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x)-\nabla_1k(\phi_{\gamma}(x),x^{\prime})J\phi_{\gamma}(x)-\nabla_1k(x,\phi_{\gamma}(x^{\prime}))+\nabla_1k(x,x^{\prime})|$
+  
+  $=|\nabla_{1,2}^2k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime}-x^{\prime}))J\phi_{\gamma}(x)-\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})|$
+  
+  $=|\nabla_{11,2}^3k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})(\phi_{\gamma}(x)-x)+\nabla_{1,2}^2k(\phi_{\gamma}(x),x)(\phi_{\gamma}(x^{\prime})-x^{\prime})(J\phi_{\gamma}(x)-I)|\leq C\cdot \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$	
+  
+  similarly $|\nabla_2F(x,x^{\prime})|\leq C\cdot \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+  
+  $tr\nabla_{1,2}^2F(x,x^{\prime})=tr(J\phi_{\gamma}(x)\nabla_{1,2}^2k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime})-J\phi_{\gamma}(x)\nabla_{1,2}^2k(\phi_{\gamma}(x),x^{\prime})-\nabla_{1,2}^2k(x,\phi_{\gamma}(x^{\prime}))J\phi_{\gamma}(x^{\prime})+\nabla_{1,2}^2k(x,x^{\prime})),$
+  
+  
+  denote $J\phi_{\gamma}(x^{\prime})=I-\gamma JP_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x^{\prime})=I-\gamma P^{\prime}, J\phi_{\gamma}(x)=I-\gamma JP_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x)=I-\gamma P^$
+  
+  
+  then
+  
+  $tr\nabla_{1,2}^2F(x,x^{\prime})=tr((I-\gamma P)\nabla_{1,22}^3k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})-(I-\gamma P)\nabla_{1,2}^2k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\gamma P^{\prime})$
+  
+  $-\nabla_{1,22}^3k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})+(\gamma P^{\prime})\nabla_{1,2}^2k(x,\phi_{\gamma}(x^{\prime})))$
+  
+  $=tr(\nabla_{11,22}^4k(x,x^{\prime})(\phi_{\gamma}(x)-x)(\phi_{\gamma}(x^{\prime})-x^{\prime})-(\gamma P^{\prime})\nabla_{11,2}^3k(x,\phi_{\gamma}(x^{\prime}))(\phi_{\gamma}(x)-x)-(\gamma P)\nabla_{1,22}^3k(\phi_{\gamma}(x),x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})+(\gamma P)\nabla_{1,2}^2k(x,x^{\prime})(\gamma P^{\prime}))$
+  
+  $|tr\nabla_{1,2}^2F(x,x^{\prime})|\leq C\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+  
+  then, we know,
+  
+  $\left\|III\right\|_H^2\leq (C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+  
+  
+  similarly, since the set of $\{\sigma_{I^{\prime}}\}\}$ is finite and have similar property with $\pi$, so
+  
+  $\left\|S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}})-S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{I^{\prime}}})\right\|_H^2\leq (C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+  
+  Finally,
+  
+  $\textbf{E}\left\|S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\pi})-S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\sigma_{n+1}})\right\|_H^2\leq (1-p)\cdot \left\|S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\pi})-S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_H^2+ (C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2+C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)\cdot \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2$
+  
+  
+  So if $\gamma$ is small enough,s.t $\frac{\gamma}{2p}\cdot(C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2+C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)-(\frac{1}{2\gamma}-\frac{C}{2})\leq 0$, then
+  
+  $\textbf{E}(\Phi_{n+1})\leq \textbf{E}(\Phi_n)-\frac{\gamma}{2}\textbf{E}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi}})\right\|_H^2,$
+  \end{proof}
+  
 
 
 \end{document}
