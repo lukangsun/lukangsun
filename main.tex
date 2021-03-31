@@ -462,10 +462,11 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
   We define the update rule as:
     
   \begin{equation}
-  S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
-        S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
-        S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
-        \end{cases}
+  	\resizebox{.9\hsize}{!}{
+  P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
+        P_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
+        P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) & \qquad {1-p}, 
+        \end{cases}}
       \end{equation}
 \adil{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
      
@@ -477,7 +478,7 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 \section{Main Proof}
 \adil{
 \begin{equation}
-		\phi(\gamma)\leq \phi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
+		\varphi(\gamma)\leq \varphi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{\mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
 		\frac{C \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
 \end{equation}}
 	then by similar calculation as in PAGE, we have,
