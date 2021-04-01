@@ -534,13 +534,10 @@ Let
     
     If $\gamma_n \cO(\bE \Phi_n) \leq C$, then
     \begin{equation}
-      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{\gamma}{2}\bE\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)\right\|_H^2,
+      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{\gamma_n}{2}\bE\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)\right\|_H^2,
     \end{equation}
   
-  where
-  
-  
-  $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma}{2p}\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_H^2$
+  where $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma_n}{2p}\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_H^2$. (In the proof,we use $\gamma$ to replace $\gamma_n$ for simplicity.)
     
     
   \end{theorem}
@@ -645,7 +642,51 @@ So
     \bE(\Phi_{n+1}) \leq \bE(\Phi_n)-\frac{\gamma}{2}\bE \sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})},
   \end{equation}
   \end{proof}
-  
 
+\begin{lemma}
+	If there existing a constant $a>0$ and a point $x_0$ such that $\int e^{ad(x_0,x)^2}d\pi(x)<+\infty$, then we have the following Talagrand inequality
+	\begin{equation}
+		W_1\left(\mu,\pi\right)\leq C\sqrt{KL\left(\mu|\pi\right)}
+	\end{equation}
+\end{lemma}
+  
+\begin{proof}
+	see Villani...
+\end{proof}
+
+\begin{lemma}
+		if we have $\Phi_n\leq C_4$, then we have 
+		\begin{equation}
+			\int|\nabla\log(\pi)(x)|d\mu_n(x)+\int|\nabla\log(\sigma_n)(x)|d\mu_n(x)+\int|\nabla\log(\frac{\sigma_n}{\sigma_{I^{\prime}}})(x)|d\mu_n(x)\leq C_5
+		\end{equation}
+\end{lemma}
+\begin{proof}
+    (We ignore the subscripts of the constant.) Since $W_1\left(\mu_n,\pi\right)\leq C\sqrt{KL\left(\mu_n|\pi\right)}\leq C\Phi_n\leq C$, by L-smoothness of $f_i$, we have 
+    \begin{equation}
+    	\begin{split}
+    	&\quad \int|\nabla\log(\pi)(x)|d\mu_n(x)+\int|\nabla\log(\sigma_n)(x)|d\mu_n(x)+\int|\nabla\log(\frac{\sigma_n}{\sigma_{I^{\prime}}})(x)|d\mu_n(x)\\
+    	&\leq C(1+\int |x|d\mu_n(x))=C(1+W_1\left(\mu_n,\delta_0\right))\leq C(1+W_1\left(\mu_n,\pi\right)+W_1\left(\pi,\delta\right)\leq C.
+    	\end{split}
+    \end{equation}
+\end{proof}
+
+\begin{lemma}
+	If $\Phi\leq A$, then we can choose $\gamma_n\geq \gamma_0$, where $\gamma_0$ is a constant depends on $A$, such that,$\Phi_{n+1}\leq A$(here $A$ is the same with the former $A$. )
+\end{lemma}
+\begin{proof}
+		from the proof of main theorem and the last lemma, we can choose $\gamma_n\geq\gamma_0$, such that $\Phi_{n+1}\leq \Phi_n-\frac{\gamma_n}{2}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2\leq A.$
+\end{proof}
+
+\begin{lemma}
+		if we set $A=\Phi_0$, then we can set $\gamma_n=\gamma_0$, for all $n$, such that
+		\begin{equation}
+			\Phi_{n+1}\leq\Phi_n-\frac{\gamma_0}{2}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
+		\end{equation}
+		
+\end{lemma}
+
+\begin{proof}
+	using the last lemma, it's obvious.
+\end{proof}
 
 \end{document}
