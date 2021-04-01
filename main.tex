@@ -462,16 +462,27 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
   We define the update rule as:
     
   \begin{equation}
-  	\resizebox{.9\hsize}{!}{
+  	\resizebox{.9\hsize}{!}{$
   P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
         P_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
         P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) & \qquad {1-p}, 
-        \end{cases}}
+        \end{cases}$
+    }
       \end{equation}
 \adil{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
      
 
-     This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed, ...
+     This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed,
+     the update rule in $n+1$ step SVSGD is 
+     
+     	\begin{align}
+     		&\quad \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\nabla \log\left(\sigma_{n+1}\right)\left(x_{j}^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
+     		&= \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\left(\nabla\log\left(\sigma_n\right)\left(x_j^n\right)+\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
+     		&= \frac{1}{l}\sum_{j=1}^{l}\left[k\left(x_j^n,\cdot\right) \nabla \log\left(\sigma_n\right)\left(x_j^n\right)+\nabla k\left(x_j^n,\cdot\right)\right] +\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n+1},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right]\\
+     		&-\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n}\right)+\nabla k\left(x_j^{n},\cdot\right)\right]+\frac{1}{l} \sum_{j=1}^{l}\left[\left (k\left(x_j^{n+1},\cdot\right)-k\left(x_j^n,\cdot\right)\right)\left(\nabla \log\left(\sigma_n\right)\left(x_j^n\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)\right]\\
+     		&\rightarrow P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)
+     	\end{align}
+     
 
 
         	
@@ -492,23 +503,24 @@ Let
   \textbf{E} 
 \left[ 
   \left\| 
- S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) - S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)
+  S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) -
+ S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) 
   \right\|_{H}^{2}
   \right] 
 \end{equation}
   
       Then a direct calculation now reveals that
-
-  \adil{
-\begin{eqnarray*}
-G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{H}^{2}\\
-              & = & (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) 
-   +S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) -       S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)+S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) \right\|_{H}^{2} \\
-              &    & \qquad +（(1-p)\cdot \left\|S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I}}\right)\right\|_{H}^{2} .
-\end{eqnarray*}
-  }
-
-
+      
+      
+      \begin{equation}
+      	\begin{split}
+      		G_{n+1} &= (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+ \\ &\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) 
+      		-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) \left.\left.\right\|_{H}^{2}\right]\\
+      		& = (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\left.\left.\right\|_{H}^{2}\right] \\
+      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)+ \\ &\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) 
+      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{H}^{2}\right]
+      	\end{split}
+      \end{equation}
 
   \section{Key Inequality}
 	
@@ -532,13 +544,17 @@ G_{n+1} & = & p\cdot 0+ (1-p)\cdot \text{E}\left\|S_{\mu_{n}}\nabla \log \left(\
   \begin{proof}
     We need to estimate
     \begin{equation}
-      \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}
+      \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2},
     \end{equation}
     
-      and
       \begin{equation}
-    \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
+    \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
       \end{equation}
+  
+  and 
+  \begin{equation}
+  	 \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2
+  \end{equation}
     First,
   \begin{align}
     &S_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)\\
