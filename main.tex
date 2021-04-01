@@ -474,14 +474,15 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 
      This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed,
      the update rule in $n+1$ step SVSGD is 
-     
-     	\begin{align}
+     \begin{equation}
+     	\begin{split}
      		&\quad \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\nabla \log\left(\sigma_{n+1}\right)\left(x_{j}^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
      		&= \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\left(\nabla\log\left(\sigma_n\right)\left(x_j^n\right)+\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
      		&= \frac{1}{l}\sum_{j=1}^{l}\left[k\left(x_j^n,\cdot\right) \nabla \log\left(\sigma_n\right)\left(x_j^n\right)+\nabla k\left(x_j^n,\cdot\right)\right] +\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n+1},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right]\\
      		&-\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n}\right)+\nabla k\left(x_j^{n},\cdot\right)\right]+\frac{1}{l} \sum_{j=1}^{l}\left[\left (k\left(x_j^{n+1},\cdot\right)-k\left(x_j^n,\cdot\right)\right)\left(\nabla \log\left(\sigma_n\right)\left(x_j^n\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)\right]\\
      		&\rightarrow P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)
-     	\end{align}
+     	\end{split}
+     \end{equation}
      
 
 
@@ -495,7 +496,10 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 	then by similar calculation as in PAGE, we have,
 	
 	
-\begin{align} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{C}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \end{align}
+\begin{equation}
+	\begin{split} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{C}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2}
+	\end{split}
+\end{equation}
 
 Let   
 \begin{equation}
@@ -556,19 +560,21 @@ Let
   	 \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2
   \end{equation}
     First,
-  \begin{align}
+    
+ \begin{equation}
+  \begin{split}
     &S_{\mu_{n+1}} \nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\\
   &=-\int k(y,\cdot)\nabla\log(\pi(y))d\mu_{n+1}(y)+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))d\mu_n(x)\\
   &-\int k(\phi_{\gamma}(x),\cdot)\nabla\log({\pi(x)})d\mu_n(x)+\int k(x,\cdot)\nabla\log({\pi(x)})d\mu_n(x)\\
   &=I + II .
-\end{align}
+  \end{split}
+\end{equation}
   
 We bound each term separately.
   
-\begin{align}
-  &\sqN{I}\\
-  =&\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))d\mu(x)d\mu(x^{\prime})
-\end{align}
+\begin{equation}
+  \sqN{I}=\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))d\mu(x)d\mu(x^{\prime})
+\end{equation}
   since F is $L$-smooth, so
   
 \begin{equation}
@@ -590,14 +596,18 @@ We bound each term separately.
 	\end{split}
 \end{equation}
  
-  denote $F(x,x^{\prime}):=k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})$
+
   
-  We need to know the order of $F(x,x^{\prime})$, in the following we assume supremum norm of the second order derivatives of $k$ are finite, and we miss $\cO(|\phi_{\gamma}(x)-x|^2)$ and $\cO(|\phi_{\gamma}(x^{\prime})-x^{\prime}|^2)$ in the derivation.
+  We need to know the order of $|k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|$, in the following we assume supremum norm of the second order derivatives of $k$ are finite, and we miss $\cO(|\phi_{\gamma}(x)-x|^2)$ and $\cO(|\phi_{\gamma}(x^{\prime})-x^{\prime}|^2)$ in the derivation.
   
-  \begin{align}
-  |F(x,x^{\prime})|=&|\ps{\phi_{\gamma}(x^{\prime}-x^{\prime}),\nabla_2k(\phi_{\gamma}(x),x^{\prime})}+\ps{x^{\prime}-\phi_{\gamma}(x^{\prime})),\nabla_2k(x,x^{\prime})}|\\
-  \leq &|\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x)-x)(\phi_{\gamma}(x^{\prime})-x^{\prime})|\leq C\cdot \gamma^2\cdot \left \sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})}
-  \end{align}
+  \begin{equation}
+  	\begin{split}
+  		&\quad |k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|\\
+  		& \leq |\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)\rangle-\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(x,x^{\prime}\right)\rangle|\\
+  		&\leq |\langle\phi_{\gamma}(x)-x,\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})\rangle|\leq C \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
+  	\end{split}
+  \end{equation}
+
 
   Then, we know,
   \begin{equation}
@@ -606,28 +616,29 @@ We bound each term separately.
 
 So
 \begin{equation}
-	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2}\leq C\left(1+\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
+	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2}\leq C_1\left(1+\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
 \end{equation}
   
   similarly, we have 
   
   \begin{equation}
-  	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}\leq C\left(1+\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
+  	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}\leq C_2\left(1+\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
   \end{equation}
   
-  Finally,
-  \begin{align}
-    &\bE\left\|S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\pi})-S_{\mu_{n+1}}\nabla\log(\frac{\mu_{n+1}}{\sigma_{n+1}})\right\|_H^2\\
-    \leq &(1-p) \left\|S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\pi})-S_{\mu_{n}}\nabla\log(\frac{\mu_{n}}{\sigma_{n}})\right\|_H^2\\
-    &+ (C_1+C_2 \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3 (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2\\
-    &+C^{\prime}_1+C^{\prime}_2 \int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx+C^{\prime}_3 (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2) \gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_H^2
-  \end{align}
+  \begin{equation}
+  	\begin{split}
+  		& \quad \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2\\
+  		&\!\!\!\!\!=\int\int\left(k\left(\phi_{\gamma}\left(x\right),\phi_{\gamma}\left(x^{\prime}\right)\right)-k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)-k\left(x,\phi_{\gamma}\left(x^{\prime}\right)\right)+k\left(x,x^{\prime}\right)
+  		\right)\nabla\log \left(\frac{\sigma_{n}}{\sigma_{I^{\prime}}}\right)\left(x\right)\nabla\log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x^{\prime}\right) d\mu_n(x)d\mu_n(x^{\prime})\\
+  		&\!\!\!\!\!\leq C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
+  	\end{split}
+  	\end{equation}
   
   
   So if $\gamma$ is small enough, s.t 
   
   \begin{equation}
-    \frac{\gamma}{2p}\cdot(C_1+C_2\cdot \int|\nabla\log(\pi(x))|\mu_n(x)dx+C_3\cdot (\int|\nabla\log(\pi(x))|\mu_n(x)dx)^2+C^{\prime}_1+C^{\prime}_2\cdot \int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)+C^{\prime}_3\cdot (\int|\nabla\log(\sigma_{I^{\prime}}(x))|\mu_n(x)dx)^2)-(\frac{1}{2\gamma}-\frac{C}{2})\leq 0,
+   \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\! \frac{\gamma}{2 p}\left(C_1\left(1+\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2+C_2\left(1+\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2+C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\right)-(\frac{1}{2\gamma}-\frac{C}{2})\leq 0,
   \end{equation}
   Then
   \begin{equation}
