@@ -252,29 +252,30 @@ Although the Hessian of $\KL(.|\pi)$ is not bounded over the whole tangent space
 
 \subsection{Proof of \Cref{prop:descent}}\label{sec:proof_descent}
 
-We justify each step of the sketch of the proof of \Cref{sec:descent_lemma_Rd}. %For notation purposes we will omit the injection $\iota$ when taking the $L^2$ scalar product with an element of $\cH$.
+%We justify each step of the sketch of the proof of \Cref{sec:descent_lemma_Rd}. For notation purposes we will omit the injection $\iota$ when taking the $L^2$ scalar product with an element of $\cH$.
 
-Consider $n \geq 0$ fixed and $\gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} }$. Denote $g = P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right)$ and  for every $t \in [0,\gamma]$,  $\phi_t = (I - t  g)$. Denote $\rho_t = \phi_{t\#} \mu_n$. Then, $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
+Let $g^{\prime}\in \cH$, $C = \left\|g^{\prime}\right\|_{\cH}^2$ and denote $g = \iota g^{\prime} \in L^2$,  for every $t \in [0,\gamma], \gamma\leq \frac{\alpha-1}{\alpha B C^{\frac{1}{2}}}$,  $\phi_t = (I - t  g)$. Denote $\rho_t = \phi_{t\#} \mu_n$. Then, $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
+%Consider $n \geq 0$ fixed and $\gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} }$. Denote $g = P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right)$ and 
 
 
 
 \begin{lemma}\label{lem:inequalities}
 	Suppose \Cref{ass:k_bounded} holds, i.e. the kernel and its gradient are bounded by some positive constant $B$. Then for any $x\in \X$:
 	\begin{align}
-&	\|g(x)\| \leq B I_{Stein}(\mu_n|\pi)^{\frac{1}{2}}\\
-&	\Vert J g(x)\Vert_{HS}\leq B I_{Stein}(\mu_n|\pi)^{\frac{1}{2}} 
+&	\|g(x)\| \leq B C^{\frac{1}{2}}\\
+&	\Vert J g(x)\Vert_{HS}\leq B C^{\frac{1}{2}} 
 	\end{align}
 	
 \end{lemma}
 \begin{proof}
-	This is a consequence of the reproducing property and Cauchy-Schwarz inequality in the RKHS space. Let $g'=S_{\mu_n}\nabla \log(\frac{\mu_n}{\pi})$, hence for any $x\in \X$, $g(x)=g'(x)$ and:
+	This is a consequence of the reproducing property and Cauchy-Schwarz inequality in the RKHS space. We know for any $x\in \X$, $g(x)=g'(x)$ and:
 	\begin{equation*}
-	\|g(x)\|^2=\sum_{i=1}^d \ps{k(x,.),g'_i}^2_{\cH_0}\le \|k(x,.)\|_{\cH_0}^2 \|g'\|_{\cH}^2\le B^2 I_{Stein}(\mu_n|\pi).
+	\|g(x)\|^2=\sum_{i=1}^d \ps{k(x,.),g'_i}^2_{\cH_0}\le \|k(x,.)\|_{\cH_0}^2 \|g'\|_{\cH}^2\le B^2 C.
 	\end{equation*}
 	Similarly:
 	\begin{align*}
 	\|Jg(x)\|_{HS}^2&=\sum_{i,j=1}^d \left|\frac{\partial g_i(x)}{\partial x_j} \right|^2=\sum_{i,j=1}^d \ps{\partial_{x_j}k(x,.), g'_i}_{\cH_0}\le \sum_{i,j=1}^d \| \partial_{x_j}k(x,.)\|^2_{\cH_0} \|g'_i\|_{\cH_0}^2\\
-	&=\| \nabla k(x,.)\|^2_{\cH}\|g'\|^2_{\cH}\le B^2 I_{Stein}(\mu_n|\pi).
+	&=\| \nabla k(x,.)\|^2_{\cH}\|g'\|^2_{\cH}\le B^2 C.
 	\end{align*}
 \end{proof}
 
@@ -282,11 +283,11 @@ Consider $n \geq 0$ fixed and $\gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2
 
 
 \begin{lemma}\label{lem:diffeo}
-	Suppose that~\Cref{ass:k_bounded} and~\Cref{ass:bounded_I_Stein} hold. Then, for any $x\in \X$, $\|t Jg(x)\|_{op} \leq t B\sqrt{C}$ and for every $t < \frac{1}{B\sqrt{C}}$, $\phi_t$ is a diffeomorphism. Moreover, $\|(J\phi_t(x))^{-1}\|_{op} \leq \alpha$. 
+	Suppose that~\Cref{ass:k_bounded} hold. Then, for any $x\in \X$, $\|t Jg(x)\|_{op} \leq t B\sqrt{C}$ and for every $t < \frac{1}{B\sqrt{C}}$, $\phi_t$ is a diffeomorphism. Moreover, $\|(J\phi_t(x))^{-1}\|_{op} \leq \alpha$. 
 	%$\phi_t = I-t\gamma P_{\mu_n}\nabla \log(\frac{\mu}{\pi})(x)$ for $t\in [0,1]$. Fix $\alpha >1$,  Then for $\gamma< \frac{\alpha-1}{\alpha BC^{\frac{1}{2}}} $, $\phi_t$ is a diffeomorphism.
 \end{lemma}
 \begin{proof}
-	First, by \Cref{lem:inequalities} and \Cref{ass:bounded_I_Stein} we have $\|J g(x)\|_{op} \leq \|J g(x)\|_{HS} \leq B\sqrt{C}$.
+	First, by \Cref{lem:inequalities}  we have $\|J g(x)\|_{op} \leq \|J g(x)\|_{HS} \leq B\sqrt{C}$.
 	If $t < \frac{1}{B\sqrt{C}}$, then $\|t Jg(x)\|_{op} < 1$. Therefore, $J(\phi_t)(x) = I - t Jg(x)$ is regular for every $x$ and $\phi_t$ is a diffeomorphism. Moreover, 
 	\begin{equation}
 		\|(J\phi_t(x))^{-1}\|_{op} \leq \sum_{k=0}^\infty \|t Jg(x)\|_{op}^k \leq \sum_{k=0}^\infty \|t Jg(x)\|_{HS}^k \leq \sum_{k=0}^\infty (t B \sqrt{C})^k \leq \alpha,
@@ -309,7 +310,7 @@ To compute $\varphi'(t)$ and $\varphi''(t)$ we have two options. Either we check
 
 \begin{lemma} Denote $w_t(x) = -g(\phi_t^{-1}(x))$. Then,
 	\begin{equation*}
-		\varphi'(0)=\ps{\nabla_{W_2} \KL(\rho_0|\pi), w_0}_{L^2(\mu_n)} = -I_{Stein}(\mu_n|\pi),
+		\varphi'(0)=\ps{\nabla_{W_2} \KL(\rho_0|\pi), w_0}_{L^2(\mu_n)} = -\langle S_{\mu_n}\nabla \log(\frac{\mu_n}{\pi}),g^{\prime}\rangle_{\cH},
 	\end{equation*}
 	and,
 	\begin{equation*}
@@ -338,7 +339,7 @@ We know by \Cref{lem:diffeo} that $\phi_t$ is a diffeomorphism, therefore, $\rho
 	\begin{align*}
 		\varphi'(0) &= -\int \left[-div( g )(x)- \ps{\nabla \log \pi(x),g(x)}\right]\mu_n(x)dx\\
 	&= -\int\ps{ \nabla \log\left(\frac{\mu_n}{\pi}\right)(x), g(x)}\mu_n(x)dx
-	= -I_{Stein}(\mu_n|\pi).
+	= -\langle S_{\mu_n}\nabla \log(\frac{\mu_n}{\pi}),g^{\prime}\rangle_{\cH}.
 	\end{align*}
 	Now, we prove the second statement. First, 
 	\begin{align*}
@@ -377,7 +378,7 @@ Denote
 % \end{equation}
 We bound $\psi_1$ and $\psi_2$ separately. First, since the potential $V$ is $M$-smooth, 
 \begin{align*}
-	\psi_2(t) \leq M\int \|g(x)\|^2 \mu_n(x)dx \leq M B^2 I_{Stein}(\mu_n|\pi),
+	\psi_2(t) \leq M\int \|g(x)\|^2 \mu_n(x)dx \leq M B^2 C,
 \end{align*}
 by using \Cref{lem:inequalities}.
 %$\ps{v,H_V v} \leq M \|v\|^2$. Therefore, 
@@ -394,7 +395,7 @@ by using \Cref{lem:inequalities}.
 % therefore $E_{x_t \sim \mu_t} \left(\|J v_t(x_t)\|_{HS}^2\right) = E_{x_0 \sim \rho_0} \left(\|Jg(x_0) J(\phi_t)^{-1}(x_0)\|_{HS}^2\right)$. Sufficiently, we shall bound the term $\|J(g)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. First,
 Now, we bound $\psi_1(t)$ using \Cref{lem:diffeo} and \ref{lem:inequalities}:
 \begin{equation}
-    \|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2 \leq \|Jg(x)\|_{HS}^2 \| (J\phi_t(x))^{-1}\|_{op}^2 \leq \alpha^2 B^2 I_{Stein}(\mu_n|\pi).
+    \|Jg(x)(J\phi_t(x))^{-1}\|_{HS}^2 \leq \|Jg(x)\|_{HS}^2 \| (J\phi_t(x))^{-1}\|_{op}^2 \leq \alpha^2 B^2 C.
 \end{equation}
 
 
@@ -410,7 +411,7 @@ Now, we bound $\psi_1(t)$ using \Cref{lem:diffeo} and \ref{lem:inequalities}:
 % \begin{equation}
 %     \|Jg(x) J(\phi_t)^{-1}(x)\|_{HS}^2 \leq \alpha^2 B^2 I_{Stein}(\mu_n|\pi).
 % \end{equation}
-Finally, $\varphi''(t) \leq (\alpha^2 + M)B^2 I_{Stein}(\mu_n|\pi)$. Plugging into~\eqref{eq:Taylor-integral-remainder-appendix} gives the result.
+Finally, $\varphi''(t) \leq (\alpha^2 + M)B^2 C$. Plugging into~\eqref{eq:Taylor-integral-remainder-appendix} gives the result.
 
 
 \begin{lemma}\label{lem:bounded_stein}
@@ -448,26 +449,33 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 \begin{equation}
 		F_{n}=\frac{1}{|I_{n}|} \sum_{i \in I_n} f_{i},  \qquad \sigma_{n} \propto e^{-F_{n}}
   \end{equation}
+
+	\begin{equation}
+		g_n^{\prime}\in \cH, \qquad g_n = \iota g \in L^2
+	\end{equation}
     \begin{equation}
-		\phi_{t}(x)=\left(I-t P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n}
+		\phi_{t}(x)=\left(I-t g_n\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n}
   \end{equation}
     
     \begin{equation}   
 	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t}
 \end{equation}
-  
+  From Lemma 4.  when $t \in [0,\gamma], \gamma\leq \frac{\alpha-1}{\alpha B \left\|g_n^{\prime}\right\|_{\cH}}$, there is
+  \adil{
+  	\begin{equation}
+  		\varphi(\gamma)\leq \varphi(0)-\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, g_n^{\prime} \right\rangle_{\cH} +
+  		\frac{(\alpha^2+M) \gamma^2}{2} \left\langle g_n^{\prime},g_n^{\prime} \right\rangle_{\cH}
+  \end{equation}}
 	
   \section{PAGE}
 
   We define the update rule as:
     
   \begin{equation}
-  	\resizebox{.9\hsize}{!}{$
-  P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{n+1}}\right)=\begin{cases}
+  g_{n+1}=\begin{cases}
         P_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
-        P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) & \qquad {1-p}, 
-        \end{cases}$
-    }
+        g_n+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
+        \end{cases}   
       \end{equation}
 \adil{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
      
@@ -488,41 +496,26 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 
         	
 \section{Main Proof}
-\adil{
-\begin{equation}
-		\varphi(\gamma)\leq \varphi(0)+\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, S_{\mu_n} \nabla\log\left(\frac{\mu_n}{\sigma_n}\right) \right\rangle_H +
-		\frac{C \gamma^2}{2} \left\langle S_{\mu_n} \nabla \log \frac{\mu_n}{\sigma_n}, S_{\mu_n} \nabla \log\left(\frac{			\mu_n}{\sigma_n}\right) \right\rangle_H
-\end{equation}}
-	then by similar calculation as in PAGE, we have,
+
+	By similar calculation as in PAGE, we have,
 	
 	
 \begin{equation}
-	\begin{split} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{H}^{2}-\left(\frac{1}{2 \gamma}-\frac{C}{2}\right) \cdot \gamma^{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\right\|_{H}^{2}
+	\begin{split} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{\cH}^{2}-\left(\frac{1}{2 \gamma}-\frac{\alpha^2+M}{2}\right)  \gamma^{2}\left\|g^{\prime}_n\right\|_{\cH}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g^{\prime}_n\right\|_{\cH}^{2}
 	\end{split}
 \end{equation}
 
-Let   
-\begin{equation}
-   G_{n} := 
-  \textbf{E} 
-\left[ 
-  \left\| 
-  S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) -
- S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right) 
-  \right\|_{H}^{2}
-  \right] 
-\end{equation}
-  
-      Then a direct calculation now reveals that
+here $\gamma\leq \frac{\alpha-1}{\alpha B \left\|g^{\prime}_n\right\|_{\cH}}$.
       
+      Then a direct calculation now reveals that
       
       \begin{equation}
       	\begin{split}
-      		G_{n+1} &= (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+ \\ &\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) 
-      		-S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) \left.\left.\right\|_{H}^{2}\right]\\
-      		& = (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)\left.\left.\right\|_{H}^{2}\right] \\
-      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)+ \\ &\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right) 
-      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{H}^{2}\right]
+      		 &\quad \text{E}\left[\left\|g_{n+1}^{\prime}-S_{\mu_{n+1}}\nabla \log\left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{\cH}^2\right] \\
+      		 &= (1-p) \text{E}\left[\left\|\right.\right. g_{n+1}^{\prime} + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\left.\left.\right\|_{\cH}^2\right] \\ 
+      		& = (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
+      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)+ \\ & 
+      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{\cH}^{2}\right]
       	\end{split}
       \end{equation}
 
@@ -534,10 +527,10 @@ Let
     
     If $\gamma_n \cO(\bE \Phi_n) \leq C$, then
     \begin{equation}
-      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{\gamma_n}{2}\bE\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)\right\|_H^2,
+      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{1}{2}\bE\gamma_n\left\|g_n^{\prime}\right\|_{\cH}^2,
     \end{equation}
   
-  where $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma_n}{2p}\left\|S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\pi}\right)-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_H^2$. (In the proof,we use $\gamma$ to replace $\gamma_n$ for simplicity.)
+  where $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma_n}{2p}\left\|g_n^{\prime}-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_{\cH}^2$. (In the proof,we use $\gamma$ instead of $\gamma_n$ for simplicity.)
     
     
   \end{theorem}
@@ -547,15 +540,12 @@ Let
     \begin{equation}
       \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2},
     \end{equation}
-    
+    and
       \begin{equation}
     \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
       \end{equation}
   
-  and 
-  \begin{equation}
-  	 \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2
-  \end{equation}
+  
     First,
     
  \begin{equation}
@@ -577,13 +567,13 @@ We bound each term separately.
 \begin{equation}
   |\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|
 \leq L |x-\phi_{\gamma}(x)|
-= L\gamma|P_{\mu_{\gamma}}\nabla\log(\frac{\mu_n(x)}{\sigma_n(x)})|
-\leq C \gamma\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})\right\|_{H},
+	= L\gamma|g_n\left(x\right)|
+\leq L B \gamma\left\|g^{\prime}_n\right\|_{\cH},
 \end{equation}
-  then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded, we derive
+  then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded by C, we derive
   
   \begin{equation}
-  \sqN{I}\leq C \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_{H}^{2}.
+  \sqN{I}\leq C L^2 B^2\gamma^2 \left\|g^{\prime}_n\right\|_{\cH}^{2}.
   \end{equation}
   Now,
 \begin{equation}
@@ -595,53 +585,62 @@ We bound each term separately.
  
 
   
-  We need to know the order of $|k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|$, in the following we assume supremum norm of the second order derivatives of $k$ are finite, and we miss $\cO(|\phi_{\gamma}(x)-x|^2)$ and $\cO(|\phi_{\gamma}(x^{\prime})-x^{\prime}|^2)$ in the derivation.
+  We need to know the order of $|k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|$, in the following we assume supremum norm of the second order derivatives of $k$ are bounded by C, then by mean value theorem, we have
   
   \begin{equation}
   	\begin{split}
   		&\quad |k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|\\
-  		& \leq |\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)\rangle-\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(x,x^{\prime}\right)\rangle|\\
-  		&\leq |\langle\phi_{\gamma}(x)-x,\nabla_{1,2}^2k(x,x^{\prime})(\phi_{\gamma}(x^{\prime})-x^{\prime})\rangle|\leq C \gamma^2 \left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
+  		& \leq |\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(\phi_{\gamma}\left(x\right),\phi_{\theta_1}(x^{\prime})\right)\rangle-\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(x,\phi_{\theta_2}(x^{\prime})\right)\rangle|\\
+  		&\leq
+		C|\phi_{\gamma}(x)-x|(|\phi_{\gamma}(x)-x|+|\phi_{\theta_1}(x^{\prime})-\phi_{\theta_2}(x^{\prime})|) \\
+		& \leq 2C B^2 \gamma^2 \left\|g_n^{\prime}\right\|_{\cH}^2
   	\end{split}
   \end{equation}
 
 
   Then, we know,
   \begin{equation}
-  \sqN{II} \leq C\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})}
+  \sqN{II} \leq 2CB^2\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2
   \end{equation}
 
 So
 \begin{equation}
-	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2}\leq C_1\left(1+\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
+	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2}\leq CB^2\left(L^2+\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\right)\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2 ,
 \end{equation}
   
   similarly, we have 
   
   \begin{equation}
-  	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}\leq C_2\left(1+\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\gamma^2\sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_{n}})} ,
+  	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}\leq CB^2\left(L^2+\left(\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\right)\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2 ,
   \end{equation}
   
-  \begin{equation}
-  	\begin{split}
-  		& \quad \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2\\
-  		&\!\!\!\!\!=\int\int\left(k\left(\phi_{\gamma}\left(x\right),\phi_{\gamma}\left(x^{\prime}\right)\right)-k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)-k\left(x,\phi_{\gamma}\left(x^{\prime}\right)\right)+k\left(x,x^{\prime}\right)
-  		\right)\nabla\log \left(\frac{\sigma_{n}}{\sigma_{I^{\prime}}}\right)\left(x\right)\nabla\log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x^{\prime}\right) d\mu_n(x)d\mu_n(x^{\prime})\\
-  		&\!\!\!\!\!\leq C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
-  	\end{split}
-  	\end{equation}
+  %\begin{equation}
+  %	\begin{split}
+  	%	& \quad \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2\\
+  	%	&\!\!\!\!\!=\int\int\left(k\left(\phi_{\gamma}\left(x\right),\phi_{\gamma}\left(x^{\prime}\right)\right)-k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)-k\left(x,\phi_{\gamma}\left(x^{\prime}\right)\right)+k\left(x,x^{\prime}\right)
+  	%	\right)\nabla\log \left(\frac{\sigma_{n}}{\sigma_{I^{\prime}}}\right)\left(x\right)\nabla\log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x^{\prime}\right) d\mu_n(x)d\mu_n(x^{\prime})\\
+  	%	&\!\!\!\!\!\leq C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
+  	%\end{split}
+  	%\end{equation}
   
   
   So if $\gamma$ is small enough, s.t 
   
   \begin{equation}
-   \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\! \frac{\gamma}{2 p}\left(C_1\left(1+\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2+C_2\left(1+\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2+C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\right)-(\frac{1}{2\gamma}-\frac{C}{2})\leq 0,
-  \end{equation}
+  	\begin{split}
+  		&\quad\frac{\gamma}{2p}\left(CB^2\left(L^2+\left(\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\right)+CB^2\left(L^2+\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\right)\right)\\
+  		& -\left(\frac{1}{2\gamma}-\frac{\alpha^2+M}{2}\right)\leq 0,
+  	\end{split}
+    \end{equation}
+ by choosing \begin{equation}
+ 	\gamma\leq \frac{1}{\alpha^2+M+B\left(2L+\int|\nabla\log\left(\pi\right)(x)|+|\nabla\log\left(\sigma_{I^{\prime}}\right)(x)|d\mu_n(x)\right)\sqrt{\frac{C}{p}}},
+ \end{equation} the last condition holds. 
   Then
   \begin{equation}
-    \bE(\Phi_{n+1}) \leq \bE(\Phi_n)-\frac{\gamma}{2}\bE \sqN{S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})},
+    \bE(\Phi_{n+1}) \leq \bE(\Phi_n)-\frac{1}{2}\bE (\gamma \left\|g_n^{\prime}\right\|_{\cH}^2)
   \end{equation}
   \end{proof}
+
 
 \begin{lemma}
 	If there existing a constant $a>0$ and a point $x_0$ such that $\int e^{ad(x_0,x)^2}d\pi(x)<+\infty$, then we have the following Talagrand inequality
