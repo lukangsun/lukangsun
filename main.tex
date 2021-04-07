@@ -740,7 +740,17 @@ So
 \end{lemma}
 
 \begin{proof}
-	if we have more than $\frac{1}{25}$ chance such that $\gamma_n\leq \frac{1}{5\sqrt{C_1+C_2}} $, then $\text{E}(\frac{1}{\gamma_n^2})>\frac{1}{25}25(C_1+C_2)=C_1+C_2$, which contradicts with (48).
+	if we have more than $\frac{1}{25}$ chance such that $\gamma_n\leq \frac{1}{5\sqrt{C_1+C_2}} $, then $\text{E}(\frac{1}{\gamma_n^2})>\frac{1}{25}25(C_1+C_2)=C_1+C_2$, which contradicts  (48).
+\end{proof}
+
+
+\begin{lemma}
+	The expectation of the number $\#$of $=\{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}$ is at least $0.96n$ and the posibility such that this number is bigger than $0.5n$ is at least 0.92.
+\end{lemma}
+
+\begin{proof}
+	The first argument is easy. If the chance that this number less than $0.5n$ is bigger than 0.08,
+	then $\text{E}\left(\#\right)<0.08\times 0.5n+n(1-0.08)=0.96n$ which contradicts the first argument.
 \end{proof}
 
 We define $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=1$, if $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, else $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=0$.
@@ -753,16 +763,41 @@ So we have
 \end{equation}
 We also know that 
 \begin{equation}
-	\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq I^2_{Stein}(\mu_i|\pi),
+	\min_{j\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}}I^2_{Stein}(\mu_j|\pi)\leq I^2_{Stein}(\mu_i|\pi),
 \end{equation}
-for every $i\leq n$, then from lemma 9., we know
+for every $i\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}$, then we know
 \begin{equation}
-	\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq \frac{1}{0.96}\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
+	\begin{split}
+		&\quad\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\\
+		&\leq\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}}I^2_{Stein}(\mu_j|\pi)\right)\\
+		&\leq \text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
+	\end{split}
 \end{equation}
 combine (49) and (51), we derive that
 \begin{equation}
-	\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq\frac{10\sqrt{C_1+C_2}\Phi_0}{0.96 n}.
+	\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq 10\sqrt{C_1+C_2}\Phi_0.
 \end{equation}
+
+so 
+\begin{equation}
+	\begin{split}
+	&\quad \text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\right)\leq \frac{10\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}
+	\end{split}
+\end{equation}
+\begin{lemma}
+	We have more than 0.9108 chance such that $\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$.
+\end{lemma}
+\begin{proof}
+	If not , then we have more than 0.01 chance such that $\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\cap \mathcal{F}\right)> \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$, then  
+	\begin{equation}
+		\begin{split}
+			\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\right)&>0.01\times \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}\\
+			&= \frac{10\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}
+		\end{split}
+	\end{equation}
+which contradicts (53). So we have more than 0.99 chance such that 
+$\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\cap \mathcal{F}\right)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$, so we have more than $0.99\times 0.92=0.9108$ chance such that  $\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$
+\end{proof}
 
 
 
