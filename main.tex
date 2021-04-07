@@ -505,7 +505,10 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 	\end{split}
 \end{equation}
 
-here $\gamma\leq \frac{\alpha-1}{\alpha B \left\|g^{\prime}_n\right\|_{\cH}}$.
+here 
+\begin{equation}
+	\gamma\leq \frac{\alpha-1}{\alpha B \left\|g^{\prime}_n\right\|_{\cH}}.
+\end{equation}
       
       Then a direct calculation now reveals that
       
@@ -633,19 +636,27 @@ So
   	\end{split}
     \end{equation}
  by choosing \begin{equation}
- 	\gamma\leq \frac{1}{\alpha^2+M+B\left(2L+\int|\nabla\log\left(\pi\right)(x)|+|\nabla\log\left(\sigma_{I^{\prime}}\right)(x)|d\mu_n(x)\right)\sqrt{\frac{C}{p}}},
- \end{equation} the last condition holds. 
+ 	\gamma^2\leq \frac{\frac{\alpha^2+M}{2}}{1+\frac{2CB^2L^2+CB^2\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)}{2p}},
+ \end{equation} then last condition holds. 
+ 
   Then
   \begin{equation}
     \bE(\Phi_{n+1}) \leq \bE(\Phi_n)-\frac{1}{2}\bE (\gamma \left\|g_n^{\prime}\right\|_{\cH}^2)
   \end{equation}
   \end{proof}
-
+If we let
+\begin{equation}
+	\bar{\gamma_n}^2=\frac{(\alpha-1)^2}{\alpha^2B^2\left\|g_n^{\prime}\right\|_{\cH}^2},
+\end{equation}  
+\begin{equation}
+	\tilde{\gamma_n}^2= \frac{\frac{\alpha^2+M}{2}}{1+\frac{2CB^2L^2+CB^2\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)}{2p}},
+\end{equation}
+then $\gamma_n=\min\left(\bar{\gamma}_n,\tilde{\gamma_n}\right)$ satisfies (19) and (34). Now we need to bound the denominators in (36) and (37).
 
 \begin{lemma}
 	If there existing a constant $a>0$ and a point $x_0$ such that $\int e^{ad(x_0,x)^2}d\pi(x)<+\infty$, then we have the following Talagrand inequality
 	\begin{equation}
-		W_1\left(\mu,\pi\right)\leq C\sqrt{KL\left(\mu|\pi\right)}
+		W_1\left(\mu,\pi\right)\leq \lambda\sqrt{KL\left(\mu|\pi\right)}
 	\end{equation}
 \end{lemma}
   
@@ -654,38 +665,139 @@ So
 \end{proof}
 
 \begin{lemma}
-		if we have $\Phi_n\leq C_4$, then we have 
-		\begin{equation}
-			\int|\nabla\log(\pi)(x)|d\mu_n(x)+\int|\nabla\log(\sigma_n)(x)|d\mu_n(x)+\int|\nabla\log(\frac{\sigma_n}{\sigma_{I^{\prime}}})(x)|d\mu_n(x)\leq C_5
-		\end{equation}
+	\text{E}$\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)$ and \text{E}$\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)$ are finite.
 \end{lemma}
+
 \begin{proof}
-    (We ignore the subscripts of the constant.) Since $W_1\left(\mu_n,\pi\right)\leq C\sqrt{KL\left(\mu_n|\pi\right)}\leq C\Phi_n\leq C$, by L-smoothness of $f_i$, we have 
-    \begin{equation}
-    	\begin{split}
-    	&\quad \int|\nabla\log(\pi)(x)|d\mu_n(x)+\int|\nabla\log(\sigma_n)(x)|d\mu_n(x)+\int|\nabla\log(\frac{\sigma_n}{\sigma_{I^{\prime}}})(x)|d\mu_n(x)\\
-    	&\leq C(1+\int |x|d\mu_n(x))=C(1+W_1\left(\mu_n,\delta_0\right))\leq C(1+W_1\left(\mu_n,\pi\right)+W_1\left(\pi,\delta\right)\leq C.
-    	\end{split}
-    \end{equation}
+	\begin{equation}
+		\begin{split}
+			\text{E}\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)& \leq \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}\right)^2\\
+			&\leq \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\mu_n)\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\pi)\right\|_{\cH}\right)^2\\
+			&\leq 3 \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}^2\right)+3 \text{E}\left(\left\|S_{\mu_n}\nabla\log(\mu_n)\right\|_{\cH}^2\right)+3 \text{E}\left(\left\|S_{\mu_n}\nabla\log(\pi)\right\|_{\cH}^2\right).
+		\end{split}
+	\end{equation}
+
+We know the first term on the right hand side is bounded by $3 \Phi_0$, the second term is bounded
+ by $3C$ since the derivative of $k$ is bounded by $C$, the third term is bounded by
+  $6C\left(|\nabla\log(\pi(0))|\right)^2+6CM\text{E}\left(\int|x|d\mu_n(x)\right)^2$ since the $M$-smoothness of $\log(\pi(x))$.
+  
+  Similarly, we have 
+  \begin{equation}
+  	\begin{split}
+  		&\quad\text{E}\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right) \\
+  		&\leq 2\left(|\nabla\log(\pi(0))|\right)^2+2\max_{I^{\prime}}\left(|\nabla\log(\sigma_{I^{\prime}}(0))|\right)^2+4M\text{E}\left(\int|x|d\mu_n(x)\right)^2
+  	\end{split}
+  \end{equation}
+  From Talagrand inequality, we have 
+  \begin{equation}
+  	\text{E}\left(W_1(\mu_n,\delta_0)-W_1(\delta_0,\pi)\right)^2\leq \text{E}\left(W_1^2(\mu_n,\pi)\right)\leq \lambda\text{E}\left(KL(\mu_n|\pi)\right)\leq \lambda \Phi_0
+  \end{equation}
+so by Young inequality,
+\begin{equation}
+	\begin{split}
+	\text{E}\left(W_1^2(\mu_n,\delta_0)\right)&\leq \lambda \Phi_0-W_1^2(\delta_0,\pi)+2W_1(\delta_0,\pi)\text{E}\left(W_1(\mu_n,\delta_0)\right)\\
+	& \leq \lambda \Phi_0-W_1^2(\delta_0,\pi)+8W_1^2(\delta_0,\pi)+\frac{(\text{E}(W_1(\mu_n,\delta_0)))^2}{4}\\
+	& \leq \lambda \Phi_0+7W_1^2(\delta_0,\pi)+\frac{\text{E}(W_1^2(\mu_n,\delta_0))}{4}
+	\end{split}
+\end{equation}
+Finally, we have
+
+\begin{equation}
+	\text{E}\left(\int|x|d\mu_n(x)\right)^2=\text{E}(W_1^2(\mu_n,\delta_0))\leq \frac{4}{3}\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right).
+\end{equation}
+In the end,
+\begin{equation}
+	\text{E}\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)\leq 3\Phi_0+3C+6C(|\nabla\log(\pi(0))|)^2+8CM\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right),
+\end{equation}
+\begin{equation}
+	\begin{split}
+	&\quad\text{E}\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)\\
+	&\leq 2\left(|\nabla\log(\pi(0))|\right)^2+2\max_{I^{\prime}}\left(|\nabla\log(\sigma_{I^{\prime}}(0))|\right)^2+\frac{16}{3}M\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right).
+	\end{split}
+\end{equation}
+ 
 \end{proof}
+
+From the definition of $\bar{\gamma_n}$, $\tilde{\gamma_n}$ and Lemma 8., we now have
+\begin{equation}
+	\text{E}\left(\frac{1}{\bar{\gamma_n^2}}\right)\leq C_1,
+\end{equation}
+
+
+\begin{equation}
+	\text{E}\left(\frac{1}{\tilde{\gamma_n^2}}\right)\leq C_2,
+\end{equation}
+
+So 
+\begin{equation}
+	\text{E}\left(\frac{1}{\gamma_n^2}\right)\leq \text{E}\left(\frac{1}{\tilde{\gamma_n^2}}\right)+\text{E}\left(\frac{1}{\bar{\gamma_n^2}}\right)\leq C_1+C_2.
+\end{equation}
+(We can calculate the exact form of $C_1,C_2$, since they are too complicated, we ignore here.)
 
 \begin{lemma}
-	If $\Phi\leq A$, then we can choose $\gamma_n\geq \gamma_0$, where $\gamma_0$ is a constant depends on $A$, such that,$\Phi_{n+1}\leq A$(here $A$ is the same with the former $A$. )
-\end{lemma}
-\begin{proof}
-		from the proof of main theorem and the last lemma, we can choose $\gamma_n\geq\gamma_0$, such that $\Phi_{n+1}\leq \Phi_n-\frac{\gamma_n}{2}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2\leq A.$
-\end{proof}
-
-\begin{lemma}
-		if we set $A=\Phi_0$, then we can set $\gamma_n=\gamma_0$, for all $n$, such that
-		\begin{equation}
-			\Phi_{n+1}\leq\Phi_n-\frac{\gamma_0}{2}\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
-		\end{equation}
-		
+		We have 0.96 chance such that $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, in other words,
+		$\text{E}(\gamma_n)\geq \frac{0.96}{5\sqrt{C_1+C_2}}.$
 \end{lemma}
 
 \begin{proof}
-	using the last lemma, it's obvious.
+	
 \end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
