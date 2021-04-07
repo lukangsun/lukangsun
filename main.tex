@@ -735,15 +735,34 @@ So
 (We can calculate the exact form of $C_1,C_2$, since they are too complicated, we ignore here.)
 
 \begin{lemma}
-		We have 0.96 chance such that $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, in other words,
+		We have no less than 0.96 chance such that $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, in other words,
 		$\text{E}(\gamma_n)\geq \frac{0.96}{5\sqrt{C_1+C_2}}.$
 \end{lemma}
 
 \begin{proof}
-	
+	if we have more than $\frac{1}{25}$ chance such that $\gamma_n\leq \frac{1}{5\sqrt{C_1+C_2}} $, then $\text{E}(\frac{1}{\gamma_n^2})>\frac{1}{25}25(C_1+C_2)=C_1+C_2$, which contradicts with (48).
 \end{proof}
 
-
+We define $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=1$, if $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, else $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=0$.
+So we have 
+\begin{equation}
+	\begin{split}
+	\Phi_0\geq\sum_{i=1}^n\text{E}\left(\frac{\gamma_i}{2}I^2_{Stein}(\mu_i|\pi)\right)&\geq \sum_{i=1}^n\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}\frac{\gamma_i}{2}I^2_{Stein}(\mu_i|\pi)\right)\\
+	& \geq\frac{1}{10\sqrt{C_1+C_2}}\sum_{i=1}^n\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
+	\end{split}
+\end{equation}
+We also know that 
+\begin{equation}
+	\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq I^2_{Stein}(\mu_i|\pi),
+\end{equation}
+for every $i\leq n$, then from lemma 9., we know
+\begin{equation}
+	\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq \frac{1}{0.96}\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
+\end{equation}
+combine (49) and (51), we derive that
+\begin{equation}
+	\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq\frac{10\sqrt{C_1+C_2}\Phi_0}{0.96 n}.
+\end{equation}
 
 
 
