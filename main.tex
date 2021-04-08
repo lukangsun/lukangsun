@@ -461,7 +461,7 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
 	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t}
 \end{equation}
   From Lemma 4.  when $t \in [0,\gamma], \gamma\leq \frac{\alpha-1}{\alpha B \left\|g_n^{\prime}\right\|_{\cH}}$, there is
-  \adil{
+  {
   	\begin{equation}
   		\varphi(\gamma)\leq \varphi(0)-\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, g_n^{\prime} \right\rangle_{\cH} +
   		\frac{(\alpha^2+M) \gamma^2}{2} \left\langle g_n^{\prime},g_n^{\prime} \right\rangle_{\cH}
@@ -477,7 +477,7 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
         g_n+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
         \end{cases}   
       \end{equation}
-\adil{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
+{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
      
 
      This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed,
@@ -491,7 +491,12 @@ F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
      		&\rightarrow P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)
      	\end{split}
      \end{equation}
-     
+     So by induction,
+     \begin{equation}
+     	g_n(x)=P_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x)-\sum_{i=1}^{n-1}\int\left(
+	   	k(\phi_{\gamma}^{(i)}(x^{\prime}),x)-k(x^{\prime},x)\right)\nabla\log(\frac{\sigma_i}{\sigma_{I^{\prime}}^{i}})(x^{\prime})d\mu_i(x^{\prime}),
+     \end{equation}
+ where $\nabla\log(\sigma_n)$ follows the same update rule as in PAGE, $\phi_{t}^{(i)}(x)=\left(I-t g_i\right) (x)$.\adil{(so you see (16) doesn't increase the calculation of gradient, but comparing with mean field limit of traditional PAGE, it increases the calculation of sum, I think this is as fast as the mean field limit of traditional PAGE. )}
 
 
         	
