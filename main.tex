@@ -113,7 +113,10 @@
 
 \newcommand{\dom}{{dom}} 
 \newcommand{\KL}{\mathop{\mathrm{KL}}\nolimits}
+\newcommand{\HS}{\mathop{\mathrm{HS}}\nolimits}
+\newcommand{\op}{\mathop{\mathrm{op}}\nolimits}
 \newcommand{\tr}{\mathop{\mathrm{tr}}\nolimits}
+\newcommand{\st}{\mathop{\mathrm{Stein}}\nolimits}
 \newcommand{\ps}[1]{\langle #1 \rangle}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -437,7 +440,216 @@ Finally, $\varphi''(t) \leq (\alpha^2 + M)B^2 C$. Plugging into~\eqref{eq:Taylor
 
 
 
+
+
+
 \appendix
+
+
+\section{Proofs}
+
+In this section we prove our main results (Theorems~\ref{th:svgd} and~\ref{th:vrsgsgd}).
+
+\subsection{Notations}
+
+%%%%NOTATIONS TO DEFINE IN APPENDIX OR MAIN PAPER:
+%\cF
+%Definition in appendix vs deifnition in main paper
+%Define: I, \X, \cH, \cF, P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right) = h_{\mu_n} tjrs bien defini, Wass grad under the metric of H cf my personal view of SVGD.
+%Jacobian, H_0, HS, op, several inner products, Wasserstein gradients,/Hessian
+%Feature map \Phi(x)
+%W_1, W_2, Dirac
+
+\subsection{Fundamental inequality}
+
+We start by stating a fundamental inequality satisfied by $\cF$ for any update of the form
+\begin{equation}
+    \mu_{n+1} = \left(I - \gamma g\right) \# \mu_n,
+\end{equation}
+where $g \in \cH$.
+\begin{proposition}
+\label{prop:TL}
+Let Assumptions~\ref{ass:k_bounded} and~\ref{ass:V_Lipschitz} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
+    \begin{equation}
+    \label{eq:TL}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g}_{\cH} +  \frac{\gamma^2 K}{2}\|g\|_{\cH}^2,
+    \end{equation}
+    where $K = (\alpha^2 + M)B$.
+\end{proposition}
+Inequality~\eqref{eq:TL} plays the role of a Taylor inequality, where $h_{\mu_n}$ is the Wasserstein gradient of $\cF$ at $\mu_n$ under the metric induced by $\cH$. Proposition~\ref{prop:TL} generalizes \cite[Proposition 5]{korba2020non}. Indeed, \cite[Proposition 5]{korba2020non} can be obtained from our Proposition~\ref{prop:TL} by taking $g = h_{\mu_n}$, by assuming the uniform upper bound $\|h_{\mu_n}\|_{\cH}^2 \leq C$ (see \cite[Assumption A3]{korba2020non}) and by restricting the step size to $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$. Note that assuming $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$ is more restrictive than assuming $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. 
+
+Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite[Proposition 5]{korba2020non}, by replacing their $h_{\mu_n}$ by our $g$ and their uniform upper bound $C$ by our $\|g\|_{\cH}^2$. Therefore, we only sketch the main arguments, and further details can be found in \cite[Section 11.2]{korba2020non}
+\begin{proof}
+    Let $\phi_t = I - t g$ for $t \in [0,\gamma]$ and $\rho_t = (\phi_t) \# \mu_n$. Note that $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
+    First, for every $x \in \X$,
+    \begin{equation}
+    \label{eq:gbound}
+	\|g(x)\|^2=\sum_{i=1}^d \ps{k(x,.),g_i}^2_{\cH_0} \le \|k(x,.)\|_{\cH_0}^2 \|g\|_{\cH}^2\le B^2 \|g\|_{\cH}^2,
+	\end{equation}
+	and,
+	\begin{align}
+	\label{eq:Jgbound}
+	\|Jg(x)\|_{\HS}^2&=\sum_{i,j=1}^d \left|\frac{\partial g_i(x)}{\partial x_j} \right|^2=\sum_{i,j=1}^d \ps{\partial_{x_j}k(x,.), g_i}_{\cH_0}^2\le \sum_{i,j=1}^d \| \partial_{x_j}k(x,.)\|^2_{\cH_0} \|g_i\|_{\cH_0}^2 \nonumber\\
+	&=\| \nabla k(x,.)\|^2_{\cH}\|g\|^2_{\cH}\le B^2 \|g\|^2_{\cH}.
+	\end{align}
+    Hence, 
+    \begin{equation}
+    \label{eq:invers-glob}
+        \|t Jg(x)\|_{\op} \leq \|t Jg(x)\|_{\HS} \leq \gamma B \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha} < 1,
+    \end{equation} 
+    using our assumption on the step size $\gamma$. Inequality~\eqref{eq:invers-glob} proves that $\phi_t$ is a diffeomorphism for every $t \in [0,\gamma]$. Moreover, 
+    \begin{equation}
+    \label{eq:alpha}
+		\|(J\phi_t(x))^{-1}\|_{\op} \leq \sum_{k=0}^\infty \|t Jg(x)\|_{\op}^k \leq \sum_{k=0}^\infty \left(\frac{\alpha-1}{\alpha}\right)^k = \alpha.
+    \end{equation}
+    Using~\cite[Theorem 5.34]{villani2003topics}, the velocity field ruling the time evolution of $\rho_t$ is $w_t \in L^2(\rho_t)$ defined by $w_t(x) = -g(\phi_t^{-1}(x))$. %Note that $w_0 = -g\in \cH$.    
+    
+    Denote $\varphi(t) = \cF(\rho_t)$. Using a Taylor expansion,
+        \begin{equation}
+        \label{eq:Taylor}
+            \varphi(\gamma) = \varphi(0) + \gamma \varphi'(0) + \int_{0}^{\gamma} (\gamma - t)\varphi''(t)dt.
+        \end{equation}
+        We now identify each term. First, 
+        \begin{equation*}
+    \varphi(0) = \cF(\mu_n)\; \text{ and } \;\varphi(\gamma) = \cF(\mu_{n+1}).
+        \end{equation*} 
+        Then, using the chain rule~\cite[Section 8.2]{villani2003topics}, 
+        \begin{equation*}
+            \varphi'(t)=\ps{\nabla_{W_2} \cF(\rho_t),w_t}_{L^2(\rho_t)}\; \text{ and } \;\varphi''(t) = \ps{w_t,H_{W_2}{\cF}(\rho_t)w_t}_{L^2(\rho_t)}.
+        \end{equation*}
+        Therefore, using $g \in \cH$,
+        \begin{equation*}
+            \varphi'(0) = -\ps{\nabla_{W_2} \cF(\mu_n),g}_{L^2(\mu_n)} = -\ps{h_{\mu_n},g}_{\cH}.
+        \end{equation*}
+        Moreover, $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where
+        \begin{equation*}
+        \psi_1(t) = \E_{x \sim \rho_t} \left[ \ps{w_t(x), H_V(x) w_t(x)}\right] \; \text{ and } \; \psi_2(t) = \E_{x \sim \rho_t} \left[ \|J w_t(x)\|_{\HS}^2 \right].
+        \end{equation*}
+        Recall that $w_t = -g \circ (\phi_t)^{-1}$.
+    The first term $\psi_1(t)$ is bounded using the transfer lemma, \Cref{ass:V_Lipschitz} and Inequality~\eqref{eq:gbound}:
+    \begin{equation*}
+        \psi_1(t) = \E_{x \sim \mu_n} \left[ \ps{g(x), H_V(\phi_t(x)) g(x)}\right] \leq M \|g\|_{L^2(\mu_n)}^2 \leq M B^2 \|g\|_{\cH}^2.
+    \end{equation*} 
+    For the second term $\psi_2(t)$, using the chain rule, $-J w_t \circ \phi_t = Jg (J \phi_t)^{-1}$. Therefore, 
+    \begin{equation*}
+        \|J w_t\circ \phi_t(x)\|_{\HS}^2 \leq \|Jg(x)\|_{\HS}^2 \|(J \phi_t)^{-1}(x)\|_{\op}^2 \leq \alpha^2 B^2 \|g\|_{\cH}^2,
+    \end{equation*}
+    using \eqref{eq:Jgbound} and \eqref{eq:alpha}.
+    %The second term , the first term is easily bounded by
+    % $\ps{v,H_V v} \leq M \|v\|^2$. Then since $\rho_t = \phi_{t\#} \mu_n$ and $v_t = -g(\phi_t^{-1})$, by the transfer lemma $\mathbb{E}_{x \sim \rho_t}[\| v_t(x)\|^2]=\mathbb{E}_{x\sim \mu_n}[\|g(x)\|^2]\le B^2I_{Stein}(\mu_n|\pi)$, hence 
+    %$
+    %\E_{x\sim \rho_t}[ \ps{v_t(x), H_V(x) v_t(x)}]\le M B^2 I_{Stein}(\mu_n|\pi)$.
+    %  The second term is the most challenging to bound.  
+    %  By the chain rule 
+    %  %for any $x$ we have $-J v_t(x)=Jg(\phi_t^{-1}(x))(J\phi_t)^{-1}(\phi_t^{-1}(x))$; hence by 
+    %  and the transfer lemma, we first have
+    %   $\E_{x \sim \rho_t} \left[\|J v_t(x)\|_{HS}^2\right]= \E_{x \sim \mu_n} \left[\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\right]$. Then,  for any $x$, $ \|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2 \le B^2I_{Stein}(\mu_n|\pi) \| (J\phi_t)^{-1}(x)\|_{op}^2$. On the other hand, $J\phi_t=I-tJg$, and if $t<\frac{1}{B\sqrt{C}}$ then $t\|Jg(x)\|<1$ and it can be shown that $\|(I - t Jg(x))^{-1}\| \le \alpha$ for $\gamma$ chosen as in \Cref{prop:descent}. Therefore $\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\le \alpha^2 B^2 I_{Stein}(\mu_n|\pi)$ and $\varphi''(t)\le (\alpha^2+M)B^2I_{Stein}(\mu_n|\pi)$. 
+    Combining each of the quantity in the Taylor expansion~\eqref{eq:Taylor} gives the desired result.
+        %Sufficiently, we shall bound the term $\|Jg)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. 
+
+\end{proof}
+\subsection{Proof of Theorem~\ref{th:SVGD}}
+As mentioned in the last section, Proposition~\ref{prop:TL} can be applied to SVGD, \textit{i.e.}, the update 
+\begin{equation*}
+    \mu_{n+1} = (I - \gamma h_{\mu_n}) \# \mu_n,
+\end{equation*}
+by setting $g = h_{\mu_n} \in \cH$. In this case, we obtain the following.
+\begin{lemma}
+\label{lem:svgd}
+Let Assumptions~\ref{ass:k_bounded} and~\ref{ass:V_Lipschitz} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
+    \begin{equation}
+    \label{eq:TL-svgd}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2,
+    \end{equation}
+    where $K = (\alpha^2 + M)B$.
+\end{lemma}
+
+\begin{lemma}
+\label{lem:T1}
+     Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Then, for every $\mu \in \cP_2(\X)$,\asnote{$\cP_2$ ?}
+\begin{equation*}
+    \|h_{\mu}\|_{\cH} \leq B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu)}.
+\end{equation*}
+\end{lemma}
+\begin{proof}
+Using \Cref{ass:k_bounded}
+    \begin{align*}
+        \|h_{\mu}\|_{\cH} &= \left\|\E_{x \sim \mu} \left(\nabla F(x)\Phi(x) - \nabla \Phi(x)\right) \right\|_{\cH} \\
+        &\leq \E_{x \sim \mu} \left\| \nabla F(x)\Phi(x) - \nabla \Phi(x) \right\|_{\cH}\\
+        &\leq \E_{x \sim \mu} \left\| \nabla F(x)\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH}\\
+        &= \E_{x \sim \mu} \left\|\nabla F(x)\right\|\left\|\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH}\\
+        &\leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
+    \end{align*}
+Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + M\|x\|$. Therefore, using the triangle inequality for the metric $W_1$,
+    \begin{align*}
+        \|h_{\mu}\|_{\cH} &\leq B \left(1 + \|\nabla F(0)\| + M\int \|x\|d\mu(x) \right)\\
+        &= B \left(1 + \|\nabla F(0)\| + M W_1(\mu,\delta_0) \right)\\
+        &\leq B \left(1 + \|\nabla F(0)\| + M W_1(\pi,\delta_0) \right) + BM W_1(\mu,\pi).
+    \end{align*}
+We conclude using Talagrand's inequality~\eqref{eq:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
+\end{proof}
+\begin{theorem}
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  \begin{equation}
+  \label{eq:condition-step}
+      \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)} \right) \leq \frac{\alpha-1}{\alpha B}.
+  \end{equation}
+  Then, 
+  \begin{equation}
+    \label{eq:TL-svgd-cst}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
+    \end{equation}
+\end{theorem}
+
+    We now prove Theorem~\ref{th:svgd} by induction. First, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then, using Lemma~\ref{lem:T1}, $\gamma \|h_{\mu_0}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Therefore, using Lemma~\ref{lem:svgd}, 
+    \begin{equation*}
+        \cF(\mu_{1}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_0}\|_{\cH}^2,
+    \end{equation*}
+\textit{i.e.}, Inequality~\eqref{eq:TL-svgd-cst} holds with $n = 0$. 
+
+Now, assume that Inequality~\eqref{eq:TL-svgd-cst} holds for every $k \in \{0,\ldots,n-1\}$. Then, $\cF(\mu_n) \leq \cF(\mu_0)$ and
+\begin{align*}
+    &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_n)}\\ \leq &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)}. 
+\end{align*}
+Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Indeed, using Lemma~\ref{lem:T1}
+\begin{align*}
+\gamma \|h_{\mu_n}\|_{\cH}
+&\leq  \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_n)} \right) \\
+       &\leq \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)} \right) \\
+       &\leq \frac{\alpha-1}{\alpha B}.
+  \end{align*}
+  Therefore, using Lemma~\ref{lem:svgd}, Inequality~\eqref{eq:TL-svgd-cst} holds at step $n$:
+  \begin{equation*}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
+    \end{equation*}
+    Finally, it remains to recall that $\|h_{\mu_n}\|_{\cH}^2 = I_{\st}(\mu_n|\pi)$.
+    
+\subsection{Proof of Theorem~\ref{th:vrsvsgd}}
+We now study VR-SVSGD, \textit{i.e.}, the update 
+\begin{equation*}
+    \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
+\end{equation*}
+where $g_n$ is defined by
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Appendix: Lukang's Draft}
 
@@ -521,12 +733,15 @@ here
       	\begin{split}
       		 &\quad \text{E}\left[\left\|g_{n+1}^{\prime}-S_{\mu_{n+1}}\nabla \log\left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{\cH}^2\right] \\
       		 &= (1-p) \text{E}\left[\left\|\right.\right. g_{n+1}^{\prime} + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\left.\left.\right\|_{\cH}^2\right] \\ 
-      		& = (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
+      		& \leq (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
       		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)+ \\ & 
-      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{\cH}^{2}\right]
+      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{\cH}^{2}\right]\\
+      		& \leq (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
+      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)
+      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right) \left.\left.\right\|_{\cH}^{2}\right],
       	\end{split}
       \end{equation}
-
+using $\frac{1}{n}\sum_{i = 1}^n \|a_i - \bar{a}\|^2 \leq \frac{1}{n}\sum_{i = 1}^n \|a_i\|^2$, where $\bar{a} = \frac{1}{n}\sum_{i=1}^n a_i$. 
   \section{Key Inequality}
 	
 		
