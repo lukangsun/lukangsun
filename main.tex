@@ -88,6 +88,7 @@
 \newcommand{\lsnote}[1]{\todo[color=magenta]{#1}}
 \newcommand{\adil}[1]{{\color{green!} #1}}
 \newcommand{\cF}{{\mathcal F}}
+\newcommand{\mcG}{{\mathscr G}}
 \newcommand{\cB}{{\mathcal B}}
 \newcommand{\cO}{{\mathcal O}}
 \newcommand{\cG}{{\mathcal G}}
@@ -182,7 +183,7 @@ We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 		\item \label{ass:k_bounded}
 	$\exists B>0$ s.t. for all $x \in \X$,\\
 	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
-	\item 	\label{ass:V_Lipschitz} The Hessian  $H_F$ of $F=-\log\pi$ is well-defined and $\exists M>0$ s.t. $\|H_F\|_{\op}\le M$.
+	\item 	\label{ass:V_Lipschitz} The Hessian  $H_{f_i}$ is well-defined and $\exists M>0$ s.t. for all $i$, $\|H_{f_i}\|_{\op}\le M$.
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
 
@@ -247,25 +248,25 @@ and,
     v_{n+1} = \left\{
     \begin{array}{ll}
         P_{\mu_{n+1}} \nabla F & \mbox{with probability } p \\
-        v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i & \mbox{with probability } 1-p, 
+        v_n + P_{\mu_{n+1}} \nabla f_{I_{n+1}} - P_{\mu_{n}} \nabla f_{I_{n+1}} & \mbox{with probability } 1-p, 
     \end{array}
 \right.
 \end{equation}
-where $i \sim \Unif(\{1,\ldots,m\})$.
+where $(I_n)$ is a sequence of i.i.d. random variables with uniform distribution over $\{1,\ldots,m\}$.
 
-\begin{theorem}
-\label{th:vrsvsgd}
-  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
-  \begin{equation}
-  \label{eq:condition-step}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}, ? \right)
-  \end{equation}
-  Then, 
-  \begin{equation}
-    \label{eq:TL-svgd-cst}
-        \cL_{n+1} \leq \cL_{n} - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
-    \end{equation}
-\end{theorem}
+% \begin{theorem}
+% \label{th:vrsvsgd}
+%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+%   \begin{equation}
+%   \label{eq:condition-step}
+%       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}, ? \right)
+%   \end{equation}
+%   Then, 
+%   \begin{equation}
+%     \label{eq:TL-svgd-cst}
+%         \cL_{n+1} \leq \cL_{n} - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
+%     \end{equation}
+% \end{theorem}
 
 \asnote{unbiasedness, complexity, computation of full gradient at the beginning}
 \bibliographystyle{apalike}
@@ -415,7 +416,7 @@ Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + M\|x\|$. T
         &= B \left(1 + \|\nabla F(0)\| + M W_1(\mu,\delta_0) \right)\\
         &\leq B \left(1 + \|\nabla F(0)\| + M W_1(\pi,\delta_0) \right) + BM W_1(\mu,\pi).
     \end{align*}
-We conclude using Talagrand's inequality~\eqref{eq:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
+We conclude using Talagrand's inequality~\Cref{ass:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
 \end{proof}
 
 
@@ -447,6 +448,21 @@ We now study VR-SVSGD, \textit{i.e.}, the update
 \begin{equation*}
     \mu_{n+1} = (I - \gamma g_n) \# \mu_n.
 \end{equation*}
+
+\begin{theorem}
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  \begin{equation}
+    \gamma \leq \min\left(\frac{1}{K + B^2 L_n \sqrt{\frac{1}{p}-1}},\frac{\alpha-1}{\alpha B \|g_n\|_{\cH}}\right),
+\end{equation}
+where $L_n^2 = \frac{1}{m}\sum_{i=1}^m \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
+  Then,
+  \begin{equation}
+    \E \cL_{n+1} \leq
+     \E \cL_n - \frac{\gamma}{2}\E I_{\st}(\mu_n|\pi),
+\end{equation}
+where $\cL_n \coloneqq \cF(\mu_n) + \frac{\gamma}{2p}\|g_{n} - h_{\mu_{n}}\|_{\cH}^2$.
+\end{theorem}
+
 We start by applying Proposition~\ref{prop:TL}: if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
     \label{eq:TL-VR}
@@ -458,10 +474,11 @@ We start by applying Proposition~\ref{prop:TL}: if $\gamma \|g_n\|_{\cH} \leq \f
     \label{eq:rec1}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2.
     \end{equation}
-One can check by induction that for every $n$, $\E g_n = h_{\mu_n}$. In other words, the stochastic gradient $g_n$ is unbiased. Therefore, the quantity $s_n = \E \|g_n - h_{\mu_n}\|_{\cH}^2$ can be seen as a variance. Moreover, by conditioning
+One can check by induction that for every $n$, $\E g_n = h_{\mu_n}$. In other words, the stochastic gradient $g_n$ is unbiased. Therefore, the quantity $\E \|g_n - h_{\mu_n}\|_{\cH}^2$ can be seen as a variance. Moreover, denoting $\mcG_n = \sigma(\mu_0,g_0,\ldots,\mu_n,g_n,\mu_{n+1})$,
 \begin{align*}
-    s_{n+1} =& p \E \left(\|P_{\mu_{n+1}} \nabla F - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2\right) \\
-    &+ (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2\right).
+    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1} = i\right) \\
+    =& p \E \left(\|P_{\mu_{n+1}} \nabla F - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right) \\
+    &+ (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right).
 \end{align*}
 Using 
 \begin{equation}
@@ -470,16 +487,18 @@ Using
 \end{equation}
 we have
 \begin{align*}
-    s_{n+1} &= (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - P_{\mu_{n+1}} \nabla F\|_{\cH}^2\right)\\
-    &= (1-p)\E \left(\left\|\underbrace{\left(v_n - P_{\mu_{n}} \nabla F\right)}_{= X} + \underbrace{\left(P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\right)}_{=a_i} - \underbrace{\left(P_{\mu_{n+1}} \nabla F - P_{\mu_{n}} \nabla F\right)}_{=\bar{a}}\right\|_{\cH}^2\right).
+    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right) \\ 
+    =& (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - P_{\mu_{n+1}} \nabla F\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right)\\
+    =& (1-p)\E \left(\left\|\underbrace{\left(v_n - P_{\mu_{n}} \nabla F\right)}_{= X} + \underbrace{\left(P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\right)}_{=a_i} - \underbrace{\left(P_{\mu_{n+1}} \nabla F - P_{\mu_{n}} \nabla F\right)}_{=\bar{a}}\right\|_{\cH}^2\Bigg|\mcG_{n},I_{n+1}=i\right)\\
+    \leq& (1-p)\E (\|X\|^2_{\cH} + \ps{X,a_i-\bar{a}}_{\cH}+\|a_i-\bar{a}\|^2_{\cH} |\mcG_{n},I_{n+1}=i)\\
 \end{align*}
-Note that $\bar{a} = \frac{1}{m} \sum_{i=1}^m a_i$, therefore $\frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2 \leq \frac{1}{m}\sum_{i=1}^m \|a_i\|_{\cH}^2$. By expanding the square and conditioning,
+Note that $\bar{a} = \frac{1}{m} \sum_{i=1}^m a_i$, therefore $\frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2 \leq \frac{1}{m}\sum_{i=1}^m \|a_i\|_{\cH}^2$. By taking the expectation w.r.t. $I_{n+1}$,
 \begin{align*}
-    s_{n+1} &= (1-p)\E \left(\|X\|_{\cH}^2 + \ps{X,a_i - \bar{a}}_{\cH} + \|a_i - \bar{a}\|_{\cH}^2\right)\\
-    & =(1-p)\left[\E \|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|a_i - \bar{a}\|_{\cH}^2\right]\\
-    & \leq (1-p)\left[\E \|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|a_i\|_{\cH}^2\right]\\
-    & = (1-p)\left[\E \|v_n - P_{\mu_{n}} \nabla F\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2\right]\\
-    & = (1-p) s_n + (1-p) \frac{1}{m}\sum_{i=1}^m \E \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2,\\
+    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n}\right) \\ 
+    =&(1-p)\E\left[\|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
+    \leq&(1-p)\left[\|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m  \|a_i\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
+    =& (1-p)\E\left[\|v_n - P_{\mu_{n}} \nabla F\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
+    =& (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \frac{1}{m}\sum_{i=1}^m \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2,\\
 \end{align*}
 using~\eqref{eq:defh}. Let $i \in \{1,\ldots,m\}$, we now estimate $\|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2$.
 \begin{align*}
@@ -500,10 +519,32 @@ Using~\eqref{eq:gbound} \asnote{Clean this}, $\|g_n(x)\| \leq B \|g_n\|_{\cH}$, 
 \begin{equation}
     \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} \leq \gamma B^2 \|g_n\|_{\cH} \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right).
 \end{equation}
-
-
-
-
+We finally have
+\begin{equation}
+\label{eq:rec2}
+    \E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n}\right)
+    \leq (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2,
+\end{equation}
+where $L_n^2 = \frac{1}{m}\sum_{i=1}^m \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
+Define $\cL_n \coloneqq \cF(\mu_n) + \frac{\gamma}{2p}\|g_{n} - h_{\mu_{n}}\|_{\cH}^2$. Using~\eqref{eq:rec1} and~\eqref{eq:rec2},
+\begin{align*}
+    \E\left(\cL_{n+1}|\mcG_n\right) \leq& \cF(\mu_n) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2\\
+    &+ \frac{\gamma}{2p}\left((1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2\right)\\
+    =& \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}\|g_n\|_{\cH}^2\left(1-\gamma K-\frac{1-p}{p}\gamma^2 B^4 L_n^2\right).
+\end{align*}
+Since, 
+\begin{equation}
+    \gamma \leq \frac{1}{K + B^2 L_n \sqrt{\frac{1}{p}-1}},
+\end{equation}
+we have
+\begin{equation}
+    K\gamma + \frac{1-p}{p} B^4 L_n^2 \gamma^2 \leq 1.
+\end{equation}
+Therefore,
+\begin{equation}
+    \E\left(\cL_{n+1}|\mcG_n\right) \leq
+     \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2.
+\end{equation}
 
 
 
