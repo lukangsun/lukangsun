@@ -91,6 +91,7 @@
 \newcommand{\cB}{{\mathcal B}}
 \newcommand{\cO}{{\mathcal O}}
 \newcommand{\cG}{{\mathcal G}}
+\newcommand{\cL}{{\mathcal L}}
 \newcommand{\cP}{{\mathcal P}}
 \newcommand{\X}{{\mathcal X}} 
 \newcommand{\Y}{{\mathcal Y}} 
@@ -113,6 +114,7 @@
 
 \newcommand{\dom}{{dom}} 
 \newcommand{\KL}{\mathop{\mathrm{KL}}\nolimits}
+\newcommand{\Unif}{\mathop{\mathrm{Unif}}\nolimits}
 \newcommand{\HS}{\mathop{\mathrm{HS}}\nolimits}
 \newcommand{\op}{\mathop{\mathrm{op}}\nolimits}
 \newcommand{\tr}{\mathop{\mathrm{tr}}\nolimits}
@@ -123,7 +125,7 @@
 
 
 
-\title{Formatting Instructions For NeurIPS 2021}
+\title{Provable Acceleration of Stein Variational Stochastic Gradient Descent via Variance Reduction}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -171,22 +173,37 @@
 \begin{abstract}
   
 \end{abstract}
-
-\section{Copy-Paste from Adil's paper}
-In this section, we analyze SVGD in discrete time, in the infinite number of particles regime~\eqref{eq:svgd_update}. We propose to study the dissipation of the KL along the SVGD algorithm. The Stein Fisher Information once again  quantifies this dissipation, as in the continuous time case. Before going further, note that discrete time analyses often require more assumptions that continuous time analyses. In optimization, these assumptions typically require some smoothness of the objective function. Here, we assume the following. 
-%In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
+\section{Background}
+\asnote{expectation of an element of the rkhs}
+We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 \newcounter{contlist}
 \begin{assumplist}
 	\setlength\itemsep{0.2em}
 		\item \label{ass:k_bounded}
-	Assume that $\exists B>0$ s.t. for all $x \in \X$,\\
-	$\|k(x,.)\|_{\cH_0}\le B$ and $\|\nabla _xk(x,.)\|_{\cH}=(\sum_{i=1}^d \|\partial_{x_i}k(x_i,.)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
-	\item 	\label{ass:V_Lipschitz} The Hessian  $H_V$ of $V=-\log\pi$ is well-defined and $\exists M>0$ s.t. $\|H_V\|_{op}\le M$.
+	$\exists B>0$ s.t. for all $x \in \X$,\\
+	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
+	\item 	\label{ass:V_Lipschitz} The Hessian  $H_F$ of $F=-\log\pi$ is well-defined and $\exists M>0$ s.t. $\|H_F\|_{\op}\le M$.
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
-	\item \label{ass:bounded_I_Stein}	Assume  that $\exists$ is $C>0$ s.t.  $I_{Stein}(\mu_n|\pi)<C$ for all $n$.
+	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
 
 \end{assumplist}
 \setcounter{contlist}{\value{enumi}}
+
+\Cref{ass:T1} is called Talagrand's inequality T1 and is satisfied if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}.
+
+\section{SVGD}
+In this section, we analyze SVGD in the infinite number of particles regime. In this regime, SVGD is given by
+\begin{equation}
+\label{eq:svgd-mean-field}
+    \mu_{n+1} = (I - \gamma h_{\mu_n}) \# \mu_n,
+\end{equation}
+where 
+\begin{equation}
+    h_{\mu} \coloneqq \int \nabla F(x) \Phi(x) - \nabla \Phi(x) d\mu(x).
+\end{equation}
+\asnote{Relationship with Wasserstein gradient here. Check: definition of Wass grad. Conditions IPP. $\cP_1$ or $\cP_2$?}
+%In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
+
 
 
 
@@ -196,23 +213,63 @@ In this section, we analyze SVGD in discrete time, in the infinite number of par
 
 %The following lemma states that the boundedness of the kernel, its gradient and the Hessian of $\pi$, as well as a the moments along the trajectory, are sufficient to satisfy the boundedness of the Stein Fisher information for all $n\ge0$. 
 
- Under \Cref{ass:V_Lipschitz,ass:k_bounded}, a sufficient condition for~\Cref{ass:bounded_I_Stein} is $\sup_n \int \Vert x \Vert \mu_n(x)dx < \infty$. Bounded moment assumptions such as these are commonly used in stochastic optimization, for instance in some analysis of the stochastic gradient descent~\citep{moulines2011non}. Given our assumptions, we quantify the decreasing of the KL along the SVGD algorithm, also called a descent lemma in optimization.
+%  Under \Cref{ass:V_Lipschitz,ass:k_bounded}, a sufficient condition for~\Cref{ass:bounded_I_Stein} is $\sup_n \int \Vert x \Vert \mu_n(x)dx < \infty$. Bounded moment assumptions such as these are commonly used in stochastic optimization, for instance in some analysis of the stochastic gradient descent~\citep{moulines2011non}. Given our assumptions, we quantify the decreasing of the KL along the SVGD algorithm, also called a descent lemma in optimization.
  
 
-
-\begin{proposition}\label{prop:descent}
-	%Define $\mu_{n+1} =   (I-\gamma K \nabla f_{\pi,\mu_n}   )_{\#}\mu_n $ and 
- Assume that \Cref{ass:V_Lipschitz,ass:k_bounded,ass:bounded_I_Stein} hold. % and that $\int \Vert x \Vert \mu_n(x)dx $ remains bounded for all $n$.
-		  Let $\alpha>1$ and choose $ \gamma \leq \frac{\alpha-1}{\alpha BC^{\frac{1}{2}} } $. Then:
-	\begin{align}\label{eq:descent}
-	\KL(\mu_{n+1}|\pi)-\KL(\mu_{n}|\pi)\leq -\gamma \left(1- \gamma \frac{(\alpha^2 + M)B^2}{2}\right)I_{stein}(\mu_n|\pi).
-	\end{align}
-\end{proposition}
+\begin{theorem}
+\label{th:svgd}
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  \begin{equation}
+  \label{eq:condition-step}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}.
+  \end{equation}
+  Then, 
+  \begin{equation}
+    \label{eq:TL-svgd-cst}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
+    \end{equation}
+\end{theorem}
 %  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
 %  for the complete proof.
+\section{SVSGD}
+\section{VR-SVSGD}
+In this section, we analyze VR-SVSGD in the infinite number of particles regime. In this regime, VR-SVSGD is given by
+\begin{equation}
+\label{eq:svgd-mean-field}
+    \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
+\end{equation}
+where 
+\begin{equation}
+    g_n = v_n-\int \nabla \Phi(x) d\mu_n(x),
+\end{equation}
+and,
+\begin{equation}
+    v_{n+1} = \left\{
+    \begin{array}{ll}
+        P_{\mu_{n+1}} \nabla F & \mbox{with probability } p \\
+        v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i & \mbox{with probability } 1-p, 
+    \end{array}
+\right.
+\end{equation}
+where $i \sim \Unif(\{1,\ldots,m\})$.
 
+\begin{theorem}
+\label{th:vrsvsgd}
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  \begin{equation}
+  \label{eq:condition-step}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}, ? \right)
+  \end{equation}
+  Then, 
+  \begin{equation}
+    \label{eq:TL-svgd-cst}
+        \cL_{n+1} \leq \cL_{n} - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
+    \end{equation}
+\end{theorem}
 
-
+\asnote{unbiasedness, complexity, computation of full gradient at the beginning}
+\bibliographystyle{apalike}
+\bibliography{math}
 
 
 \appendix
@@ -360,18 +417,7 @@ Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + M\|x\|$. T
     \end{align*}
 We conclude using Talagrand's inequality~\eqref{eq:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
 \end{proof}
-\begin{theorem}
-  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
-  \begin{equation}
-  \label{eq:condition-step}
-      \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)} \right) \leq \frac{\alpha-1}{\alpha B}.
-  \end{equation}
-  Then, 
-  \begin{equation}
-    \label{eq:TL-svgd-cst}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
-    \end{equation}
-\end{theorem}
+
 
     We now prove Theorem~\ref{th:svgd} by induction. First, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then, using Lemma~\ref{lem:T1}, $\gamma \|h_{\mu_0}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Therefore, using Lemma~\ref{lem:svgd}, 
     \begin{equation*}
@@ -379,32 +425,63 @@ We conclude using Talagrand's inequality~\eqref{eq:T1}: $W_1(\mu,\pi) \leq \lamb
     \end{equation*}
 \textit{i.e.}, Inequality~\eqref{eq:TL-svgd-cst} holds with $n = 0$. 
 
-Now, assume that Inequality~\eqref{eq:TL-svgd-cst} holds for every $k \in \{0,\ldots,n-1\}$. Then, $\cF(\mu_n) \leq \cF(\mu_0)$ and
+Now, assume that the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} for every $n \in \{0,\ldots,N-1\}$. Then, $\cF(\mu_N) \leq \cF(\mu_0)$ and
 \begin{align*}
-    &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_n)}\\ \leq &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)}. 
+    &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_N)}\\ \leq &B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)}. 
 \end{align*}
-Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Indeed, using Lemma~\ref{lem:T1}
+Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_N}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Indeed, using Lemma~\ref{lem:T1}
 \begin{align*}
-\gamma \|h_{\mu_n}\|_{\cH}
-&\leq  \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_n)} \right) \\
+\gamma \|h_{\mu_N}\|_{\cH}
+&\leq  \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_N)} \right) \\
        &\leq \gamma \left(B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu_0)} \right) \\
        &\leq \frac{\alpha-1}{\alpha B}.
   \end{align*}
-  Therefore, using Lemma~\ref{lem:svgd}, Inequality~\eqref{eq:TL-svgd-cst} holds at step $n$:
+  Therefore, using Lemma~\ref{lem:svgd}, the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} step $N$:
   \begin{equation*}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
+        \cF(\mu_{N+1}) \leq \cF(\mu_{N}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_N}\|_{\cH}^2.
     \end{equation*}
-    Finally, it remains to recall that $\|h_{\mu_n}\|_{\cH}^2 = I_{\st}(\mu_n|\pi)$.
+    Finally, it remains to recall that $\|h_{\mu_N}\|_{\cH}^2 = I_{\st}(\mu_N|\pi)$.
     
 \subsection{Proof of Theorem~\ref{th:vrsvsgd}}
 We now study VR-SVSGD, \textit{i.e.}, the update 
 \begin{equation*}
-    \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
+    \mu_{n+1} = (I - \gamma g_n) \# \mu_n.
 \end{equation*}
-where $g_n$ is defined by...
-
-
-
+We start by applying Proposition~\ref{prop:TL}: if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
+    \begin{equation}
+    \label{eq:TL-VR}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g_n}_{\cH} +  \frac{\gamma^2 K}{2}\|g_n\|_{\cH}^2,
+    \end{equation}
+    where $K = (\alpha^2 + M)B$.
+    Using the polarization identity $\ps{a,b} = \frac{1}{2}\|a+b\|^2 - \frac{1}{2}\|a\|^2 - \frac{1}{2}\|b\|^2$, the last inequality can be rewritten as
+    \begin{equation}
+    \label{eq:rec1}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2.
+    \end{equation}
+One can check by induction that for every $n$, $\E g_n = h_{\mu_n}$. In other words, the stochastic gradient $g_n$ is unbiased. Therefore, the quantity $s_n = \E \|g_n - h_{\mu_n}\|_{\cH}^2$ can be seen as a variance. Moreover, by conditioning
+\begin{align*}
+    s_{n+1} =& p \E \left(\|P_{\mu_{n+1}} \nabla F - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2\right) \\
+    &+ (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2\right).
+\end{align*}
+Using 
+\begin{equation}
+\label{eq:defh}
+    P_{\mu_{n}} \nabla F - \int \nabla \Phi(x)d\mu_{n}(x) = h_{\mu_{n}},
+\end{equation}
+we have
+\begin{align*}
+    s_{n+1} &= (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - P_{\mu_{n+1}} \nabla F\|_{\cH}^2\right)\\
+    &= (1-p)\E \left(\left\|\underbrace{\left(v_n - P_{\mu_{n}} \nabla F\right)}_{= X} + \underbrace{\left(P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\right)}_{=a_i} - \underbrace{\left(P_{\mu_{n+1}} \nabla F - P_{\mu_{n}} \nabla F\right)}_{=\bar{a}}\right\|_{\cH}^2\right).
+\end{align*}
+Note that $\bar{a} = \frac{1}{m} \sum_{i=1}^m a_i$, therefore $\frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2 \leq \frac{1}{m}\sum_{i=1}^m \|a_i\|_{\cH}^2$. By expanding the square and conditioning,
+\begin{align*}
+    s_{n+1} &= (1-p)\E \left(\|X\|_{\cH}^2 + \ps{X,a_i - \bar{a}}_{\cH} + \|a_i - \bar{a}\|_{\cH}^2\right)\\
+    & =(1-p)\left[\E \|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|a_i - \bar{a}\|_{\cH}^2\right]\\
+    & \leq (1-p)\left[\E \|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|a_i\|_{\cH}^2\right]\\
+    & = (1-p)\left[\E \|v_n - P_{\mu_{n}} \nabla F\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \E \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2\right]\\
+    & = (1-p) s_n + (1-p) \frac{1}{m}\sum_{i=1}^m \E \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2,\\
+\end{align*}
+using~\eqref{eq:defh}. Let $i \in \{1,\ldots,m\}$, we now estimate $\|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2$.
 
 
 
