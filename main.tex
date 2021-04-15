@@ -284,7 +284,7 @@ In this section we prove our main results (Theorems~\ref{th:svgd} and~\ref{th:vr
 %%%%NOTATIONS TO DEFINE IN APPENDIX OR MAIN PAPER:
 %\cF
 %Definition in appendix vs deifnition in main paper
-%Define: I, \X, \cH, \cF, P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right) = h_{\mu_n} tjrs bien defini, Wass grad under the metric of H cf my personal view of SVGD.
+%Define: I, \X, \cH, \cH_0 (and their norms) \cF, P_{\mu_n}\nabla \log\left(\frac{\mu_n}{\pi}\right) = h_{\mu_n} tjrs bien defini, Wass grad under the metric of H cf my personal view of SVGD.
 %Jacobian, H_0, HS, op, several inner products, Wasserstein gradients,/Hessian
 %Feature map \Phi(x)
 %W_1, W_2, Dirac
@@ -482,7 +482,24 @@ Note that $\bar{a} = \frac{1}{m} \sum_{i=1}^m a_i$, therefore $\frac{1}{m}\sum_{
     & = (1-p) s_n + (1-p) \frac{1}{m}\sum_{i=1}^m \E \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2,\\
 \end{align*}
 using~\eqref{eq:defh}. Let $i \in \{1,\ldots,m\}$, we now estimate $\|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2$.
-
+\begin{align*}
+    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} =& \left\|\int \nabla f_i(x - \gamma g_n(x))\Phi(x - \gamma g_n(x)) - \nabla f_i(x)\Phi(x) d\mu_n(x)\right\|_{\cH}\\
+    \leq& \int\left\|\nabla f_i(x - \gamma g_n(x))\Phi(x - \gamma g_n(x)) - \nabla f_i(x)\Phi(x)\right\|_{\cH}d\mu_n(x)\\
+    \leq& \int\left\|\left(\nabla f_i(x - \gamma g_n(x)) - \nabla f_i(x)\right)\Phi(x - \gamma g_n(x))\right\|_{\cH}d\mu_n(x)\\
+    &+ \int\left\|\left(\Phi(x - \gamma g_n(x)) - \Phi(x)\right)\nabla f_i(x)\right\|_{\cH}d\mu_n(x)\\
+    \leq& \int\|\nabla f_i(x - \gamma g_n(x)) - \nabla f_i(x)\|\|\Phi(x - \gamma g_n(x))\|_{\cH_0}d\mu_n(x)\\
+    &+ \int \|\Phi(x - \gamma g_n(x)) - \Phi(x)\|_{\cH_0}\|\nabla f_i(x)\|d\mu_n(x).
+\end{align*}
+Using \Cref{ass:k_bounded}, $\|\Phi(x)\|_{\cH_0} \leq B$ and $\Phi : \X \to \cH_0$ is $B$-Lipschitz, \textit{i.e.}, $\|\Phi(x) - \Phi(y)\|_{\cH_0} \leq B \|x-y\|$. \asnote{Check this}
+Therefore, using \Cref{ass:V_Lipschitz},
+\begin{align*}
+    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} \leq& \int MB\gamma \|g_n(x)\|d\mu_n(x)\\
+    &+ \int B\gamma \|g_n(x)\|\|\nabla f_i(x)\|d\mu_n(x).
+\end{align*}
+Using~\eqref{eq:gbound} \asnote{Clean this}, $\|g_n(x)\| \leq B \|g_n\|_{\cH}$, therefore,
+\begin{equation}
+    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} \leq \gamma B^2 \|g_n\|_{\cH} \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right).
+\end{equation}
 
 
 
