@@ -449,27 +449,27 @@ We now study VR-SVSGD, \textit{i.e.}, the update
     \mu_{n+1} = (I - \gamma g_n) \# \mu_n.
 \end{equation*}
 
-\begin{theorem}
+\begin{lemma}
   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
   \begin{equation}
-    \gamma \leq \min\left(\frac{1}{K + B^2 L_n \sqrt{\frac{1}{p}-1}},\frac{\alpha-1}{\alpha B \|g_n\|_{\cH}}\right),
+    \gamma \leq \min\left(\frac{1}{(\alpha^2 + M)B + B^2 L_n \sqrt{\frac{1}{p}-1}},\frac{\alpha-1}{\alpha B \|g_n\|_{\cH}}\right),
 \end{equation}
-where $L_n^2 = \frac{1}{m}\sum_{i=1}^m \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
+where $L_n^2 \coloneqq \frac{1}{m}\sum_{i=1}^m \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
   Then,
   \begin{equation}
     \E \cL_{n+1} \leq
      \E \cL_n - \frac{\gamma}{2}\E I_{\st}(\mu_n|\pi),
 \end{equation}
 where $\cL_n \coloneqq \cF(\mu_n) + \frac{\gamma}{2p}\|g_{n} - h_{\mu_{n}}\|_{\cH}^2$.
-\end{theorem}
-
+\end{lemma}
+\begin{proof}
 We start by applying Proposition~\ref{prop:TL}: if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
     \label{eq:TL-VR}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g_n}_{\cH} +  \frac{\gamma^2 K}{2}\|g_n\|_{\cH}^2,
     \end{equation}
     where $K = (\alpha^2 + M)B$.
-    Using the polarization identity $\ps{a,b} = \frac{1}{2}\|a+b\|^2 - \frac{1}{2}\|a\|^2 - \frac{1}{2}\|b\|^2$, the last inequality can be rewritten as
+    Using the polarization identity $-\ps{a,b} = \frac{1}{2}\|a-b\|^2 - \frac{1}{2}\|a\|^2 - \frac{1}{2}\|b\|^2$, the last inequality can be rewritten as
     \begin{equation}
     \label{eq:rec1}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2.
@@ -523,16 +523,15 @@ We finally have
 \begin{equation}
 \label{eq:rec2}
     \E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n}\right)
-    \leq (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2,
+    \leq (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2.
 \end{equation}
-where $L_n^2 = \frac{1}{m}\sum_{i=1}^m \left(M+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
-Define $\cL_n \coloneqq \cF(\mu_n) + \frac{\gamma}{2p}\|g_{n} - h_{\mu_{n}}\|_{\cH}^2$. Using~\eqref{eq:rec1} and~\eqref{eq:rec2},
+Using~\eqref{eq:rec1} and~\eqref{eq:rec2},
 \begin{align*}
     \E\left(\cL_{n+1}|\mcG_n\right) \leq& \cF(\mu_n) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2\\
     &+ \frac{\gamma}{2p}\left((1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2\right)\\
     =& \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}\|g_n\|_{\cH}^2\left(1-\gamma K-\frac{1-p}{p}\gamma^2 B^4 L_n^2\right).
 \end{align*}
-Since, 
+Since
 \begin{equation}
     \gamma \leq \frac{1}{K + B^2 L_n \sqrt{\frac{1}{p}-1}},
 \end{equation}
@@ -543,10 +542,10 @@ we have
 Therefore,
 \begin{equation}
     \E\left(\cL_{n+1}|\mcG_n\right) \leq
-     \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2.
+     \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2,
 \end{equation}
-
-
+and we conclude by taking the full expectation.
+\end{proof}
 
 
 
