@@ -92,6 +92,7 @@
 \newcommand{\cB}{{\mathcal B}}
 \newcommand{\cO}{{\mathcal O}}
 \newcommand{\cG}{{\mathcal G}}
+\newcommand{\cN}{{\mathcal N}}
 \newcommand{\cL}{{\mathcal L}}
 \newcommand{\cP}{{\mathcal P}}
 \newcommand{\X}{{\mathcal X}} 
@@ -126,7 +127,7 @@
 
 
 
-\title{$\cO(1/n)$ convergence of SVGD \\ under Talagrand's Inequality}
+\title{Improved Complexity Analysis of SVGD \\ under Talagrand's Inequality}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -182,14 +183,16 @@ We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 	\setlength\itemsep{0.2em}
 		\item \label{ass:k_bounded}
 	$\exists B>0$ s.t. for all $x \in \X$,\\
-	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
-	\item 	\label{ass:V_Lipschitz} The Hessian  $H_{f_i}$ is well-defined and $\exists M>0$ s.t. for all $i$, $\|H_{f_i}\|_{\op}\le M$.
+	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.\asnote{+ Mercer kernel and conditions to do the integration by part?}
+	\item 	\label{ass:V_Lipschitz} The Hessian  $H_{F}$ is well-defined and $\exists M>0$ s.t. for all $i$, $\|H_{F}\|_{\op}\le M$. 
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
+	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star)$ \textit{i.e.}, $F$ admits a stationary point.
+	\item 	\label{ass:dist} The kernel $k$ is distantly dissipative: 
 
 \end{assumplist}
 \setcounter{contlist}{\value{enumi}}
-
+\asnote{Can we extend outside of the population limit? no, locally sobolev}
 \Cref{ass:T1} is called Talagrand's inequality T1 and is satisfied if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}.
 
 \section{SVGD}
@@ -206,7 +209,7 @@ where
 %In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
 
 
-
+Dependence in $d$:\asnote{Se ramener au first moment de gaussienne + KL between gaussienne e=and target, then apply Lemma 1 of Vempala Wibisono. Dependence of lambda in d? KLS? If strongly log concave, $\lambda = $ racine du parametre de strong convexity}
 
 %In this section we assume \Cref{ass:k_bounded} holds, i.e. the norms of the kernel $k(x,x)$ and $  \nabla_1.\nabla_2 k(x,x)$ are bounded by some positive constant $B^2$.  We will also rely on \Cref{ass:bounded_I_Stein}, that states that the Stein Fisher information remains bounded at all iterations by some $C>0$.
 
@@ -232,6 +235,19 @@ where
 \end{theorem}
 %  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
 %  for the complete proof.
+\asnote{Convergence of SVGD + KSD metricizes weak cv + Anna}
+\section{General convergence: IMQ kernel}
+\begin{corollary}[Convergence]
+\end{corollary}
+
+\section{Complexity}
+\begin{corollary}[Convergence rate]
+\end{corollary}
+
+\begin{corollary}[Complexity]
+
+\end{corollary}
+
 \section{SVSGD}
 \section{VR-SVSGD}
 In this section, we analyze VR-SVSGD in the infinite number of particles regime. In this regime, VR-SVSGD is given by
@@ -443,6 +459,72 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
     \end{equation*}
     Finally, it remains to recall that $\|h_{\mu_N}\|_{\cH}^2 = I_{\st}(\mu_N|\pi)$.
     
+    \subsection{Proof of Corollary~\ref{cor:comp}}
+    The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
+    \begin{theorem}
+\label{th:svgd2}
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:stationary} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  \begin{equation}
+  \label{eq:condition-step-2}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}.
+  \end{equation}
+  Then, 
+  \begin{equation}
+    \label{eq:TL-svgd-cst-2}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    The proof is similar to that of Theorem~\ref{th:svgd}. 
+    
+    First, recall that
+\begin{equation}
+\|h_\mu\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
+\end{equation}
+Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq M\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
+\begin{align*}
+    \int \|x-x_\star\|d\mu(x) &= W_1(\mu,\delta_{x_\star}) \\
+    &\leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
+    &\leq \lambda \sqrt{\cF(\mu_0)} + \lambda \sqrt{\cF(\mu)} + W_1(\mu_0,\delta_{x_\star}).
+\end{align*}
+Therefore, 
+\begin{align}
+\label{eq:cond2}
+\|h_\mu\|_{\cH} &\leq B \left(1 + M\int \|x-x_\star\|d\mu(x) \right)\nonumber\\
+&\leq B \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu)} + M W_1(\mu_0,\delta_{x_\star})\right).
+\end{align}
+
+
+Second, using Lemma~\ref{lem:svgd} and~\eqref{eq:cond2}, if
+\begin{equation}
+\label{eq:condition-step-n}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu_n)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1},
+\end{equation}
+then,
+    \begin{equation}
+    \label{eq:TLproof}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
+    \end{equation}
+We conclude by induction as in the proof of Theorem~\ref{th:svgd}: Inequality \eqref{eq:TL-svgd-cst-2} holds for $n=0$, and if it holds up to $n-1$, then $\cF(\mu_n) \leq \cF(\mu_0)$, therefore 
+\begin{align*}
+    &(\alpha-1)\left(\alpha B^2 \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu_n)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}\\
+    \leq&(\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1},
+\end{align*}
+and any $\gamma >0$ satisfying~\eqref{eq:condition-step-2} satisfies~\eqref{eq:condition-step-n}, therefore~\eqref{eq:TLproof} holds.
+\end{proof}
+We now prove Corollary~\ref{cor:comp}. Using~\cite[Lemma 1]{vempala2019rapid}, $\cF(\mu_0) \leq F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)$. Besides,
+\begin{equation}
+    W_1(\mu_0,\delta_{x_\star}) = \int \|x-x_\star\|d\mu_0(x) = \E_{X \sim \mu_0} \|X - x_\star\| = \frac{1}{\sqrt{M}} \E_{X \sim \mu_0} \|\sqrt{M}(X - x_\star)\|,
+\end{equation}
+and using the transfer lemma and Cauchy-Schwartz inequality,
+\begin{equation}
+    W_1(\mu_0,\delta_{x_\star}) = \frac{1}{\sqrt{M}} \E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\| \leq \frac{1}{\sqrt{M}} \left(\E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\|^2\right)^{1/2} = \sqrt{\frac{d}{M}}.
+\end{equation}
+Therefore, if 
+\begin{equation}
+    \gamma = (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)} +  \sqrt{Md}\right)\right)^{-1},
+\end{equation}
+we have
 \subsection{Proof of Theorem~\ref{th:vrsvsgd}}
 We now study VR-SVSGD, \textit{i.e.}, the update 
 \begin{equation*}
