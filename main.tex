@@ -188,11 +188,10 @@ We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
 	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star)$ \textit{i.e.}, $F$ admits a stationary point.
-	\item 	\label{ass:dist} The kernel $k$ is distantly dissipative: 
 
 \end{assumplist}
 \setcounter{contlist}{\value{enumi}}
-\asnote{Can we extend outside of the population limit? no, locally sobolev}
+% \asnote{Can we extend outside of the population limit? no, locally sobolev}
 \Cref{ass:T1} is called Talagrand's inequality T1 and is satisfied if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}.
 
 \section{SVGD}
@@ -209,7 +208,7 @@ where
 %In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
 
 
-Dependence in $d$:\asnote{Se ramener au first moment de gaussienne + KL between gaussienne e=and target, then apply Lemma 1 of Vempala Wibisono. Dependence of lambda in d? KLS? If strongly log concave, $\lambda = $ racine du parametre de strong convexity}
+% Dependence in $d$:\asnote{Se ramener au first moment de gaussienne + KL between gaussienne e=and target, then apply Lemma 1 of Vempala Wibisono. Dependence of lambda in d? KLS? If strongly log concave, $\lambda = $ racine du parametre de strong convexity}
 
 %In this section we assume \Cref{ass:k_bounded} holds, i.e. the norms of the kernel $k(x,x)$ and $  \nabla_1.\nabla_2 k(x,x)$ are bounded by some positive constant $B^2$.  We will also rely on \Cref{ass:bounded_I_Stein}, that states that the Stein Fisher information remains bounded at all iterations by some $C>0$.
 
@@ -236,7 +235,7 @@ Dependence in $d$:\asnote{Se ramener au first moment de gaussienne + KL between 
 %  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
 %  for the complete proof.
 \asnote{Convergence of SVGD + KSD metricizes weak cv + Anna}
-\section{General convergence: IMQ kernel}
+\section{General convergence: IMQ kernel + Distant dissipativity}
 \begin{corollary}[Convergence]
 \end{corollary}
 
@@ -522,7 +521,7 @@ and using the transfer lemma and Cauchy-Schwartz inequality,
 \end{equation}
 Therefore, if 
 \begin{equation}
-    \gamma = (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)} +  \sqrt{Md}\right)\right)^{-1},
+    \gamma = (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)} +  \sqrt{Md}\right)\right)^{-1} = \tilde{\cO}\left(\frac{1}{M\lambda\sqrt{d}}\right),
 \end{equation}
 we have
 \subsection{Proof of Theorem~\ref{th:vrsvsgd}}
