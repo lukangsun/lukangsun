@@ -43,6 +43,7 @@
 \usepackage{amssymb,amsmath,amscd,amsfonts,amsthm,bbm,mathrsfs,yhmath}
 
 \usepackage[shortlabels]{enumitem}
+\usepackage{enumerate}
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage{graphics}
@@ -173,10 +174,26 @@
 \maketitle
 
 \begin{abstract}
-  
+  We study the complexity of SVGD which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ $L$-smooth. 
 \end{abstract}
+\section{Introduction}
+Sampling has become a prerequisite of many machine learning algorithms. We study SVGD in the population limit.
+
+\subsection{Related works}
+To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of Kernelized Stein Discrepancy (KSD). However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that the first moment of the iterates is uniformly bounded, and this uniform bound appears in the hidden constants.
+
+The ML literature on the complexity of sampling from a non logconcave target distribution has many focused on Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence if the target distribution satisfies Log Sobolev Inequality with constant $\lambda$. 
+
+Recall that $F$ $\lambda$-strongly convex $\Longrightarrow$ Log Sobolev Inequality with constant $\lambda$ $\Longrightarrow$ Talagrand's inequality T2 with constant $\frac{2}{\lambda^2}$ $\Longrightarrow$ Talagrand's inequality T1 with constant $\frac{2}{\lambda^2}$.
+
+
+\subsection{Contribution}
+
+In this paper, we study SVGD in the population limit assuming that the target distribution satisfies Talagrand's inequality T1. We show that $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^2\varepsilon}\right)$\asnote{Add the log terms to compare to Wibisono Vempala} iterations of SVGD are sufficient to achieve $\varepsilon$ accuracy in terms of KSD. We do not make any unverifiable assumption and we also provide a general convergence result for SVGD.
+
+
 \section{Background}
-\asnote{expectation of an element of the rkhs}
+\asnote{expectation of an element of the rkhs, T1, T2, LSI, strong logconcavity}
 We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 \newcounter{contlist}
 \begin{assumplist}
@@ -186,8 +203,8 @@ We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.\asnote{+ Mercer kernel and conditions to do the integration by part?}
 	\item 	\label{ass:V_Lipschitz} The Hessian  $H_{F}$ is well-defined and $\exists M>0$ s.t. for all $i$, $\|H_{F}\|_{\op}\le M$. 
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
-	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
-	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star)$ \textit{i.e.}, $F$ admits a stationary point.
+	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
+	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
 
 \end{assumplist}
 \setcounter{contlist}{\value{enumi}}
@@ -221,12 +238,19 @@ where
 
 \begin{theorem}
 \label{th:svgd}
-  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$. 
+  
+  If 
   \begin{equation}
   \label{eq:condition-step}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}.
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1},
   \end{equation}
-  Then, 
+  OR if \Cref{ass:stationary} holds and
+  \begin{equation}
+  \label{eq:condition-step-2}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
+  \end{equation}
+  then, 
   \begin{equation}
     \label{eq:TL-svgd-cst}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
@@ -234,17 +258,65 @@ where
 \end{theorem}
 %  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
 %  for the complete proof.
-\asnote{Convergence of SVGD + KSD metricizes weak cv + Anna}
-\section{General convergence: IMQ kernel + Distant dissipativity}
+
+\section{General convergence}
 \begin{corollary}[Convergence]
+Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
+  If 
+  \begin{equation*}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}\quad \text{and} \quad \gamma < \frac{2}{B (\alpha^2 + M)},
+  \end{equation*}
+  then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
 \end{corollary}
+\begin{proof}
+    Using Theorem~\ref{th:svgd} and iterating, 
+    \begin{equation*}
+        \cF(\mu_{n}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi),
+    \end{equation*}
+    therefore, for every $n \geq 0$,
+    \begin{equation*}
+    \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \cF(\mu_0).
+    \end{equation*}
+    Therefore, $\sum_{n=0}^{+\infty} I_{\st}(\mu_n|\pi) < \infty$. Therefore $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ and $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
+\end{proof}
+Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite{gorham2017measuring}. In particular, sufficient conditions include $\pi$ being distant dissipative (\textit{e.g.}, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set) and $k$ being an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$.
+%(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
 
 \section{Complexity}
 \begin{corollary}[Convergence rate]
+Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$. 
+  If 
+  \begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x) + M \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1},\frac{1}{B (\alpha^2 + M)}\right),
+  \end{equation*}
+  OR if \Cref{ass:stationary} holds and
+  \begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + M)}\right),
+  \end{equation*}
+  then,
+  \begin{equation}
+      \frac{1}{n} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \frac{2\cF(\mu_0)}{n \gamma}.
+  \end{equation}
 \end{corollary}
-
+\begin{proof}
+    Using Theorem~\ref{th:svgd}, 
+    \begin{equation*}
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2} I_{\st}(\mu_n|\pi),
+    \end{equation*}
+    and by iterating,
+    \begin{equation*}
+        0 \leq \cF(\mu_{n}) \leq \cF(\mu_{0}) - \frac{\gamma}{2} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi).
+    \end{equation*}
+    We obtain the result by rearranging the terms.
+\end{proof}
 \begin{corollary}[Complexity]
-
+\label{cor:comp}
+Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:stationary} hold true. Let $\alpha > 1$. If
+\begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)} + \sqrt{M d}\right)\right)^{-1},\frac{1}{B (\alpha^2 + M)}\right),
+  \end{equation*}
+  and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
+  then $n = \tilde{\cO}\left(\frac{M\lambda{d}^{3/2}}{\varepsilon}\right)$ iterations of SVGD are sufficient to obtain $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
 \end{corollary}
 
 \section{SVSGD}
@@ -291,7 +363,7 @@ where $(I_n)$ is a sequence of i.i.d. random variables with uniform distribution
 \appendix
 
 
-\section{Proofs}
+\section{Proofs related to SVGD}
 
 In this section we prove our main results (Theorems~\ref{th:svgd} and~\ref{th:vrsgsgd}).
 
@@ -393,7 +465,7 @@ Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite
         %Sufficiently, we shall bound the term $\|Jg)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. 
 
 \end{proof}
-\subsection{Proof of Theorem~\ref{th:SVGD}}
+\subsection{Proof of Theorem~\ref{th:svgd}}
 As mentioned in the last section, Proposition~\ref{prop:TL} can be applied to SVGD, \textit{i.e.}, the update 
 \begin{equation*}
     \mu_{n+1} = (I - \gamma h_{\mu_n}) \# \mu_n,
@@ -415,6 +487,10 @@ Let Assumptions~\ref{ass:k_bounded} and~\ref{ass:V_Lipschitz} hold true. Let $\a
 \begin{equation*}
     \|h_{\mu}\|_{\cH} \leq B \left(1 + \|\nabla F(0)\| + M \int \|x\|d\pi(x)\right) + BM \lambda \sqrt{\cF(\mu)}.
 \end{equation*}
+Moreover, if \Cref{ass:stationary} holds, then
+\begin{equation*}
+\|h_\mu\|_{\cH} \leq B \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu)} + M \int \|x-x_\star\|d\mu_0(x)\right).
+\end{equation*}
 \end{lemma}
 \begin{proof}
 Using \Cref{ass:k_bounded}
@@ -431,11 +507,29 @@ Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + M\|x\|$. T
         &= B \left(1 + \|\nabla F(0)\| + M W_1(\mu,\delta_0) \right)\\
         &\leq B \left(1 + \|\nabla F(0)\| + M W_1(\pi,\delta_0) \right) + BM W_1(\mu,\pi).
     \end{align*}
-We conclude using Talagrand's inequality~\Cref{ass:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
+We obtain the first inequality using \Cref{ass:T1}: $W_1(\mu,\pi) \leq \lambda \sqrt{\cF(\mu)}$.
+
+To prove the second inequality, recall that
+\begin{equation*}
+\|h_\mu\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
+\end{equation*}
+Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq M\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
+\begin{align*}
+    \int \|x-x_\star\|d\mu(x) &= W_1(\mu,\delta_{x_\star}) \\
+    &\leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
+    &\leq \lambda \sqrt{\cF(\mu_0)} + \lambda \sqrt{\cF(\mu)} + W_1(\mu_0,\delta_{x_\star}).
+\end{align*}
+Therefore, 
+\begin{align}
+\label{eq:cond2}
+\|h_\mu\|_{\cH} &\leq B \left(1 + M\int \|x-x_\star\|d\mu(x) \right)\nonumber\\
+&\leq B \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu)} + M W_1(\mu_0,\delta_{x_\star})\right).
+\end{align}
 \end{proof}
 
 
-    We now prove Theorem~\ref{th:svgd} by induction. First, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then, using Lemma~\ref{lem:T1}, $\gamma \|h_{\mu_0}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Therefore, using Lemma~\ref{lem:svgd}, 
+    We now prove by induction the first implication of Theorem~\ref{th:svgd}: \eqref{eq:condition-step} $\Rightarrow$ \eqref{eq:TL-svgd-cst}.
+    First, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then, using Lemma~\ref{lem:T1}, $\gamma \|h_{\mu_0}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Therefore, using Lemma~\ref{lem:svgd}, 
     \begin{equation*}
         \cF(\mu_{1}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_0}\|_{\cH}^2,
     \end{equation*}
@@ -458,72 +552,70 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
     \end{equation*}
     Finally, it remains to recall that $\|h_{\mu_N}\|_{\cH}^2 = I_{\st}(\mu_N|\pi)$.
     
-    \subsection{Proof of Corollary~\ref{cor:comp}}
-    The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
-    \begin{theorem}
-\label{th:svgd2}
-  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:stationary} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
-  \begin{equation}
-  \label{eq:condition-step-2}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}.
-  \end{equation}
-  Then, 
-  \begin{equation}
-    \label{eq:TL-svgd-cst-2}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
-    \end{equation}
-\end{theorem}
-\begin{proof}
-    The proof is similar to that of Theorem~\ref{th:svgd}. 
+    The proof of the second implication of Theorem~\ref{th:svgd} \eqref{eq:condition-step-2} $\Rightarrow$ \eqref{eq:TL-svgd-cst} is similar.
     
-    First, recall that
-\begin{equation}
-\|h_\mu\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
-\end{equation}
-Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq M\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
-\begin{align*}
-    \int \|x-x_\star\|d\mu(x) &= W_1(\mu,\delta_{x_\star}) \\
-    &\leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
-    &\leq \lambda \sqrt{\cF(\mu_0)} + \lambda \sqrt{\cF(\mu)} + W_1(\mu_0,\delta_{x_\star}).
-\end{align*}
-Therefore, 
-\begin{align}
-\label{eq:cond2}
-\|h_\mu\|_{\cH} &\leq B \left(1 + M\int \|x-x_\star\|d\mu(x) \right)\nonumber\\
-&\leq B \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu)} + M W_1(\mu_0,\delta_{x_\star})\right).
-\end{align}
+    \subsection{Proof of Corollary~\ref{cor:comp}}
+%     The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
+%     \begin{theorem}
+% \label{th:svgd2}
+%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:stationary} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+%   \begin{equation}
+%   \label{eq:condition-step-2}
+%       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}.
+%   \end{equation}
+%   Then, 
+%   \begin{equation}
+%     \label{eq:TL-svgd-cst-2}
+%         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + M)}{2}\right)I_{\st}(\mu_n|\pi).
+%     \end{equation}
+% \end{theorem}
+%\begin{proof}
+     
 
 
-Second, using Lemma~\ref{lem:svgd} and~\eqref{eq:cond2}, if
+
+Using Corollary~\ref{cor:comp}, if
+  \begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + M)}\right),
+  \end{equation*}
+  then, denoting $p = \argmin_{k \in \{0,\ldots,n-1\}} I_{\st}(\mu_k|\pi)$,
+  \begin{equation}
+      I_{\st}(\mu_p|\pi) = \frac{1}{n} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \frac{2\cF(\mu_0)}{n \gamma}.
+  \end{equation}
+% then,
+%     \begin{equation}
+%     \label{eq:TLproof}
+%         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
+%     \end{equation}
+% We conclude by induction as in the proof of Theorem~\ref{th:svgd}: Inequality \eqref{eq:TL-svgd-cst-2} holds for $n=0$, and if it holds up to $n-1$, then $\cF(\mu_n) \leq \cF(\mu_0)$, therefore 
+% \begin{align*}
+%     &(\alpha-1)\left(\alpha B^2 \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu_n)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}\\
+%     \leq&(\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1},
+% \end{align*}
+% and any $\gamma >0$ satisfying~\eqref{eq:condition-step-2} satisfies~\eqref{eq:condition-step-n}, therefore~\eqref{eq:TLproof} holds.
+% \end{proof}
+Using~\cite[Lemma 1]{vempala2019rapid}, $\cF(\mu_0) \leq F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)$. Besides,
 \begin{equation}
-\label{eq:condition-step-n}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu_n)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1},
-\end{equation}
-then,
-    \begin{equation}
-    \label{eq:TLproof}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_n}\|_{\cH}^2.
-    \end{equation}
-We conclude by induction as in the proof of Theorem~\ref{th:svgd}: Inequality \eqref{eq:TL-svgd-cst-2} holds for $n=0$, and if it holds up to $n-1$, then $\cF(\mu_n) \leq \cF(\mu_0)$, therefore 
-\begin{align*}
-    &(\alpha-1)\left(\alpha B^2 \left(1 + M\lambda \sqrt{\cF(\mu_0)} + M\lambda \sqrt{\cF(\mu_n)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}\\
-    \leq&(\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1},
-\end{align*}
-and any $\gamma >0$ satisfying~\eqref{eq:condition-step-2} satisfies~\eqref{eq:condition-step-n}, therefore~\eqref{eq:TLproof} holds.
-\end{proof}
-We now prove Corollary~\ref{cor:comp}. Using~\cite[Lemma 1]{vempala2019rapid}, $\cF(\mu_0) \leq F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)$. Besides,
-\begin{equation}
-    W_1(\mu_0,\delta_{x_\star}) = \int \|x-x_\star\|d\mu_0(x) = \E_{X \sim \mu_0} \|X - x_\star\| = \frac{1}{\sqrt{M}} \E_{X \sim \mu_0} \|\sqrt{M}(X - x_\star)\|,
+    \int \|x-x_\star\|d\mu_0(x) = \E_{X \sim \mu_0} \|X - x_\star\| = \frac{1}{\sqrt{M}} \E_{X \sim \mu_0} \|\sqrt{M}(X - x_\star)\|,
 \end{equation}
 and using the transfer lemma and Cauchy-Schwartz inequality,
 \begin{equation}
-    W_1(\mu_0,\delta_{x_\star}) = \frac{1}{\sqrt{M}} \E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\| \leq \frac{1}{\sqrt{M}} \left(\E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\|^2\right)^{1/2} = \sqrt{\frac{d}{M}}.
+    \int \|x-x_\star\|d\mu_0(x) = \frac{1}{\sqrt{M}} \E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\| \leq \frac{1}{\sqrt{M}} \left(\E_{Y \sim \cN(0_{\X},I_{\X})} \|Y\|^2\right)^{1/2} = \sqrt{\frac{d}{M}}.
 \end{equation}
-Therefore, if 
+Therefore,
 \begin{equation}
-    \gamma = (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{M}{2\pi}\right)} +  \sqrt{Md}\right)\right)^{-1} = \tilde{\cO}\left(\frac{1}{M\lambda\sqrt{d}}\right),
+    (\alpha-1)\left(\alpha B^2 \left(1 + 2M\lambda \sqrt{\cF(\mu_0)} + M \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1} = \tilde{\cO}\left(\frac{1}{M\lambda\sqrt{d} + \sqrt{Md}}\right),
 \end{equation}
-we have
+and 
+\begin{equation}
+    \gamma^{-1} = \tilde{\cO}\left(M\lambda\sqrt{d} + \sqrt{Md} + M\right) = \tilde{\cO}\left(M\lambda\sqrt{d}\right).
+\end{equation}
+Since $\cF(\mu_0) = \tilde{\cO}(d)$,
+\begin{equation}
+    \frac{\cF(\mu_0)}{\gamma} = \tilde{\cO}\left(M\lambda{d}^{3/2}\right).
+\end{equation}
+Let $\varepsilon > 0$. To output $\mu_p$ such that $I_{\st}(\mu_p|\pi)$, it suffices to ensure that $\frac{2\cF(\mu_0)}{n\gamma} \leq \varepsilon$, therefore, $\frac{2\cF(\mu_0)}{\gamma \varepsilon} = \tilde{\cO}\left(\frac{M\lambda{d}^{3/2}}{\varepsilon}\right)$ iterations are sufficient.
+\section{Proofs related to VR-SVSGD}
 \subsection{Proof of Theorem~\ref{th:vrsvsgd}}
 We now study VR-SVSGD, \textit{i.e.}, the update 
 \begin{equation*}
