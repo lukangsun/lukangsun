@@ -42,8 +42,7 @@
 \DeclareUnicodeCharacter{00A0}{~}
 \usepackage{amssymb,amsmath,amscd,amsfonts,amsthm,bbm,mathrsfs,yhmath}
 
-\usepackage[shortlabels]{enumitem}
-\usepackage{enumerate}
+%\usepackage[shortlabels]{enumitem}
 \usepackage{hyperref}
 \usepackage{caption}
 \usepackage{graphics}
@@ -51,7 +50,7 @@
 \usepackage{cleveref}
 \usepackage{comment}
 
-\usepackage{paralist}                                       
+\usepackage{paralist,enumitem}                                       
 %\usepackage{tabto}
 \usepackage{pdfpages}
 
@@ -177,21 +176,19 @@
   We study the complexity of SVGD which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ $L$-smooth. 
 \end{abstract}
 \section{Introduction}
-Sampling has become a prerequisite of many machine learning algorithms. We study SVGD in the population limit.
+Sampling is a fundamental task of many machine learning procedures. As sampling algorithms are intended to be applied on large scale problems, it has become more and more important to understand their theoretical properties such as their complexity, as a function of the dimension of the problem $d$ and the accuracy $\varepsilon$ wanted by the user. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity of the Langevin algorithm in various settings, for instance~\cite{jordan,etc.} to name a few. An alternative to the Langevin algorithm is the Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017}, that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{}, blabla and blabla. 
 
-\subsection{Related works}
-To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of Kernelized Stein Discrepancy (KSD). However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that the first moment of the iterates is uniformly bounded, and this uniform bound appears in the hidden constants.
+Both Langevin and SVGD are algorithms to sample from a target distribution $\pi$ whose density is proportional to $\exp(-F)$, where $F$ is a smooth function. They both make use the gradient of the gradient of $F$ and they can both be interpreted as a gradient flow in a space of probability measures~\cite{liu2017,steingeometry,wibisono2018sampling,durmus2018analysis,bernton2018langevin}. However, the theoretical understanding of SVGD is rather limited compared to that of the Langevin algorithm. In particular, the only known convergence rate for SVGD appeared recently~\cite{korba2020non}. However, their complexity analysis relies on an unverfiable assumption on the trajectory of the algorithm (basically that the first moment of the iterates remain uniformly bounded) their complexity result does not provide the dependence on the dimension of the problem. 
 
-The ML literature on the complexity of sampling from a non logconcave target distribution has many focused on Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence if the target distribution satisfies Log Sobolev Inequality with constant $\lambda$. 
+In this work, we assume that the target distribution satisfies a Talagrand's inequality. This assumption allows $F$ to be nonconvex~\cite[]{villani2008optimal}, and is milder than Log Sobolev Inequality that has been used in the analysis of Langevin algorithm~\cite{vempala2019rapid}. Under this assumption, we prove a complexity result that depends on the accuracy $\varepsilon$ and the dimension $d$, similarly to what has been done in the analysis of Langevin algorithm~\cite[Theorem 1]{vempala2019rapid}. We also prove additional convergence results for SVGD. In summary. our contributions are as follows: we study SVGD in the so called population limit, and prove 
+\begin{itemize}
+    \item A convergence rate in terms of the Kernelized Stein Discrepancy (KSD, see below) without making any unverifiable assumption on the trajectory of the algorithm, but by assuming that the target distribution satisfies the mildest of the Talagrand's inequalities, called T1~\cite{villani2003topics},
+    \item The complexity result $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^2\varepsilon}\right)$ that gives the sufficient number of iterations to reach $\varepsilon$ accuracy in terms of KSD as a function of the smoothness constant $L$, the dimension $d$ and the T1 constant $\lambda$,
+    \item A generic weak convergence result of SVGD under further assumptions on the target distribution.
+\end{itemize}
 
-Recall that $F$ $\lambda$-strongly convex $\Longrightarrow$ Log Sobolev Inequality with constant $\lambda$ $\Longrightarrow$ Talagrand's inequality T2 with constant $\frac{2}{\lambda^2}$ $\Longrightarrow$ Talagrand's inequality T1 with constant $\frac{2}{\lambda^2}$.
-
-
-\subsection{Contribution}
-
-In this paper, we study SVGD in the population limit assuming that the target distribution satisfies Talagrand's inequality T1. We show that $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^2\varepsilon}\right)$\asnote{Add the log terms to compare to Wibisono Vempala} iterations of SVGD are sufficient to achieve $\varepsilon$ accuracy in terms of KSD. We do not make any unverifiable assumption and we also provide a general convergence result for SVGD.
-
-
+\asnote{Add the log terms to compare to Wibisono Vempala} 
+The remainder is organized as follows.
 \section{Background}
 \asnote{expectation of an element of the rkhs, T1, T2, LSI, strong logconcavity}
 We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
@@ -205,7 +202,6 @@ We denote the feature map by $\Phi(x) \coloneqq k(x,\cdot)$.
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
 	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
-
 \end{assumplist}
 \setcounter{contlist}{\value{enumi}}
 % \asnote{Can we extend outside of the population limit? no, locally sobolev}
@@ -318,6 +314,15 @@ Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \re
   and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
   then $n = \tilde{\cO}\left(\frac{M\lambda{d}^{3/2}}{\varepsilon}\right)$ iterations of SVGD are sufficient to obtain $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
 \end{corollary}
+
+
+\subsection{Related works}
+To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of Kernelized Stein Discrepancy (KSD). However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that the first moment of the iterates is uniformly bounded, and this uniform bound appears in the hidden constants.
+
+The ML literature on the complexity of sampling from a non logconcave target distribution has many focused on Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence if the target distribution satisfies Log Sobolev Inequality with constant $\lambda$. 
+
+Recall that $F$ $\lambda$-strongly convex $\Longrightarrow$ Log Sobolev Inequality with constant $\lambda$ $\Longrightarrow$ Talagrand's inequality T2 with constant $\frac{2}{\lambda^2}$ $\Longrightarrow$ Talagrand's inequality T1 with constant $\frac{2}{\lambda^2}$.
+
 
 \section{SVSGD}
 \section{VR-SVSGD}
@@ -621,7 +626,7 @@ We now study VR-SVSGD, \textit{i.e.}, the update
 \begin{equation*}
     \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
 \end{equation*}
-where $g_n = P_{\mu_n} \left(v_n + \nabla \log(\mu_n)\right)$ and $v_n$ is a stochastic gradient, \textit{i.e.}, $\E_n v_n(\cdot) = \nabla F(\cdot)$. For simplicity, we assume that the stochastic gradient has a bounded variance, \textit{i.e.}, $\E \|P_{\mu_n} v_n - P_{\mu_n} \nabla F\|_{\cH} \leq \sigma$. By applying Proposition~\ref{prop:TL}, we have
+where $g_n = P_{\mu_n} \left(v_n + \nabla \log(\mu_n)\right)$ and $v_n$ is a stochastic gradient, \textit{i.e.}, $\E_n v_n(\cdot) = \nabla F(\cdot)$. In particular, we have $\E_n g_n = h_{\mu_n}$. For simplicity, we assume that the stochastic gradient has a bounded variance, \textit{i.e.}, $\E \|P_{\mu_n} v_n - P_{\mu_n} \nabla F\|_{\cH} \leq \sigma$. By applying Proposition~\ref{prop:TL}, we have
 that if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation*}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g_n}_{\cH} +  \frac{\gamma^2 K}{2}\|g_n\|_{\cH}^2,
@@ -634,7 +639,7 @@ that if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation*}
         \E\cF(\mu_{n+1}) \leq \E \cF(\mu_{n}) - \gamma\left(1-\frac{\gamma K}{2}\right)I_{\st}(\mu_n|\pi) +  \frac{\gamma^2 K}{2}\sigma^2.
     \end{equation*}
-    {\color{red} The condition on the step size depends on $n$. We could get rid of $n$ as in the proof of SVGD (section above) by proving that $\|g_n\|_{\cH} \leq \phi(\E\cF(\mu_n))$, where $\phi$ is a non decreasing function. But this is not true in general, we can only have $\E \|g_n\|_{\cH} \leq \phi(\E \cF(\mu_n))$ using Talagrand's inequality as in the last section. \textbf{So, what bothers us is the fact that the condition on the step size must hold almost surely instead of in expectation}. We can always assume a uniform bound $\|g_n\|_{\cH} < C$ a.s. for every $n$, but we don't want to do that since our final the goal is to study a Variance Reduced version of SVSGD.}
+    {\color{red} The condition on the step size depends on $n$. We could get rid of $n$ as in the proof of SVGD (see the induction argument in the previous section) by proving that $\|g_n\|_{\cH} \leq \phi(\E\cF(\mu_n))$, where $\phi$ is a non decreasing function. But this is not true in general, we can only have $\E \|g_n\|_{\cH} \leq \phi(\E \cF(\mu_n))$ using Talagrand's inequality, as in the previous section. \textbf{So, what bothers us is the fact that the condition on the step size must hold almost surely instead of in expectation}. We can always assume a uniform bound $\|g_n\|_{\cH} < C$ a.s. for every $n$, but we don't want to do that since our final the goal is to study a Variance Reduced version of SVSGD.}
 \section{Proofs related to VR-SVSGD}
 \subsection{Proof of Theorem~\ref{th:vrsvsgd}}
 We now study VR-SVSGD, \textit{i.e.}, the update 
