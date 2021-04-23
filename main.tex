@@ -275,7 +275,11 @@ Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold
     \end{equation*}
     Therefore, $\sum_{n=0}^{+\infty} I_{\st}(\mu_n|\pi) < \infty$. Therefore $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ and $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
 \end{proof}
-Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite{gorham2017measuring}. In particular, sufficient conditions include $\pi$ being distant dissipative (\textit{e.g.}, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set) and $k$ being an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$.
+Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem 8]{gorham2017measuring}. In particular, a sufficient condition is the combines the two following properties:
+\begin{itemize}
+    \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
+    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check these!}
+\end{itemize}  
 %(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
 
 \section{Complexity}
@@ -317,6 +321,17 @@ Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \re
 
 
 \subsection{Related works}
+
+
+% We do not have a rate in KL for SVGD but we can have a rate in KSD for Langevin:
+% \begin{proposition}[Comparison to Langevin]
+% Assume LSI. Then, Langevin $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon^2})$
+% \end{proposition}
+% \begin{proof}
+%     Since LSI holds, then T1 holds. Then we can combine Lemma~\ref{lem:T1} with~\cite[Theorem 1]{vempala2019rapid}.
+% \end{proof}
+
+
 To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of Kernelized Stein Discrepancy (KSD). However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that the first moment of the iterates is uniformly bounded, and this uniform bound appears in the hidden constants.
 
 The ML literature on the complexity of sampling from a non logconcave target distribution has many focused on Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence if the target distribution satisfies Log Sobolev Inequality with constant $\lambda$. 
