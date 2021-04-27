@@ -256,10 +256,12 @@ Stein Variational Gradient Descent (SVGD) is an algorithm to sample from $\pi \p
 \end{equation}
 where 
 \begin{equation}
-    h_{\mu} = P_{\mu} \nabla \log \left(\frac{\mu}{\pi})\right.
+    h_{\mu} = P_{\mu} \nabla \log \left(\frac{\mu}{\pi}\right).
 \end{equation}
 \asnote{Check integration by part here and in the proof of the. descent lemma also. We can show that $\mu_n(x)$ is $C^1$ by induction. In particular we can apply \cite[Lemma 10.4.1]{ambrosio2008gradient}. Moreover, if $\mu_n \in \cP_2(\X)$, then $\mu_{n+1} \in \cP_2(\X)$}
 %(x) \coloneqq \int k(x,y)\nabla F(y) - \nabla_y k(x,y) d\mu(y), \quad \text{or},\quad  h_{\mu} \coloneqq \int \nabla F(y) \Phi(y) - \nabla \Phi(y) d\mu(y).
+SVGD can be interpreted as a Riemannian gradient descent thanks to two interpretations. First, the Wasserstein space can be interpreted as a Riemannian space~\cite{villani2008optimal} and the exponential map at $\mu$ is $\phi \mapsto (I + \phi)\#\mu$. Second, $\nabla \log \left(\frac{\mu}{\pi}\right)$ can be identified as $\nabla \cF(\mu)$ and $P_{\mu}\nabla \cF(\mu)$ is the ...
+Combining these two interpretations, SVGD can be interpreted as a Riemannian gradient descent.
 \newcounter{contlist}
 \begin{assumplist}
 	\setlength\itemsep{0.2em}
