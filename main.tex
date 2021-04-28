@@ -182,7 +182,7 @@ Sampling from a given target distribution $\pi$ is a fundamental task of many Ma
     \label{eq:target}
     \pi(x) \propto \exp(-F(x)),
 \end{equation}
-where $F:\X \to \R$ is a function defined on $\X \coloneqq \R^d$.
+where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$.
 
 As sampling algorithms are intended to be applied on large scale problems, it has become more and more important to understand their theoretical properties such as their complexity, as a function of the dimension of the problem $d$ and the accuracy $\varepsilon$ wanted by the user. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.}~\cite{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
@@ -222,12 +222,51 @@ All these results hold without assuming $F$ convex. Our complexity result is sum
 % \asnote{Add the log terms to compare to Wibisono Vempala} 
 
 The remainder is organized as follows.
-
+%Change F, L, \lambda in the proof !!!!!!!!!
 
 \section{Background}
 \subsection{Optimal transport}
-%L^2(\mu,\R^d), pushforward, W_1, W_2
-\asnote{T1, T2, LSI, strong logconcavity}
+%L^2(\mu,\R^d), pushforward, W_1, W_2, wass gradient, \cF
+%T1, T2, LSI, strong logconcavity
+Consider $p \geq 1$. We denote by $\cP_p(\X)$ the set of Borel probability measures $\mu$ over $\X$ with finite $p^{\text{th}}$ moment: $\int \|x\|^p d\mu(x) < \infty$. We denote by $L^p(\mu)$ the set of measurable functions $f : \X \to \X$ such that $\int \|f\|^p d\mu$. Note that the identity map $I$ of $\X$ satisfies $I \in L^p(\mu)$ if $\mu \in \cP_p(\X)$. Moreover, denoting the image (or pushforward) measure of $\mu$ by a map $T$ as $T \# \mu$, we have that if $\mu \in \cP_p(\X)$ and $T \in L^p(\mu)$ then $T \# \mu \in \cP_p(\X)$ using the transfer lemma.
+
+For every $\mu,\nu \in \cP_p(\X)$, the $p$-Wasserstein distance between $\mu$ and $\nu$ is denoted by
+\begin{equation}
+    \label{eq:wass}
+    W_p(\mu,\nu)^p = \inf_{s \in \cS(\mu,\nu)} \int \|x-y\|^p ds(x,y),
+\end{equation}
+where $\cS(\mu,\nu)$ is the set of couplings between $\mu$ and $\nu$, \textit{i.e.}, the set of nonnegative measures over $\X^2$ such that $P \# s = \mu$ (resp. $Q \# s = \nu$) where $P: (x,y) \mapsto x$ (resp. $Q: (x,y) \mapsto y$) denotes the projection onto the first
+(resp. the second) component. The $p$-Wasserstein distance is a metric over $\cP_p(\X)$. The metric space $(\cP_2(\X),W_2)$ is called the Wasserstein space.
+
+
+In this paper, we consider a target probability distribution $\pi$ proportional to $\exp(-F)$, where $F$ satisfies the following.
+\begin{assumption}
+\label{ass:V_Lipschitz} The Hessian $H_{F}$ is well-defined and $\exists L \geq 0$ such that $\|H_{F}\|_{\op} \le L$, where $\|\cdot\|_{\op}$ denotes the operator norm.
+\end{assumption}
+The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler (KL) divergence as 
+\begin{equation}
+\label{eq:KL}
+    \KL(\mu|\pi) = \int \log\left(\frac{d\mu}{d\pi}(x)\right)d\mu(x),
+\end{equation}
+if $\mu$ admits the density $\frac{d\mu}{d\pi}$ w.r.t. $\pi$, and $\KL(\mu|\pi) = +\infty$ else. Then, $\KL(\mu|\pi) \geq 0$ and $\KL(\mu|\pi) = 0$ if and only if $\mu = \pi$. Therefore, assuming $\pi \in \cP_2(\X)$, the optimization problem
+\begin{equation}
+    \label{eq:optim-pb}
+    \min_{\mu \in \cP_2(\X)} \cF(\mu) \coloneqq \KL(\mu|\pi),
+\end{equation}
+admits a unique solution, the distribution $\pi$.
+We will see below that SVGD can be seen as an optimization algorithm to solve~\eqref{eq:optim-pb}.
+
+Indeed, the Wasserstein space can be endowed with a differential structure. In particular, when it is well defined, the Wasserstein gradient of the functional $\cF$ denoted by $\nabla_W \cF(\mu)$ is an element of $L^2(\mu)$ and satisfies $\nabla_W \cF(\mu) = \nabla \log \left(\frac{d\mu}{d\pi}\right)$.
+%STOP HERE.
+Our key assumption on $\pi$ is that it satisfies the Talagrand's inequality T1~\cite[Definition 22.1]{villani2003topics}.
+\begin{assumption}
+\label{ass:T1} 
+$\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$, $W_1(\mu,\pi) \leq \sqrt{\frac{2 \KL(\mu|\pi)}{\lambda}}$.
+\end{assumption}
+The target distribution $\pi$ satisfies T1 if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption about the tail of $\pi$. In particular, $\pi \in \cP_2(\X)$.
+
+\Cref{ass:T1} is rather mild. In particular, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T1 is implied by T2 ($W_2(\mu,\pi) \leq \sqrt{\frac{2 \KL(\mu|\pi)}{\lambda}}$) with the same constant $\lambda$. Moreover, Log Sobolev Inequality (LSI) with constant $\lambda$ implies T2 with the same constant $\lambda$~\cite[Theorem 22.17]{villani2008optimal}. In conclusion, LSI$\Rightarrow$T2$\Rightarrow$T1 with the same constant $\lambda$. Recall that LSI is the key assumption in the analysis of Langevin algorithm in the case where $F$ is nonconvex~\cite{vempala2019rapid}.
+
 \subsection{Reproducing Kernel Hilbert Space}
 For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm.
 We consider a kernel $k$ associated to a Reproducing Kernel Hilbert Space (RKHS) denoted by $\cH_0$. We denote the so-called feature map $k(x,\cdot)$ by $\Phi(x) \coloneqq k(\cdot,x) \in \cH_{0}$ for every $x \in \X$. The Hilbert space $\cH_0^d$ is denoted by $\cH \coloneqq \cH_0^d$. We make the following assumption.
@@ -256,19 +295,28 @@ Stein Variational Gradient Descent (SVGD) is an algorithm to sample from $\pi \p
 \end{equation}
 where 
 \begin{equation}
-    h_{\mu} = P_{\mu} \nabla \log \left(\frac{\mu}{\pi}\right).
+    h_{\mu}(x) \coloneqq \int k(x,y)\nabla F(y) - \nabla_y k(x,y) d\mu(y), \quad \text{or},\quad  h_{\mu} \coloneqq \int \nabla F(y) \Phi(y) - \nabla \Phi(y) d\mu(y).
 \end{equation}
-\asnote{Check integration by part here and in the proof of the. descent lemma also. We can show that $\mu_n(x)$ is $C^1$ by induction. In particular we can apply \cite[Lemma 10.4.1]{ambrosio2008gradient}. Moreover, if $\mu_n \in \cP_2(\X)$, then $\mu_{n+1} \in \cP_2(\X)$}
-%(x) \coloneqq \int k(x,y)\nabla F(y) - \nabla_y k(x,y) d\mu(y), \quad \text{or},\quad  h_{\mu} \coloneqq \int \nabla F(y) \Phi(y) - \nabla \Phi(y) d\mu(y).
-SVGD can be interpreted as a Riemannian gradient descent thanks to two interpretations. First, the Wasserstein space can be interpreted as a Riemannian space~\cite{villani2008optimal} and the exponential map at $\mu$ is $\phi \mapsto (I + \phi)\#\mu$. Second, $\nabla \log \left(\frac{\mu}{\pi}\right)$ can be identified as $\nabla \cF(\mu)$ and $P_{\mu}\nabla \cF(\mu)$ is the ...
-Combining these two interpretations, SVGD can be interpreted as a Riemannian gradient descent.
+%\asnote{Check integration by part here and in the proof of the. descent lemma also. We can show that $\mu_n(x)$ is $C^1$ by induction. In particular we can apply \cite[Lemma 10.4.1]{ambrosio2008gradient}. Moreover, if $\mu_n \in \cP_2(\X)$, then $\mu_{n+1} \in \cP_2(\X)$}
+\paragraph{Our point of view on SVGD.} We now provide our intuition on SVGD. The considerations here are not used explicitly in the proofs, but help to understand why the results of this paper hold. 
+
+\textit{In the population limit, SVGD can be seen as a Riemannian gradient descent, thanks to the two following reasons.} First, in a Riemannian interpretation of the Wasserstein space~\cite{villani2008optimal}, for every $\mu \in \cP_2(\X)$, the map $\exp_{\mu} : \phi \mapsto (I + \phi)\#\mu$ can be seen as the exponential map at $\mu$. SVGD~\eqref{eq:svgdpopulation} can be rewritten as $\mu_{n+1} = \exp_{\mu_n}(-\gamma h_{\mu_n})$. Second, $-h_{\mu}$ can be seen as the negative gradient of $\cF$ at $\mu$ under a certain metric. Indeed, using an integration by parts, $h_{\mu} = P_{\mu} \nabla_W \cF(\mu)$, see \textit{e.g.}~\cite{korba2020non}. Therefore, for every $g \in \cH$, $\ps{h_{\mu},g}_{\cH} = \ps{\nabla_W \cF(\mu),g}_{L^2(\mu)}$, hence $h_{\mu}$ can be seen as a Wasserstein gradient of $\cF$ under the inner product of $\cH$.
+% SVGD can be interpreted as a Riemannian gradient descent thanks to two interpretations. First, the Wasserstein space can be interpreted as a Riemannian space~\cite{villani2008optimal} and the exponential map at $\mu$ is $\phi \mapsto (I + \phi)\#\mu$. Second, $\nabla \log \left(\frac{\mu}{\pi}\right)$ can be identified as $\nabla \cF(\mu)$ and $P_{\mu}\nabla \cF(\mu)$ is the ...
+% Combining these two interpretations, SVGD can be interpreted as a Riemannian gradient descent.
+The Kernelized Stein Discrepancy (KSD), a natural discrepancy between probability distributions that is used in the context of SVGD (to measure the convergence of the algorithm), see~\cite{liu2016stein,liu2017stein}. The KSD is defined as the square root of the Stein Fisher Information~\cite{duncan2019geometry} $I_{\st}$: 
+\begin{equation}
+\label{eq:Istein}
+    I_{\st}(\mu|\pi) \coloneqq \|h_{\mu}\|_{\cH}^2.
+\end{equation}
+In this paper, we study the complexity of SVGD in terms of the Stein Fisher Information. Indeed, $I_{\st}(\mu|\pi) = 0$ implies $\mu = \pi$ if $\cH$ is rich enough~\cite{liu2016kernelized,chwialkowski2016kernel,oates2019convergence} and under further conditions on $\nabla F$ and $k$, we even have that $I_{\st}(\mu_n|\pi) \to 0$ is equivalent to $\mu_n \to \pi$ weakly~\cite[Theorem 8]{gorham2017measuring}, see below.
 \newcounter{contlist}
 \begin{assumplist}
 	\setlength\itemsep{0.2em}
 		\item \label{ass:k_bounded}
 	$\exists B>0$ s.t. for all $x \in \X$,\\
-	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.\asnote{+ Mercer kernel and conditions to do the integration by part?}
-	\item 	\label{ass:V_Lipschitz} The Hessian  $H_{F}$ is well-defined and $\exists M>0$ s.t. for all $i$, $\|H_{F}\|_{\op}\le M$. 
+	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
+	%\asnote{+ Mercer kernel and conditions to do the integration by part?}
+	
 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
 	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
@@ -458,7 +506,7 @@ where $(I_n)$ is a sequence of i.i.d. random variables with uniform distribution
 In this section we prove our main results (Theorems~\ref{th:svgd} and~\ref{th:vrsgsgd}).
 
 \subsection{Notations}
-
+%Jac, HS, op, dirac
 %%%%NOTATIONS TO DEFINE IN APPENDIX OR MAIN PAPER:
 %\cF
 %Definition in appendix vs deifnition in main paper
@@ -466,6 +514,7 @@ In this section we prove our main results (Theorems~\ref{th:svgd} and~\ref{th:vr
 %Jacobian, H_0, HS, op, several inner products, Wasserstein gradients,/Hessian
 %Feature map \Phi(x)
 %W_1, W_2, Dirac
+The Jacobian of a function $\phi: \X \to \X$ is denoted by $J \phi$. For every $x \in \X$, $J \phi(x)$ can be seen as a $d \times d$ matrix. For any $d \times d$ matrix $A$, $\|A\|_{\HS}$ denotes the Hilbert Schmidt norm of $A$ and by $\|A\|_{\op}$ the operator norm of $A$ viewed as a linear operator $A: \X \to \X$ (where $\X$ is endowed with the standard Euclidean inner product). Finally, $\delta_x$ is the Dirac measure at $x \in \X$.
 
 \subsection{Fundamental inequality}
 
@@ -520,18 +569,21 @@ Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite
         \begin{equation*}
     \varphi(0) = \cF(\mu_n)\; \text{ and } \;\varphi(\gamma) = \cF(\mu_{n+1}).
         \end{equation*} 
-        Then, using the chain rule~\cite[Section 8.2]{villani2003topics}, 
-        \begin{equation*}
-            \varphi'(t)=\ps{\nabla_{W_2} \cF(\rho_t),w_t}_{L^2(\rho_t)}\; \text{ and } \;\varphi''(t) = \ps{w_t,H_{W_2}{\cF}(\rho_t)w_t}_{L^2(\rho_t)}.
-        \end{equation*}
-        Therefore, using $g \in \cH$,
-        \begin{equation*}
-            \varphi'(0) = -\ps{\nabla_{W_2} \cF(\mu_n),g}_{L^2(\mu_n)} = -\ps{h_{\mu_n},g}_{\cH}.
-        \end{equation*}
-        Moreover, $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where
-        \begin{equation*}
-        \psi_1(t) = \E_{x \sim \rho_t} \left[ \ps{w_t(x), H_V(x) w_t(x)}\right] \; \text{ and } \; \psi_2(t) = \E_{x \sim \rho_t} \left[ \|J w_t(x)\|_{\HS}^2 \right].
-        \end{equation*}
+        Then, 
+        % using the chain rule~\cite[Section 8.2]{villani2003topics}, 
+        % \begin{equation*}
+        %     \varphi'(t)=\ps{\nabla_{W_2} \cF(\rho_t),w_t}_{L^2(\rho_t)}\; \text{ and } \;\varphi''(t) = \ps{w_t,H_{W_2}{\cF}(\rho_t)w_t}_{L^2(\rho_t)}.
+        % \end{equation*}
+        % Therefore, using $g \in \cH$,
+        \begin{equation}
+        \label{eq:chainrule1}
+            \varphi'(0) = -\ps{h_{\mu_n},g}_{\cH},
+        \end{equation}
+        and, $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where\footnote{Equations~\eqref{eq:chainrule1} and~\eqref{eq:chainrule2} are the equations that would deserve more explanations. See~\cite[Lemma 11]{korba2020non} more for details.}
+        \begin{equation}
+        \label{eq:chainrule2}
+        \psi_1(t) = \E_{x \sim \rho_t} \left[ \ps{w_t(x), H_F(x) w_t(x)}\right] \; \text{ and } \; \psi_2(t) = \E_{x \sim \rho_t} \left[ \|J w_t(x)\|_{\HS}^2 \right].
+        \end{equation}
         Recall that $w_t = -g \circ (\phi_t)^{-1}$.
     The first term $\psi_1(t)$ is bounded using the transfer lemma, \Cref{ass:V_Lipschitz} and Inequality~\eqref{eq:gbound}:
     \begin{equation*}
