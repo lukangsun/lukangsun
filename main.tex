@@ -228,6 +228,8 @@ The remainder is organized as follows.
 \subsection{Optimal transport}
 %L^2(\mu,\R^d), pushforward, W_1, W_2, wass gradient, \cF
 %T1, T2, LSI, strong logconcavity
+For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm.
+
 Consider $p \geq 1$. We denote by $\cP_p(\X)$ the set of Borel probability measures $\mu$ over $\X$ with finite $p^{\text{th}}$ moment: $\int \|x\|^p d\mu(x) < \infty$. We denote by $L^p(\mu)$ the set of measurable functions $f : \X \to \X$ such that $\int \|f\|^p d\mu$. Note that the identity map $I$ of $\X$ satisfies $I \in L^p(\mu)$ if $\mu \in \cP_p(\X)$. Moreover, denoting the image (or pushforward) measure of $\mu$ by a map $T$ as $T \# \mu$, we have that if $\mu \in \cP_p(\X)$ and $T \in L^p(\mu)$ then $T \# \mu \in \cP_p(\X)$ using the transfer lemma.
 
 For every $\mu,\nu \in \cP_p(\X)$, the $p$-Wasserstein distance between $\mu$ and $\nu$ is denoted by
@@ -243,6 +245,12 @@ In this paper, we consider a target probability distribution $\pi$ proportional 
 \begin{assumption}
 \label{ass:V_Lipschitz} The Hessian $H_{F}$ is well-defined and $\exists L \geq 0$ such that $\|H_{F}\|_{\op} \le L$, where $\|\cdot\|_{\op}$ denotes the operator norm.
 \end{assumption}
+To specify the dependence in the dimension $d$ of our complexity bounds, we shall sometimes assume moreover the following.
+\begin{assumption}
+\label{ass:stationary} 
+$\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
+\end{assumption}
+
 The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler (KL) divergence as 
 \begin{equation}
 \label{eq:KL}
@@ -258,17 +266,35 @@ We will see below that SVGD can be seen as an optimization algorithm to solve~\e
 
 Indeed, the Wasserstein space can be endowed with a differential structure. In particular, when it is well defined, the Wasserstein gradient of the functional $\cF$ denoted by $\nabla_W \cF(\mu)$ is an element of $L^2(\mu)$ and satisfies $\nabla_W \cF(\mu) = \nabla \log \left(\frac{d\mu}{d\pi}\right)$.
 %STOP HERE.
+
+
+The analysis of sampling algorithm in the case where $F$ is nonconvex often goes through functional inequalities.
+
+\begin{definition}[Logarithmic Sobolev inequality (LSI)]
+The distribution $\pi$ satisfies the Logarithmic Sobolev inequality if $\exists \lambda > 0$ s.t. for all $\mu \in \cP_2(\X)$, $\cF(\mu) \leq \frac{2}{\lambda}\|\nabla \cF(\mu)\|_{L^2(\mu)}^2$.
+\end{definition}
+
+LSI is the key assumption in the analysis of Langevin algorithm in the case where $F$ is not convex~\cite{vempala2019rapid}.
+
+\begin{definition}[Talagrand's Inequality T$p$]
+Let $p \geq 1$. The distribution $\pi$ satisfies the Talagrand's Inequality T$p$ if $\exists \lambda > 0$ s.t. for all $\mu \in \cP_p(\X)$, $W_p(\mu,\pi) \leq \sqrt{\frac{2 \cF(\mu)}{\lambda}}$.
+\end{definition}
+
+T1 is milder than LSI. Indeed, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T2 implies T1 with the same constant $\lambda$. Moreover, using~\cite[Theorem 22.17]{villani2008optimal}, LSI implies T2 with the same constant $\lambda$. In conclusion, LSI$\Rightarrow$T2$\Rightarrow$T1 with the same constant $\lambda$.
+
 Our key assumption on $\pi$ is that it satisfies the Talagrand's inequality T1~\cite[Definition 22.1]{villani2003topics}.
 \begin{assumption}
 \label{ass:T1} 
-$\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$, $W_1(\mu,\pi) \leq \sqrt{\frac{2 \KL(\mu|\pi)}{\lambda}}$.
+The target distribution $\pi$ satisfies T1.
 \end{assumption}
+
 The target distribution $\pi$ satisfies T1 if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption about the tail of $\pi$. In particular, $\pi \in \cP_2(\X)$.
 
-\Cref{ass:T1} is rather mild. In particular, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T1 is implied by T2 ($W_2(\mu,\pi) \leq \sqrt{\frac{2 \KL(\mu|\pi)}{\lambda}}$) with the same constant $\lambda$. Moreover, Log Sobolev Inequality (LSI) with constant $\lambda$ implies T2 with the same constant $\lambda$~\cite[Theorem 22.17]{villani2008optimal}. In conclusion, LSI$\Rightarrow$T2$\Rightarrow$T1 with the same constant $\lambda$. Recall that LSI is the key assumption in the analysis of Langevin algorithm in the case where $F$ is nonconvex~\cite{vempala2019rapid}.
+Somehow, T1 allows $F$ to be "more nonconvex" than LSI. Moreover, if $F$ is $\lambda$-strongly convex, then LSI and T2 hold with constant $\lambda$.
+
 
 \subsection{Reproducing Kernel Hilbert Space}
-For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm.
+
 We consider a kernel $k$ associated to a Reproducing Kernel Hilbert Space (RKHS) denoted by $\cH_0$. We denote the so-called feature map $k(x,\cdot)$ by $\Phi(x) \coloneqq k(\cdot,x) \in \cH_{0}$ for every $x \in \X$. The Hilbert space $\cH_0^d$ is denoted by $\cH \coloneqq \cH_0^d$. We make the following assumption.
 \begin{assumption}
 \label{ass:k_bounded}
@@ -309,21 +335,21 @@ The Kernelized Stein Discrepancy (KSD), a natural discrepancy between probabilit
     I_{\st}(\mu|\pi) \coloneqq \|h_{\mu}\|_{\cH}^2.
 \end{equation}
 In this paper, we study the complexity of SVGD in terms of the Stein Fisher Information. Indeed, $I_{\st}(\mu|\pi) = 0$ implies $\mu = \pi$ if $\cH$ is rich enough~\cite{liu2016kernelized,chwialkowski2016kernel,oates2019convergence} and under further conditions on $\nabla F$ and $k$, we even have that $I_{\st}(\mu_n|\pi) \to 0$ is equivalent to $\mu_n \to \pi$ weakly~\cite[Theorem 8]{gorham2017measuring}, see below.
-\newcounter{contlist}
-\begin{assumplist}
-	\setlength\itemsep{0.2em}
-		\item \label{ass:k_bounded}
-	$\exists B>0$ s.t. for all $x \in \X$,\\
-	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
-	%\asnote{+ Mercer kernel and conditions to do the integration by part?}
+% \newcounter{contlist}
+% \begin{assumplist}
+% 	\setlength\itemsep{0.2em}
+% 		\item \label{ass:k_bounded}
+% 	$\exists B>0$ s.t. for all $x \in \X$,\\
+% 	$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0})^{\frac{1}{2}}\le B$.
+% 	%\asnote{+ Mercer kernel and conditions to do the integration by part?}
 	
-	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
-	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
-	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
-\end{assumplist}
-\setcounter{contlist}{\value{enumi}}
-% \asnote{Can we extend outside of the population limit? no, locally sobolev}
-\Cref{ass:T1} is called Talagrand's inequality T1 and is satisfied if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption about the tail of $\pi$.
+% 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
+% 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
+% 	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
+% \end{assumplist}
+% \setcounter{contlist}{\value{enumi}}
+% % \asnote{Can we extend outside of the population limit? no, locally sobolev}
+% \Cref{ass:T1} is called Talagrand's inequality T1 and is satisfied if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption about the tail of $\pi$.
 
 \section{SVGD}
 In this section, we analyze SVGD in the infinite number of particles regime. In this regime, SVGD is given by
@@ -335,7 +361,7 @@ where
 \begin{equation}
     h_{\mu} \coloneqq \int \nabla F(x) \Phi(x) - \nabla \Phi(x) d\mu(x).
 \end{equation}
-\asnote{Relationship with Wasserstein gradient here. Check: definition of Wass grad. Conditions IPP. $\cP_1$ or $\cP_2$?}
+%\asnote{Relationship with Wasserstein gradient here. Check: definition of Wass grad. Conditions IPP. $\cP_1$ or $\cP_2$?}
 %In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
 
 
