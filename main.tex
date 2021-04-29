@@ -186,11 +186,11 @@ where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d
 
 As sampling algorithms are intended to be applied on large scale problems, it has become more and more important to understand their theoretical properties such as their complexity, as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.}~\cite{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
-Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{liu2017policy}, sequential decision making~\cite{zhang2018learning,zhang2019scalable}, Generative Adversarial Networks~\cite{tao2019variational}, Variational Auto Encoders~\cite{pu2017vae}, Federated Learning~\cite{kassab2020federated} etc. However, the theoretical understanding of SVGD is limited compared to that of Langevin algorithm~\cite{lu2019scaling,duncan2019geometry,liu2017stein}. In particular, the first complexity result of SVGD appeared recently~\cite[Corollary 6]{korba2020non} under an unverifiable assumption on the trajectory of the algorithm, basically that the first moment of the iterates remain uniformly bounded by a constant $C$ at every iteration. Moreover, the complexity bound~\cite[Corollary 6]{korba2020non} does not explicit the dependence in the dimension $d$ of the problem, precisely because this bound depends on $C$.
+Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{liu2017policy}, sequential decision making~\cite{zhang2018learning,zhang2019scalable}, Generative Adversarial Networks~\cite{tao2019variational}, Variational Auto Encoders~\cite{pu2017vae}, Federated Learning~\cite{kassab2020federated} etc. However, the theoretical understanding of SVGD is limited compared to that of Langevin algorithm~\cite{lu2019scaling,duncan2019geometry,liu2017stein}. In particular, the first complexity result of SVGD appeared recently~\cite[Corollary 6]{korba2020non} under an assumption on the trajectory of the algorithm which cannot be checked prior to running the algorithm. Basically, this assumption is that the first moment of the iterates remain uniformly bounded by a constant $C$ at every iteration. Moreover, the complexity bound~\cite[Corollary 6]{korba2020non} does not explicit the dependence in the dimension $d$ of the problem, precisely because this bound depends on $C$.
 
 Our paper intends to provide a clean analysis of SVGD, without assumption on the trajectory and with complexity bounds depending on $\varepsilon$ and $d$. Our key assumption is that $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution~\cite[Theorem 22.10]{villani2008optimal} and is implied by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. Under T1 inequality, 
 \begin{itemize}
-    \item We provide a convergence rate for SVGD in the so-called population limit without unverifiable assumption on the trajectory of the algorithm,
+    \item We provide a convergence rate for SVGD in the so-called population limit without assumption on the trajectory of the algorithm,
     \item We provide a complexity bound for SVGD in terms of the dimension $d$ and the desired accuracy $\varepsilon$,
     \item We provide a generic weak convergence result for SVGD. 
 \end{itemize}
@@ -487,7 +487,7 @@ Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alph
 % \end{proof}
 
 
-To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that the first moment of the iterates is uniformly bounded, and this uniform bound appears in the hidden constants.
+To our knowledge, the only existing complexity result for SVGD is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. Moreover, this complexity result is established under the assumption that $\sup_n I_{\st}(\mu_n|\pi) < \infty$, and the quantity $\sup_n I_{\st}(\mu_n|\pi)$ appears in the hidden constants.
 
 The ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence if the target distribution satisfies LSI, which is stronger than T1.
 
@@ -781,7 +781,7 @@ Let $\varepsilon > 0$. To output $\mu_p$ such that $I_{\st}(\mu_p|\pi) < \vareps
 \section{FOR AFTER NEURIPS: STOCHASTIC GRADIENT}
 
 \subsection{Proofs related to SVSGD}
-We now study VR-SVSGD, \textit{i.e.}, the update 
+We now study SVSGD, \textit{i.e.}, the update 
 \begin{equation*}
     \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
 \end{equation*}
