@@ -128,7 +128,7 @@
 
 
 
-\title{Improved Complexity Analysis of SVGD \\ under Talagrand's Inequality}
+\title{Complexity Analysis of SVGD \\ under Talagrand's Inequality T1}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -174,7 +174,7 @@
 \maketitle
 
 \begin{abstract}
-  We study the complexity of SVGD which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ smooth and nonconvex. We provide a clean complexity bound for SVGD in the population limit in terms of the Stein Fisher Information (or squared Kernelized Stein Discrepancy), as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$, without assumption on the trajectory of the algorithm. Our key assumption is that the target distribution satisfies Talagrand's inequality T1.
+  We study the complexity of SVGD which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ smooth and nonconvex. We provide a clean complexity bound for SVGD in the population limit in terms of the Stein Fisher Information (or squared Kernelized Stein Discrepancy), as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$. Unlike existing work, we do not make any assumption on the trajectory of the algorithm. Instead, our key assumption is that the target distribution satisfies Talagrand's inequality T1.
 \end{abstract}
 \section{Introduction}
 Sampling from a given target distribution $\pi$ is a fundamental task of many Machine Learning procedures. In Bayesian Machine Learning, the target distribution $\pi$ is known up to a multiplicative factor and often takes the form
