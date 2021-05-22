@@ -128,7 +128,7 @@
 
 
 
-\title{Complexity Analysis of SVGD \\ under Talagrand's Inequality T1}
+\title{Complexity Analysis of Stein Variational Gradient Descent Under Talagrand's Inequality T1}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -174,7 +174,7 @@
 \maketitle
 
 \begin{abstract}
-  We study the complexity of SVGD which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ smooth and nonconvex. We provide a clean complexity bound for SVGD in the population limit in terms of the Stein Fisher Information (or squared Kernelized Stein Discrepancy), as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$. Unlike existing work, we do not make any assumption on the trajectory of the algorithm. Instead, our key assumption is that the target distribution satisfies Talagrand's inequality T1.
+  We study the complexity of Stein Variational Gradient Descent (SVGD), which is an algorithm to sample from $\pi(x) \propto \exp(-F(x))$ where $F$ smooth and nonconvex. We provide a clean complexity bound for SVGD in the population limit in terms of the Stein Fisher Information (or squared Kernelized Stein Discrepancy), as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$. Unlike existing work, we do not make any assumption on the trajectory of the algorithm. Instead, our key assumption is that the target distribution satisfies Talagrand's inequality T1.
 \end{abstract}
 \section{Introduction}
 Sampling from a given target distribution $\pi$ is a fundamental task of many Machine Learning procedures. In Bayesian Machine Learning, the target distribution $\pi$ is known up to a multiplicative factor and often takes the form
@@ -184,31 +184,61 @@ Sampling from a given target distribution $\pi$ is a fundamental task of many Ma
 \end{equation}
 where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$.
 
-As sampling algorithms are intended to be applied on large scale problems, it has become more and more important to understand their theoretical properties such as their complexity, as a function of the dimension of the problem $d$ and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.}~\cite{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
+As sampling algorithms are intended to be applied to large scale problems, it has become increasingly important to understand their theoretical properties, such as their complexity, as a function of the dimension of the problem $d$, and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.} the works of~\citet{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
-Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{liu2017policy}, sequential decision making~\cite{zhang2018learning,zhang2019scalable}, Generative Adversarial Networks~\cite{tao2019variational}, Variational Auto Encoders~\cite{pu2017vae}, Federated Learning~\cite{kassab2020federated} etc. However, the theoretical understanding of SVGD is limited compared to that of Langevin algorithm~\cite{lu2019scaling,duncan2019geometry,liu2017stein,chewi2020svgd,nusken2021stein}. In particular, the first complexity result of SVGD appeared recently~\cite[Corollary 6]{korba2020non} under an assumption on the trajectory of the algorithm which cannot be checked prior to running the algorithm. Basically, this assumption is that the first moment of the iterates remain uniformly bounded by a constant $C$ at every iteration. Moreover, the complexity bound~\cite[Corollary 6]{korba2020non} does not explicit the dependence in the dimension $d$ of the problem, precisely because this bound depends on $C$.
+\subsection{SVDG}
 
-Our paper intends to provide a clean analysis of SVGD, without assumption on the trajectory and with complexity bounds depending on $\varepsilon$ and $d$. Our key assumption is that $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution~\cite[Theorem 22.10]{villani2008optimal} and is implied by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. Under T1 inequality, 
+Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{liu2017policy}, sequential decision making~\cite{zhang2018learning,zhang2019scalable}, Generative Adversarial Networks~\cite{tao2019variational}, Variational Auto Encoders~\cite{pu2017vae}, and Federated Learning~\cite{kassab2020federated}. However, the theoretical understanding of SVGD is limited compared to that of Langevin algorithm~\cite{lu2019scaling,duncan2019geometry,liu2017stein,chewi2020svgd,nusken2021stein}. In particular, the first complexity result of SVGD, due to~\citet[Corollary 6]{korba2020non}, appeared only recently, and relies on an assumption on the trajectory of the algorithm, which cannot be checked prior to running the algorithm. Basically, this assumption is that the first moment of the iterates remain uniformly bounded by a constant $C$ at every iteration. Moreover, their complexity bound~\cite[Corollary 6]{korba2020non} does not make the dependence on the dimension $d$ of the problem explicit, precisely because this bound depends on $C$.
+
+\subsection{Contributions}
+Our paper intends to provide a clean analysis of SVGD, without any assumptions on the trajectory, and with complexity bounds depending on $\varepsilon$ and $d$. Instead, our key assumption is that the target distribution $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution~\cite[Theorem 22.10]{villani2008optimal}, and is implied, for example, by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. 
+
+
+Assuming that the T1 inequality holds, we provide 
 \begin{itemize}
-    \item We provide a convergence rate for SVGD in the so-called population limit without assumption on the trajectory of the algorithm,
-    \item We provide a complexity bound for SVGD in terms of the dimension $d$ and the desired accuracy $\varepsilon$,
-    \item We provide a generic weak convergence result for SVGD. 
+    \item a convergence rate for SVGD in the so-called population limit, without assumption on the trajectory of the algorithm,
+    \item a complexity bound for SVGD in terms of the dimension $d$ and the desired accuracy $\varepsilon$,
+    \item a generic weak convergence result for SVGD. 
 \end{itemize}
-All these results hold without assuming $F$ convex. Our main complexity result is summarized in Table~\ref{tab:result}.
+All these results hold without assuming $F$ to be convex. Our main complexity result is summarized in Table~\ref{tab:result}.
+
+
 \begin{table}[h!]
 \centering
-\begin{tabular}{ |c|c|c|c|c| } 
+\caption{Complexity results. Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
+\label{tab:result}
+\begin{tabular}{ |c||c|c|} 
  \hline
- Algorithm & Reference & Assumptions & Criterion & Complexity \\ 
- \hline \hline
- SVGD & This paper, Theorem~\ref{th:svgd} & T1 with constant $\lambda$, $F$ $L$-smooth & $I_{\st}(\mu|\pi)$ & $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$\\ 
- \hline
- Langevin & \cite[Theorem 1]{vempala2019rapid} & LSI with constant $\lambda$, $F$ $L$-smooth & $\KL(\mu|\pi)$ & $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$\\ 
+ Algorithm  &  Langevin &\color{red}SVGD \\ 
+  \hline
+ Reference & \citet[Theorem 1]{vempala2019rapid} &\color{red}This paper, Theorem~\ref{th:svgd}  \\
+   \hline
+ Assumptions & \begin{tabular}{c}LSI with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular} &  \color{red} \begin{tabular}{c}T1 with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}  \\
+   \hline
+Criterion & $\KL(\mu|\pi)$ & \color{red}$I_{\st}(\mu|\pi)$ \\
+  \hline
+Complexity  & $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & \color{red} $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ \\  
  \hline
 \end{tabular}
-\label{tab:result}
-\caption{Complexity results. Recall that LSI implies T1 with the same constant $\lambda$~\cite[Theorem 22.17]{villani2008optimal}.}
 \end{table}
+
+
+
+%\begin{table}[h!]
+%\centering
+%\caption{Complexity results. Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
+%\label{tab:result}
+%\begin{tabular}{ |c|c|c|c|c| } 
+% \hline
+% Algorithm & Reference & Assumptions & Criterion & Complexity \\ 
+% \hline \hline
+% SVGD & This paper, Theorem~\ref{th:svgd} & \begin{tabular}{c}T1 with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}& $I_{\st}(\mu|\pi)$ & $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$\\ 
+% \hline
+% Langevin & \citet[Theorem 1]{vempala2019rapid} & \begin{tabular}{c}LSI with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}& $\KL(\mu|\pi)$ & $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$\\ 
+% \hline
+%\end{tabular}
+%\end{table}
+
 % %HERE
 % Both Langevin and SVGD are algorithms to sample from a target distribution $\pi$ whose density is proportional to $\exp(-F)$, where $F$ is a smooth function. They both make use the gradient of the gradient of $F$ and they can both be interpreted as a gradient flow in a space of probability measures~\cite{liu2017,steingeometry,wibisono2018sampling,durmus2018analysis,bernton2018langevin}. However, the theoretical understanding of SVGD is rather limited compared to that of the Langevin algorithm. In particular, the only known convergence rate for SVGD appeared recently~\cite{korba2020non}. However, their complexity analysis relies on an unverfiable assumption on the trajectory of the algorithm (basically that the first moment of the iterates remain uniformly bounded) their complexity result does not provide the dependence on the dimension of the problem. 
 
@@ -512,7 +542,7 @@ Finally, the ML literature on the complexity of sampling from a non logconcave t
 % \end{theorem}
 
 %\asnote{unbiasedness, complexity, computation of full gradient at the beginning}
-\bibliographystyle{plain}
+\bibliographystyle{plainnat}
 \bibliography{math}
 
 
