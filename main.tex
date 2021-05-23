@@ -205,19 +205,19 @@ All these results hold without assuming $F$ to be convex. Our main complexity re
 
 \begin{table}[h!]
 \centering
-\caption{Complexity results. Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
+\caption{Comparison of {\color{blue}known complexity results} for SVGD and {\color{red}our complexity results.} Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
 \label{tab:result}
 \begin{tabular}{ |c||c|c|} 
  \hline
- Algorithm  &  Langevin &\color{red}SVGD \\ 
+ Algorithm  &  \color{blue} Langevin &\color{red}SVGD \\ 
   \hline
- Reference & \citet[Theorem 1]{vempala2019rapid} &\color{red}This paper, Theorem~\ref{th:svgd}  \\
+ Reference &  \color{blue}\citet[Theorem 1]{vempala2019rapid} &\color{red}This paper, Theorem~\ref{th:svgd}  \\
    \hline
- Assumptions & \begin{tabular}{c}LSI with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular} &  \color{red} \begin{tabular}{c}T1 with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}  \\
+ Assumptions & \color{blue} \begin{tabular}{c}LSI with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular} &  \color{red} \begin{tabular}{c}T1 with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}  \\
    \hline
-Criterion & $\KL(\mu|\pi)$ & \color{red}$I_{\st}(\mu|\pi)$ \\
+Criterion &  \color{blue}$\KL(\mu|\pi)$ & \color{red}$I_{\st}(\mu|\pi)$ \\
   \hline
-Complexity  & $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & \color{red} $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ \\  
+Complexity  &  \color{blue}$\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & \color{red} $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ \\  
  \hline
 \end{tabular}
 \end{table}
@@ -251,11 +251,12 @@ Complexity  & $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & \color{red} $
 
 % \asnote{Add the log terms to compare to Wibisono Vempala} 
 
-The remainder is organized as follows...
+\subsection{Paper structure}
+The remainder of the paper is organized as follows. In Section~\ref{sec:background} we introduce the necessary mathematical and notational background on optimal transport, reproducing kernel Hilbert spaces and SVGD in order to be able to describe and explain our results.
 %Change F, L, \lambda in the proof !!!!!!!!!
 
-\section{Background}
-For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm. Moreover, $\|\cdot\|_{\op}$ denotes the operator norm on the set of matrices.
+\section{Background} \label{sec:background}
+For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm. Moreover, $\|\cdot\|_{\op}$ denotes the operator norm on the set of matrices. In Section~\ref{sec:svgd} we describe our theoretical results.
 
 \subsection{Optimal transport}
 %L^2(\mu,\R^d), pushforward, W_1, W_2, wass gradient, \cF
@@ -339,7 +340,7 @@ Under Assumption~\ref{ass:k_bounded}, $\cH \subset L^2(\mu)$ for every probabili
 \end{equation}
 Then, $P_\mu$ can be expressed as a convolution with $k$~\cite[Proposition 3]{carmeli2010vector}:
 \begin{equation}
-    P_{\mu} f(x) = \int k(x,y)f(y)d\mu(y), \quad \text{or},  \quad P_{\mu} f = \int \Phi(y)f(y)d\mu(y)
+    P_{\mu} f(x) = \int k(x,y)f(y)d\mu(y), \qquad \text{or}  \qquad P_{\mu} f = \int \Phi(y)f(y)d\mu(y)
 \end{equation}
 where the integral converges in norm.
 
@@ -352,10 +353,13 @@ Stein Variational Gradient Descent (SVGD) is an algorithm to sample from $\pi \p
     \mu_{n+1} = \left(I - \gamma h_{\mu_n}\right)\#\mu_n,
 \end{equation}
 where 
-\begin{equation}
-    h_{\mu}(x) \coloneqq \int k(x,y)\nabla F(y) - \nabla_y k(x,y) d\mu(y), \quad \text{or},\quad  h_{\mu} \coloneqq \int \nabla F(y) \Phi(y) - \nabla \Phi(y) d\mu(y).
-\end{equation}
+\begin{equation*}
+    h_{\mu}(x) \coloneqq \int k(x,y)\nabla F(y) - \nabla_y k(x,y) d\mu(y)\end{equation*}
+    or 
+    \begin{equation*} h_{\mu} \coloneqq \int \nabla F(y) \Phi(y) - \nabla \Phi(y) d\mu(y).
+\end{equation*}
 %\asnote{Check integration by part here and in the proof of the. descent lemma also. We can show that $\mu_n(x)$ is $C^1$ by induction. In particular we can apply \cite[Lemma 10.4.1]{ambrosio2008gradient}. Moreover, if $\mu_n \in \cP_2(\X)$, then $\mu_{n+1} \in \cP_2(\X)$}
+
 \paragraph{Our point of view on SVGD.} We now provide the intuition behind our results on SVGD.
 
 \textit{In the population limit, SVGD can be seen as a Riemannian gradient descent, thanks to the two following reasons.} 
@@ -392,6 +396,7 @@ In this paper, we study the complexity of SVGD in terms of the Stein Fisher Info
 
 \section{Analysis of SVGD}
 \label{sec:svgd}
+
 In this section, we analyze SVGD in the infinite number of particles regime. Recall that in this regime, SVGD is given by
 \begin{equation*}
     \mu_{n+1} = (I - \gamma h_{\mu_n}) \# \mu_n,
@@ -417,19 +422,17 @@ where
 
 \begin{theorem}
 \label{th:svgd}
-  Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded}  hold true. Let $\alpha > 1$. 
-  
-  If 
+  Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded}  hold true. Let $\alpha > 1$.   If 
   \begin{equation}
   \label{eq:condition-step}
       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},
   \end{equation}
-  OR if \Cref{ass:stationary} holds and
+or if \Cref{ass:stationary} holds and
   \begin{equation}
   \label{eq:condition-step-2}
       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
   \end{equation}
-  then, 
+  then
   \begin{equation}
     \label{eq:TL-svgd-cst}
         \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right)I_{\st}(\mu_n|\pi).
@@ -807,589 +810,6 @@ Since $\cF(\mu_0) = \tilde{\cO}(d)$,
     \frac{\cF(\mu_0)}{\gamma} = \tilde{\cO}\left(\frac{L{d}^{3/2}}{\sqrt{\lambda}}\right).
 \end{equation}
 Let $\varepsilon > 0$. To output $\mu_p$ such that $I_{\st}(\mu_p|\pi) < \varepsilon$, it suffices to ensure that $\frac{2\cF(\mu_0)}{n\gamma} < \varepsilon$, therefore, $\frac{2\cF(\mu_0)}{\gamma \varepsilon} = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\varepsilon\sqrt{\lambda}}\right)$ iterations are sufficient.
-
-
-\newpage
-
-\section{FOR AFTER NEURIPS: STOCHASTIC GRADIENT}
-
-\subsection{Proofs related to SVSGD}
-We now study SVSGD, \textit{i.e.}, the update 
-\begin{equation*}
-    \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
-\end{equation*}
-where $g_n = P_{\mu_n} \left(v_n + \nabla \log(\mu_n)\right)$ and $v_n$ is a stochastic gradient, \textit{i.e.}, $\E_n v_n(\cdot) = \nabla F(\cdot)$. In particular, we have $\E_n g_n = h_{\mu_n}$. For simplicity, we assume that the stochastic gradient has a bounded variance, \textit{i.e.}, $\E \|P_{\mu_n} v_n - P_{\mu_n} \nabla F\|_{\cH} \leq \sigma$. By applying Proposition~\ref{prop:TL}, we have
-that if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
-    \begin{equation*}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g_n}_{\cH} +  \frac{\gamma^2 K}{2}\|g_n\|_{\cH}^2,
-    \end{equation*}
-    where $K = (\alpha^2 + L)B$. Since $\E \|g_n\|_{\cH}^2 = \E \|g_n - h_{\mu_n}\|_{\cH}^2 + \E \|h_{\mu_n}\|_{\cH}^2 = \E \|P_{\mu_n} v_n - P_{\mu_n} \nabla F\|_{\cH}^2 + \E \|h_{\mu_n}\|_{\cH}^2,$
-    \begin{equation*}
-        \E\cF(\mu_{n+1}) \leq \E \cF(\mu_{n}) - \gamma\E\|h_{\mu_n}\|_{\cH}^2 +  \frac{\gamma^2 K}{2}\left(\E \|h_{\mu_n}\|_{\cH}^2+\sigma^2\right).
-    \end{equation*}
-    Finally, if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$ \textbf{almost surely},
-    \begin{equation*}
-        \E\cF(\mu_{n+1}) \leq \E \cF(\mu_{n}) - \gamma\left(1-\frac{\gamma K}{2}\right)I_{\st}(\mu_n|\pi) +  \frac{\gamma^2 K}{2}\sigma^2.
-    \end{equation*}
-    {\color{red} The condition on the step size depends on $n$. We could get rid of $n$ as in the proof of SVGD (see the induction argument in the previous section) by proving that $\|g_n\|_{\cH} \leq \phi(\E\cF(\mu_n))$, where $\phi$ is a non decreasing function. But this is not true in general, we can only have $\E \|g_n\|_{\cH} \leq \phi(\E \cF(\mu_n))$ using Talagrand's inequality, as in the previous section. \textbf{So, what bothers us is the fact that the condition on the step size must hold almost surely instead of in expectation}. We can always assume a uniform bound $\|g_n\|_{\cH} < C$ a.s. for every $n$, but we don't want to do that since our final the goal is to study a Variance Reduced version of SVSGD.}
-\subsection{Proofs related to VR-SVSGD}
-
-In this section, we analyze VR-SVSGD in the infinite number of particles regime. In this regime, VR-SVSGD is given by
-\begin{equation}
-\label{eq:svgd-mean-field}
-    \mu_{n+1} = (I - \gamma g_n) \# \mu_n,
-\end{equation}
-where 
-\begin{equation}
-    g_n = v_n-\int \nabla \Phi(x) d\mu_n(x),
-\end{equation}
-and,
-\begin{equation}
-    v_{n+1} = \left\{
-    \begin{array}{ll}
-        P_{\mu_{n+1}} \nabla F & \mbox{with probability } p \\
-        v_n + P_{\mu_{n+1}} \nabla f_{I_{n+1}} - P_{\mu_{n}} \nabla f_{I_{n+1}} & \mbox{with probability } 1-p, 
-    \end{array}
-\right.
-\end{equation}
-where $(I_n)$ is a sequence of i.i.d. random variables with uniform distribution over $\{1,\ldots,m\}$.
-
-
-
-\subsubsection{Proof of Theorem~\ref{th:vrsvsgd}}
-We now study VR-SVSGD, \textit{i.e.}, the update 
-\begin{equation*}
-    \mu_{n+1} = (I - \gamma g_n) \# \mu_n.
-\end{equation*}
-
-\begin{lemma}
-  Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
-  \begin{equation}
-    \gamma \leq \min\left(\frac{1}{(\alpha^2 + L)B + B^2 L_n \sqrt{\frac{1}{p}-1}},\frac{\alpha-1}{\alpha B \|g_n\|_{\cH}}\right),
-\end{equation}
-where $L_n^2 \coloneqq \frac{1}{m}\sum_{i=1}^m \left(L+\int \|\nabla f_i(x)\|d\mu_n(x)\right)^2$.
-  Then,
-  \begin{equation}
-    \E \cL_{n+1} \leq
-     \E \cL_n - \frac{\gamma}{2}\E I_{\st}(\mu_n|\pi),
-\end{equation}
-where $\cL_n \coloneqq \cF(\mu_n) + \frac{\gamma}{2p}\|g_{n} - h_{\mu_{n}}\|_{\cH}^2$.
-\end{lemma}
-\begin{proof}
-We start by applying Proposition~\ref{prop:TL}: if $\gamma \|g_n\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
-    \begin{equation}
-    \label{eq:TL-VR}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g_n}_{\cH} +  \frac{\gamma^2 K}{2}\|g_n\|_{\cH}^2,
-    \end{equation}
-    where $K = (\alpha^2 + L)B$.
-    Using the polarization identity $-\ps{a,b} = \frac{1}{2}\|a-b\|^2 - \frac{1}{2}\|a\|^2 - \frac{1}{2}\|b\|^2$, the last inequality can be rewritten as
-    \begin{equation}
-    \label{eq:rec1}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2.
-    \end{equation}
-One can check by induction that for every $n$, $\E g_n = h_{\mu_n}$. In other words, the stochastic gradient $g_n$ is unbiased. Therefore, the quantity $\E \|g_n - h_{\mu_n}\|_{\cH}^2$ can be seen as a variance. Moreover, denoting $\mcG_n = \sigma(\mu_0,g_0,\ldots,\mu_n,g_n,\mu_{n+1})$,
-\begin{align*}
-    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1} = i\right) \\
-    =& p \E \left(\|P_{\mu_{n+1}} \nabla F - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right) \\
-    &+ (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - \int \nabla \Phi(x)d\mu_{n+1}(x) - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right).
-\end{align*}
-Using 
-\begin{equation}
-\label{eq:defh}
-    P_{\mu_{n}} \nabla F - \int \nabla \Phi(x)d\mu_{n}(x) = h_{\mu_{n}},
-\end{equation}
-we have
-\begin{align*}
-    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right) \\ 
-    =& (1-p)\E \left(\|v_n + P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i - P_{\mu_{n+1}} \nabla F\|_{\cH}^2|\mcG_{n},I_{n+1}=i\right)\\
-    =& (1-p)\E \left(\left\|\underbrace{\left(v_n - P_{\mu_{n}} \nabla F\right)}_{= X} + \underbrace{\left(P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\right)}_{=a_i} - \underbrace{\left(P_{\mu_{n+1}} \nabla F - P_{\mu_{n}} \nabla F\right)}_{=\bar{a}}\right\|_{\cH}^2\Bigg|\mcG_{n},I_{n+1}=i\right)\\
-    \leq& (1-p)\E (\|X\|^2_{\cH} + \ps{X,a_i-\bar{a}}_{\cH}+\|a_i-\bar{a}\|^2_{\cH} |\mcG_{n},I_{n+1}=i)\\
-\end{align*}
-Note that $\bar{a} = \frac{1}{m} \sum_{i=1}^m a_i$, therefore $\frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2 \leq \frac{1}{m}\sum_{i=1}^m \|a_i\|_{\cH}^2$. By taking the expectation w.r.t. $I_{n+1}$,
-\begin{align*}
-    &\E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n}\right) \\ 
-    =&(1-p)\E\left[\|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \|a_i - \bar{a}\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
-    \leq&(1-p)\left[\|X\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m  \|a_i\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
-    =& (1-p)\E\left[\|v_n - P_{\mu_{n}} \nabla F\|_{\cH}^2 + \frac{1}{m}\sum_{i=1}^m \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2\Bigg|\mcG_{n}\right]\\
-    =& (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \frac{1}{m}\sum_{i=1}^m \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2,\\
-\end{align*}
-using~\eqref{eq:defh}. Let $i \in \{1,\ldots,m\}$, we now estimate $\|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH}^2$.
-\begin{align*}
-    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} =& \left\|\int \nabla f_i(x - \gamma g_n(x))\Phi(x - \gamma g_n(x)) - \nabla f_i(x)\Phi(x) d\mu_n(x)\right\|_{\cH}\\
-    \leq& \int\left\|\nabla f_i(x - \gamma g_n(x))\Phi(x - \gamma g_n(x)) - \nabla f_i(x)\Phi(x)\right\|_{\cH}d\mu_n(x)\\
-    \leq& \int\left\|\left(\nabla f_i(x - \gamma g_n(x)) - \nabla f_i(x)\right)\Phi(x - \gamma g_n(x))\right\|_{\cH}d\mu_n(x)\\
-    &+ \int\left\|\left(\Phi(x - \gamma g_n(x)) - \Phi(x)\right)\nabla f_i(x)\right\|_{\cH}d\mu_n(x)\\
-    \leq& \int\|\nabla f_i(x - \gamma g_n(x)) - \nabla f_i(x)\|\|\Phi(x - \gamma g_n(x))\|_{\cH_0}d\mu_n(x)\\
-    &+ \int \|\Phi(x - \gamma g_n(x)) - \Phi(x)\|_{\cH_0}\|\nabla f_i(x)\|d\mu_n(x).
-\end{align*}
-Using \Cref{ass:k_bounded}, $\|\Phi(x)\|_{\cH_0} \leq B$ and $\Phi : \X \to \cH_0$ is $B$-Lipschitz, \textit{i.e.}, $\|\Phi(x) - \Phi(y)\|_{\cH_0} \leq B \|x-y\|$. \asnote{Check this}
-Therefore, using \Cref{ass:V_Lipschitz},
-\begin{align*}
-    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} \leq& \int LB\gamma \|g_n(x)\|d\mu_n(x)\\
-    &+ \int B\gamma \|g_n(x)\|\|\nabla f_i(x)\|d\mu_n(x).
-\end{align*}
-Using~\eqref{eq:gbound} \asnote{Clean this}, $\|g_n(x)\| \leq B \|g_n\|_{\cH}$, therefore,
-\begin{equation}
-    \|P_{\mu_{n+1}} \nabla f_i - P_{\mu_{n}} \nabla f_i\|_{\cH} \leq \gamma B^2 \|g_n\|_{\cH} \left(L+\int \|\nabla f_i(x)\|d\mu_n(x)\right).
-\end{equation}
-We finally have
-\begin{equation}
-\label{eq:rec2}
-    \E \left(\|g_{n+1} - h_{\mu_{n+1}}\|_{\cH}^2|\mcG_{n}\right)
-    \leq (1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2.
-\end{equation}
-Using~\eqref{eq:rec1} and~\eqref{eq:rec2},
-\begin{align*}
-    \E\left(\cL_{n+1}|\mcG_n\right) \leq& \cF(\mu_n) - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}(1-\gamma K)\|g_n\|_{\cH}^2 + \frac{\gamma}{2}\|g_n - h_{\mu_n}\|_{\cH}^2\\
-    &+ \frac{\gamma}{2p}\left((1-p) \|g_n - h_{\mu_{n}}\|_{\cH}^2 + (1-p) \gamma^2 B^4 L_n^2 \|g_n\|_{\cH}^2\right)\\
-    =& \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2 - \frac{\gamma}{2}\|g_n\|_{\cH}^2\left(1-\gamma K-\frac{1-p}{p}\gamma^2 B^4 L_n^2\right).
-\end{align*}
-Since
-\begin{equation}
-    \gamma \leq \frac{1}{K + B^2 L_n \sqrt{\frac{1}{p}-1}},
-\end{equation}
-we have
-\begin{equation}
-    K\gamma + \frac{1-p}{p} B^4 L_n^2 \gamma^2 \leq 1.
-\end{equation}
-Therefore,
-\begin{equation}
-    \E\left(\cL_{n+1}|\mcG_n\right) \leq
-     \cL_n - \frac{\gamma}{2}\|h_{\mu_n}\|_{\cH}^2,
-\end{equation}
-and we conclude by taking the full expectation.
-\end{proof}
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Appendix: Lukang's Draft}
-
-\subsubsection{Setup}
-
-\begin{equation}
-F=\frac{1}{n} \sum_{i=1}^{n} f_{i}, \qquad \pi \propto e^{-F }
-\end{equation}
-\begin{equation}
-		F_{n}=\frac{1}{|I_{n}|} \sum_{i \in I_n} f_{i},  \qquad \sigma_{n} \propto e^{-F_{n}}
-  \end{equation}
-
-	\begin{equation}
-		g_n^{\prime}\in \cH, \qquad g_n = \iota g \in L^2
-	\end{equation}
-    \begin{equation}
-		\phi_{t}(x)=\left(I-t g_n\right) (x), \qquad \mu_{t}=\left(\phi_{t}\right)_{\#} \mu_{n}
-  \end{equation}
-    
-    \begin{equation}   
-	\varphi(t)=\int \log \left(\frac{\mu_{t}}{\pi}\right) d \mu_{t}
-\end{equation}
-  From Lemma 4.  when $t \in [0,\gamma], \gamma\leq \frac{\alpha-1}{\alpha B \left\|g_n^{\prime}\right\|_{\cH}}$, there is
-  {
-  	\begin{equation}
-  		\varphi(\gamma)\leq \varphi(0)-\gamma \left\langle S_{\mu_n}\nabla\log \frac{\mu_n}{\pi}, g_n^{\prime} \right\rangle_{\cH} +
-  		\frac{(\alpha^2+L) \gamma^2}{2} \left\langle g_n^{\prime},g_n^{\prime} \right\rangle_{\cH}
-  \end{equation}}
-	
-  \subsubsection{PAGE}
-
-  We define the update rule as:
-    
-  \begin{equation}
-  g_{n+1}=\begin{cases}
-        P_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\pi}\right) & \qquad {p},\\
-        g_n+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right) & \qquad {1-p}, 
-        \end{cases}   
-      \end{equation}
-{where  $\sigma_{I^{\prime}} \sim \exp^{-f_{I^{\prime}}}$, $f_{I^{\prime}} = \frac{1}{b^{\prime}}\sum_{i\in I^{\prime}}f_i$.}
-     
-
-     This is the mean field limit of the following algorithm SVSGD with variance reduction. Indeed,
-     the update rule in $n+1$ step SVSGD is 
-     \begin{equation}
-     	\begin{split}
-     		&\quad \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\nabla \log\left(\sigma_{n+1}\right)\left(x_{j}^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
-     		&= \frac{1}{l} \sum_{j=1}^{l}\left[k\left(x_{j}^{n+1},\cdot\right)\left(\nabla\log\left(\sigma_n\right)\left(x_j^n\right)+\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right] \\
-     		&= \frac{1}{l}\sum_{j=1}^{l}\left[k\left(x_j^n,\cdot\right) \nabla \log\left(\sigma_n\right)\left(x_j^n\right)+\nabla k\left(x_j^n,\cdot\right)\right] +\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n+1},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n+1}\right)+\nabla k\left(x_j^{n+1},\cdot\right)\right]\\
-     		&-\frac{1}{l} \sum_{j=1}^{l}\left[ k\left(x_j^{n},\cdot\right) \nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^{n}\right)+\nabla k\left(x_j^{n},\cdot\right)\right]+\frac{1}{l} \sum_{j=1}^{l}\left[\left (k\left(x_j^{n+1},\cdot\right)-k\left(x_j^n,\cdot\right)\right)\left(\nabla \log\left(\sigma_n\right)\left(x_j^n\right)-\nabla \log\left(\sigma_{I^{\prime}}\right)\left(x_j^n\right)\right)\right]\\
-     		&\rightarrow P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{n}}\right)+P_{\mu_{n+1}} \nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-P_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)+\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)
-     	\end{split}
-     \end{equation}
-     So by induction,
-     \begin{equation}
-     	g_n(x)=P_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})(x)-\sum_{i=1}^{n-1}\int\left(
-	   	k(\phi_{\gamma}^{(i)}(x^{\prime}),x)-k(x^{\prime},x)\right)\nabla\log(\frac{\sigma_i}{\sigma_{I^{\prime}}^{i}})(x^{\prime})d\mu_i(x^{\prime}),
-     \end{equation}
- where $\nabla\log(\sigma_n)$ follows the same update rule as in PAGE, $\phi_{t}^{(i)}(x)=\left(I-t g_i\right) (x)$.\adil{(so you see (16) doesn't increase the calculation of gradient, but comparing with mean field limit of traditional PAGE, it increases the calculation of sum, I think this is as fast as the mean field limit of traditional PAGE. )}
-
-
-        	
-\subsubsection{Main Proof}
-
-	By similar calculation as in PAGE, we have,
-	
-	
-\begin{equation}
-	\begin{split} \varphi(\gamma) & \leqslant \varphi(0)-\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)\right\|_{\cH}^{2}-\left(\frac{1}{2 \gamma}-\frac{\alpha^2+L}{2}\right)  \gamma^{2}\left\|g^{\prime}_n\right\|_{\cH}^{2} \\ &+\frac{\gamma}{2}\left\|S_{\mu_{n}} \nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g^{\prime}_n\right\|_{\cH}^{2}
-	\end{split}
-\end{equation}
-
-here 
-\begin{equation}
-	\gamma\leq \frac{\alpha-1}{\alpha B \left\|g^{\prime}_n\right\|_{\cH}}.
-\end{equation}
-      
-      Then a direct calculation now reveals that
-      
-      \begin{equation}
-      	\begin{split}
-      		 &\quad \text{E}\left[\left\|g_{n+1}^{\prime}-S_{\mu_{n+1}}\nabla \log\left(\frac{\mu_{n+1}}{\pi}\right)\right\|_{\cH}^2\right] \\
-      		 &= (1-p) \text{E}\left[\left\|\right.\right. g_{n+1}^{\prime} + S_{\mu_{n+1}}\nabla \log \left(\frac{\mu_{n+1}}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\sigma_{I^{\prime}}}\right)\left.\left.\right\|_{\cH}^2\right] \\ 
-      		& \leq (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
-      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right) + S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)+ \\ & 
-      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right) \left.\left.\right\|_{\cH}^{2}\right]\\
-      		& \leq (1-p)\text{E}\left[ \left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{\mu_{n}}{\pi}\right)-g_n^{\prime}\left.\left.\right\|_{\cH}^{2}\right] \\
-      		& + (1-p) \text{E}\left[\left\|\right.\right. S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)
-      		-S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right) \left.\left.\right\|_{\cH}^{2}\right],
-      	\end{split}
-      \end{equation}
-using $\frac{1}{n}\sum_{i = 1}^n \|a_i - \bar{a}\|^2 \leq \frac{1}{n}\sum_{i = 1}^n \|a_i\|^2$, where $\bar{a} = \frac{1}{n}\sum_{i=1}^n a_i$. 
-  \subsubsection{Key Inequality}
-	
-		
-
-  \begin{theorem}
-    
-    If $\gamma_n \cO(\bE \Phi_n) \leq C$, then
-    \begin{equation}
-      \bE(\Phi_{n+1})\leq \bE(\Phi_n)-\frac{1}{2}\bE\gamma_n\left\|g_n^{\prime}\right\|_{\cH}^2,
-    \end{equation}
-  
-  where $\Phi_n:=\KL(\mu_n|\pi)+\frac{\gamma_n}{2p}\left\|g_n^{\prime}-S_{\mu_n}\nabla\log\left(\frac{\mu_n}{\sigma_n}\right)\right\|_{\cH}^2$. (In the proof,we use $\gamma$ instead of $\gamma_n$ for simplicity.)
-    
-    
-  \end{theorem}
-  
-  \begin{proof}
-    We need to estimate
-    \begin{equation}
-      \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2},
-    \end{equation}
-    and
-      \begin{equation}
-    \left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}
-      \end{equation}
-  
-  
-    First,
-    
- \begin{equation}
-  \begin{split}
-    &S_{\mu_{n+1}} \nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\\
-  &=-\int k(y,\cdot)\nabla\log(\pi(y))d\mu_{n+1}(y)+\int k(\phi_{\gamma}(x),\cdot)\nabla\log(\pi(x))d\mu_n(x)\\
-  &-\int k(\phi_{\gamma}(x),\cdot)\nabla\log({\pi(x)})d\mu_n(x)+\int k(x,\cdot)\nabla\log({\pi(x)})d\mu_n(x)\\
-  &=I + II .
-  \end{split}
-\end{equation}
-  
-We bound each term separately.
-  
-\begin{equation}
-  \sqN{I}=\int\int k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))(\nabla\log(x)-\nabla\log(\pi(\phi_{\gamma}(x))))(\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime}))))d\mu(x)d\mu(x^{\prime})
-\end{equation}
-  since F is $L$-smooth, so
-  
-\begin{equation}
-  |\nabla\log(x^{\prime})-\nabla\log(\pi(\phi_{\gamma}(x^{\prime})))|
-\leq L |x-\phi_{\gamma}(x)|
-	= L\gamma|g_n\left(x\right)|
-\leq L B \gamma\left\|g^{\prime}_n\right\|_{\cH},
-\end{equation}
-  then by Cauchy-Schwartz inequality and $k(x,x)$ is bounded by C, we derive
-  
-  \begin{equation}
-  \sqN{I}\leq C L^2 B^2\gamma^2 \left\|g^{\prime}_n\right\|_{\cH}^{2}.
-  \end{equation}
-  Now,
-\begin{equation}
-	\begin{split}
-		\sqN{II}=\int\int \left(k(\phi_{\gamma}\left(x\right),\phi_{\gamma}\left(x^{\prime}\right))-k(\phi_{\gamma}\left(x\right),x^{\prime})-k(x,\phi_{\gamma}\left(x^{\prime}\right))+k(x,x^{\prime})
-		\right)\nabla\log \left(\pi\left(x\right)\right)\nabla\log \left(\pi\left(x^{\prime}\right)\right) d\mu_n(x)d\mu_n(x^{\prime})
-	\end{split}
-\end{equation}
- 
-
-  
-  We need to know the order of $|k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|$, in the following we assume supremum norm of the second order derivatives of $k$ are bounded by C, then by mean value theorem, we have
-  
-  \begin{equation}
-  	\begin{split}
-  		&\quad |k(\phi_{\gamma}(x),\phi_{\gamma}(x^{\prime}))-k(\phi_{\gamma}(x),x^{\prime})-k(x,\phi_{\gamma}(x^{\prime}))+k(x,x^{\prime})|\\
-  		& \leq |\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(\phi_{\gamma}\left(x\right),\phi_{\theta_1}(x^{\prime})\right)\rangle-\langle \phi_{\gamma}\left(x^{\prime}\right)-x^{\prime},\nabla_2 k\left(x,\phi_{\theta_2}(x^{\prime})\right)\rangle|\\
-  		&\leq
-		C|\phi_{\gamma}(x)-x|(|\phi_{\gamma}(x)-x|+|\phi_{\theta_1}(x^{\prime})-\phi_{\theta_2}(x^{\prime})|) \\
-		& \leq 2C B^2 \gamma^2 \left\|g_n^{\prime}\right\|_{\cH}^2
-  	\end{split}
-  \end{equation}
-
-
-  Then, we know,
-  \begin{equation}
-  \sqN{II} \leq 2CB^2\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2
-  \end{equation}
-
-So
-\begin{equation}
-	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\pi}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\pi}\right)\right\|_{H}^{2}\leq CB^2\left(L^2+\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\right)\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2 ,
-\end{equation}
-  
-  similarly, we have 
-  
-  \begin{equation}
-  	\left\|S_{\mu_{n+1}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)-S_{\mu_{n}}\nabla \log \left(\frac{1}{\sigma_{I^{\prime}}}\right)\right\|_{H}^{2}\leq CB^2\left(L^2+\left(\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\right)\gamma^2\left\|g_n^{\prime}\right\|_{\cH}^2 ,
-  \end{equation}
-  
-  %\begin{equation}
-  %	\begin{split}
-  	%	& \quad \left\|\int\left(k(\phi_{\gamma}(x),\cdot)-k(x,\cdot)\right)\nabla \log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x\right)d\mu_n\left(x\right)\right\|_H^2\\
-  	%	&\!\!\!\!\!=\int\int\left(k\left(\phi_{\gamma}\left(x\right),\phi_{\gamma}\left(x^{\prime}\right)\right)-k\left(\phi_{\gamma}\left(x\right),x^{\prime}\right)-k\left(x,\phi_{\gamma}\left(x^{\prime}\right)\right)+k\left(x,x^{\prime}\right)
-  	%	\right)\nabla\log \left(\frac{\sigma_{n}}{\sigma_{I^{\prime}}}\right)\left(x\right)\nabla\log \left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)\left(x^{\prime}\right) d\mu_n(x)d\mu_n(x^{\prime})\\
-  	%	&\!\!\!\!\!\leq C_3\left(\int |\nabla \log\left(\frac{\sigma_n}{\sigma_{I^{\prime}}}\right)|d\mu_n\right)^2\gamma^2\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\sigma_n})\right\|_H^2
-  	%\end{split}
-  	%\end{equation}
-  
-  
-  So if $\gamma$ is small enough, s.t 
-  
-  \begin{equation}
-  	\begin{split}
-  		&\quad\frac{\gamma}{2p}\left(CB^2\left(L^2+\left(\int|\nabla\log(\sigma_{I^{\prime}}(x))|d\mu_n(x)\right)^2\right)+CB^2\left(L^2+\left(\int|\nabla\log(\pi(x))|d\mu_n(x)\right)^2\right)\right)\\
-  		& -\left(\frac{1}{2\gamma}-\frac{\alpha^2+L}{2}\right)\leq 0,
-  	\end{split}
-    \end{equation}
- by choosing \begin{equation}
- 	\gamma^2\leq \frac{\frac{\alpha^2+L}{2}}{1+\frac{2CB^2L^2+CB^2\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)}{2p}},
- \end{equation} then last condition holds. 
- 
-  Then
-  \begin{equation}
-    \bE(\Phi_{n+1}) \leq \bE(\Phi_n)-\frac{1}{2}\bE (\gamma \left\|g_n^{\prime}\right\|_{\cH}^2)
-  \end{equation}
-  \end{proof}
-If we let
-\begin{equation}
-	\bar{\gamma_n}^2=\frac{(\alpha-1)^2}{\alpha^2B^2\left\|g_n^{\prime}\right\|_{\cH}^2},
-\end{equation}  
-\begin{equation}
-	\tilde{\gamma_n}^2= \frac{\frac{\alpha^2+L}{2}}{1+\frac{2CB^2L^2+CB^2\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)}{2p}},
-\end{equation}
-then $\gamma_n=\min\left(\bar{\gamma}_n,\tilde{\gamma_n}\right)$ satisfies (19) and (34). Now we need to bound the denominators in (36) and (37).
-
-\begin{lemma}
-	If there existing a constant $a>0$ and a point $x_0$ such that $\int e^{ad(x_0,x)^2}d\pi(x)<+\infty$, then we have the following Talagrand inequality
-	\begin{equation}
-		W_1\left(\mu,\pi\right)\leq \lambda\sqrt{KL\left(\mu|\pi\right)}
-	\end{equation}
-\end{lemma}
-  
-\begin{proof}
-	see Villani...
-\end{proof}
-
-\begin{lemma}
-	\text{E}$\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)$ and \text{E}$\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)$ are finite.
-\end{lemma}
-
-\begin{proof}
-	\begin{equation}
-		\begin{split}
-			\text{E}\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)& \leq \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}\right)^2\\
-			&\leq \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\mu_n)\right\|_{\cH}+\left\|S_{\mu_n}\nabla\log(\pi)\right\|_{\cH}\right)^2\\
-			&\leq 3 \text{E}\left(\left\|g_{n}^{\prime}-S_{\mu_n}\nabla\log(\frac{\mu_n}{\pi})\right\|_{\cH}^2\right)+3 \text{E}\left(\left\|S_{\mu_n}\nabla\log(\mu_n)\right\|_{\cH}^2\right)+3 \text{E}\left(\left\|S_{\mu_n}\nabla\log(\pi)\right\|_{\cH}^2\right).
-		\end{split}
-	\end{equation}
-
-We know the first term on the right hand side is bounded by $3 \Phi_0$, the second term is bounded
- by $3C$ since the derivative of $k$ is bounded by $C$, the third term is bounded by
-  $6C\left(|\nabla\log(\pi(0))|\right)^2+6CL\text{E}\left(\int|x|d\mu_n(x)\right)^2$ since the $L$-smoothness of $\log(\pi(x))$.
-  
-  Similarly, we have 
-  \begin{equation}
-  	\begin{split}
-  		&\quad\text{E}\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right) \\
-  		&\leq 2\left(|\nabla\log(\pi(0))|\right)^2+2\max_{I^{\prime}}\left(|\nabla\log(\sigma_{I^{\prime}}(0))|\right)^2+4L\text{E}\left(\int|x|d\mu_n(x)\right)^2
-  	\end{split}
-  \end{equation}
-  From Talagrand inequality, we have 
-  \begin{equation}
-  	\text{E}\left(W_1(\mu_n,\delta_0)-W_1(\delta_0,\pi)\right)^2\leq \text{E}\left(W_1^2(\mu_n,\pi)\right)\leq \lambda\text{E}\left(KL(\mu_n|\pi)\right)\leq \lambda \Phi_0
-  \end{equation}
-so by Young inequality,
-\begin{equation}
-	\begin{split}
-	\text{E}\left(W_1^2(\mu_n,\delta_0)\right)&\leq \lambda \Phi_0-W_1^2(\delta_0,\pi)+2W_1(\delta_0,\pi)\text{E}\left(W_1(\mu_n,\delta_0)\right)\\
-	& \leq \lambda \Phi_0-W_1^2(\delta_0,\pi)+8W_1^2(\delta_0,\pi)+\frac{(\text{E}(W_1(\mu_n,\delta_0)))^2}{4}\\
-	& \leq \lambda \Phi_0+7W_1^2(\delta_0,\pi)+\frac{\text{E}(W_1^2(\mu_n,\delta_0))}{4}
-	\end{split}
-\end{equation}
-Finally, we have
-
-\begin{equation}
-	\text{E}\left(\int|x|d\mu_n(x)\right)^2=\text{E}(W_1^2(\mu_n,\delta_0))\leq \frac{4}{3}\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right).
-\end{equation}
-In the end,
-\begin{equation}
-	\text{E}\left(\left\|g_n^{\prime}\right\|_{\cH}^2\right)\leq 3\Phi_0+3C+6C(|\nabla\log(\pi(0))|)^2+8CL\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right),
-\end{equation}
-\begin{equation}
-	\begin{split}
-	&\quad\text{E}\left(\left(\int|\nabla\log(\pi)(x)|d\mu_n(x)\right)^2+\left(\int|\nabla\log(\sigma_{I^{\prime}})(x)|d\mu_n(x)\right)^2\right)\\
-	&\leq 2\left(|\nabla\log(\pi(0))|\right)^2+2\max_{I^{\prime}}\left(|\nabla\log(\sigma_{I^{\prime}}(0))|\right)^2+\frac{16}{3}L\left(\lambda \Phi_0+7W_1^2(\delta_0,\pi)\right).
-	\end{split}
-\end{equation}
- 
-\end{proof}
-
-From the definition of $\bar{\gamma_n}$, $\tilde{\gamma_n}$ and Lemma 8., we now have
-\begin{equation}
-	\text{E}\left(\frac{1}{\bar{\gamma_n^2}}\right)\leq C_1,
-\end{equation}
-
-
-\begin{equation}
-	\text{E}\left(\frac{1}{\tilde{\gamma_n^2}}\right)\leq C_2,
-\end{equation}
-
-So 
-\begin{equation}
-	\text{E}\left(\frac{1}{\gamma_n^2}\right)\leq \text{E}\left(\frac{1}{\tilde{\gamma_n^2}}\right)+\text{E}\left(\frac{1}{\bar{\gamma_n^2}}\right)\leq C_1+C_2.
-\end{equation}
-(We can calculate the exact form of $C_1,C_2$, since they are too complicated, we ignore here.)
-
-\begin{lemma}
-		We have no less than 0.96 chance such that $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, in other words,
-		$\text{E}(\gamma_n)\geq \frac{0.96}{5\sqrt{C_1+C_2}}.$
-\end{lemma}
-
-\begin{proof}
-	if we have more than $\frac{1}{25}$ chance such that $\gamma_n\leq \frac{1}{5\sqrt{C_1+C_2}} $, then $\text{E}(\frac{1}{\gamma_n^2})>\frac{1}{25}25(C_1+C_2)=C_1+C_2$, which contradicts  (48).
-\end{proof}
-
-
-\begin{lemma}
-	The expectation of the number $\#$of $=\{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}$ is at least $0.96n$ and the posibility such that this number is bigger than $0.5n$ is at least 0.92.
-\end{lemma}
-
-\begin{proof}
-	The first argument is easy. If the chance that this number less than $0.5n$ is bigger than 0.08,
-	then $\text{E}\left(\#\right)<0.08\times 0.5n+n(1-0.08)=0.96n$ which contradicts the first argument.
-\end{proof}
-
-We define $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=1$, if $\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}$, else $I_{\gamma_n\geq \frac{1}{5\sqrt{C_1+C_2}}}=0$.
-So we have 
-\begin{equation}
-	\begin{split}
-	\Phi_0\geq\sum_{i=1}^n\text{E}\left(\frac{\gamma_i}{2}I^2_{Stein}(\mu_i|\pi)\right)&\geq \sum_{i=1}^n\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}\frac{\gamma_i}{2}I^2_{Stein}(\mu_i|\pi)\right)\\
-	& \geq\frac{1}{10\sqrt{C_1+C_2}}\sum_{i=1}^n\text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
-	\end{split}
-\end{equation}
-We also know that 
-\begin{equation}
-	\min_{j\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}}I^2_{Stein}(\mu_j|\pi)\leq I^2_{Stein}(\mu_i|\pi),
-\end{equation}
-for every $i\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}$, then we know
-\begin{equation}
-	\begin{split}
-		&\quad\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\\
-		&\leq\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\in \{k|\gamma_k\geq \frac{1}{5\sqrt{C_1+C_2}},k\leq n\}}I^2_{Stein}(\mu_j|\pi)\right)\\
-		&\leq \text{E}\left(I_{\gamma_i\geq \frac{1}{5\sqrt{C_1+C_2}}}I^2_{Stein}(\mu_i|\pi)\right)
-	\end{split}
-\end{equation}
-combine (49) and (51), we derive that
-\begin{equation}
-	\text{E}\left(\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\right)\leq 10\sqrt{C_1+C_2}\Phi_0.
-\end{equation}
-
-so 
-\begin{equation}
-	\begin{split}
-	&\quad \text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\right)\leq \frac{10\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}
-	\end{split}
-\end{equation}
-\begin{lemma}
-	We have more than 0.9108 chance such that $\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$.
-\end{lemma}
-\begin{proof}
-	If not , then we have more than 0.01 chance such that $\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\cap \mathcal{F}\right)> \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$, then  
-	\begin{equation}
-		\begin{split}
-			\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\right)&>0.01\times \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}\\
-			&= \frac{10\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}
-		\end{split}
-	\end{equation}
-which contradicts (53). So we have more than 0.99 chance such that 
-$\text{E}\left(\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\Big|\#\{j|\gamma_j\geq \frac{1}{5\sqrt{C_1+C_2}},j\leq n\}\geq 0.5n\cap \mathcal{F}\right)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$, so we have more than $0.99\times 0.92=0.9108$ chance such that  $\min_{j\leq n}I^2_{Stein}(\mu_j|\pi)\leq \frac{1000\sqrt{C_1+C_2}\Phi_0}{0.92\times 0.5n}$
-\end{proof}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
