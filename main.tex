@@ -86,7 +86,8 @@
 \newcommand{\prnote}[1]{\todo[color=cyan!20]{#1}}
 \newcommand{\asnote}[1]{\todo[color=green!]{#1}}
 \newcommand{\lsnote}[1]{\todo[color=magenta]{#1}}
-\newcommand{\adil}[1]{{\color{green!} #1}}
+\newcommand{\adil}[1]{{\color{green!}Adil: #1}}
+\newcommand{\peter}[1]{{\color{green!}Peter: #1}}
 \newcommand{\cF}{{\mathcal F}}
 \newcommand{\mcG}{{\mathscr G}}
 \newcommand{\cB}{{\mathcal B}}
@@ -190,6 +191,27 @@ As sampling algorithms are intended to be applied to large scale problems, it ha
 
 Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm that has been applied in several contexts in machine learning, including Reinforcement Learning~\cite{liu2017policy}, sequential decision making~\cite{zhang2018learning,zhang2019scalable}, Generative Adversarial Networks~\cite{tao2019variational}, Variational Auto Encoders~\cite{pu2017vae}, and Federated Learning~\cite{kassab2020federated}. However, the theoretical understanding of SVGD is limited compared to that of Langevin algorithm~\cite{lu2019scaling,duncan2019geometry,liu2017stein,chewi2020svgd,nusken2021stein}. In particular, the first complexity result of SVGD, due to~\citet[Corollary 6]{korba2020non}, appeared only recently, and relies on an assumption on the trajectory of the algorithm, which cannot be checked prior to running the algorithm. Basically, this assumption is that the first moment of the iterates remain uniformly bounded by a constant $C$ at every iteration. Moreover, their complexity bound~\cite[Corollary 6]{korba2020non} does not make the dependence on the dimension $d$ of the problem explicit, precisely because this bound depends on $C$.
 
+
+
+\subsection{Related works}
+
+
+% We do not have a rate in KL for SVGD but we can have a rate in KSD for Langevin:
+% \begin{proposition}[Comparison to Langevin]
+% Assume LSI. Then, Langevin $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon^2})$
+% \end{proposition}
+% \begin{proof}
+%     Since LSI holds, then T1 holds. Then we can combine Lemma~\ref{lem:T1} with~\cite[Theorem 1]{vempala2019rapid}.
+% \end{proof}
+
+
+Most of the existing results on SVGD deal with the \textit{continuous time} approximation of SVGD (in the population limit)~\citep{lu2019scaling,duncan2019geometry,liu2017stein,nusken2021stein}, or with an approximation of that continuous time dynamics~\cite{chewi2020svgd}. In particular, \citet{duncan2019geometry} propose a Stein logarithmic Sobolev inequality that implies the linear convergence of the continuous time dynamics. However, it is not yet understood when this inequality holds. Besides, \citet{chewi2020svgd} showed that the Wasserstein gradient flow of the chi-squared divergence can be seen as an approximation of the continuous dynamics behind SVGD, and showed linear convergence of the Wasserstein gradient flow of the chi-squared under Poincaré inequality. Other results~\citep{lu2019scaling,liu2017stein,nusken2021stein} include asymptotic convergence properties of the continuous time SVGD, but do not include convergence rates.
+
+
+To our knowledge, the only existing complexity result (\textit{i.e.}, convergence rate) for SVGD in \textit{discrete time} is due to~\citet{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. More importantly, this complexity result is established under the assumption that $\sup_n I_{\st}(\mu_n|\pi) < \infty$, and the quantity $C = \sup_n I_{\st}(\mu_n|\pi)$ appears in the hidden constants. In particular, the dependence of $C$ in $d$ and other parameters is not known.
+
+Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \citet{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence, if the target distribution satisfies LSI, which is stronger than T1; see Table~\ref{tab:result}.
+
 \subsection{Contributions}
 Our paper intends to provide a clean analysis of SVGD, without any assumptions on the trajectory, and with complexity bounds depending on $\varepsilon$ and $d$. Instead, our key assumption is that the target distribution $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution~\cite[Theorem 22.10]{villani2008optimal}, and is implied, for example, by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. 
 
@@ -203,7 +225,7 @@ Assuming that the T1 inequality holds, we provide
 All these results hold without assuming $F$ to be convex. Our main complexity result is summarized in Table~\ref{tab:result}.
 
 
-\begin{table}[h!]
+\begin{table}[t!]
 \centering
 \caption{Comparison of {\color{blue}known complexity results} for SVGD and {\color{red}our complexity results.} Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
 \label{tab:result}
@@ -255,7 +277,7 @@ Complexity  &  \color{blue}$\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & 
 The remainder of the paper is organized as follows. In Section~\ref{sec:background} we introduce the necessary mathematical and notational background on optimal transport, reproducing kernel Hilbert spaces and SVGD in order to be able to describe and explain our results.
 %Change F, L, \lambda in the proof !!!!!!!!!
 
-\section{Background} \label{sec:background}
+\section{Background and Notation} \label{sec:background}
 For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm. Moreover, $\|\cdot\|_{\op}$ denotes the operator norm on the set of matrices. In Section~\ref{sec:svgd} we describe our theoretical results.
 
 \subsection{Optimal transport}
@@ -331,14 +353,15 @@ Somehow, T1 allows $F$ to be "more nonconvex" than LSI. Moreover, if $F$ is $\la
 We consider a kernel $k$ associated to a Reproducing Kernel Hilbert Space (RKHS) denoted by $\cH_0$. We denote the so-called feature map $x \mapsto k(x,\cdot)$ by $\Phi(x) \coloneqq k(\cdot,x) \in \cH_{0}$, for every $x \in \X$. The Hilbert space $\cH_0^d$ is denoted by $\cH \coloneqq \cH_0^d$. We make the following assumption on the kernel $k$.
 \begin{assumption}
 \label{ass:k_bounded}
-$\exists B>0$ s.t. for all $x \in \X$,\\
-$\|\Phi(x)\|_{\cH_0}\le B$ and $\|\nabla \Phi(x)\|_{\cH}=\left(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0}\right)^{\frac{1}{2}}\le B$.
+There exists $ B>0$ such that  the inequalities
+$$\|\Phi(x)\|_{\cH_0}\le B \qquad \text{and} \qquad \|\nabla \Phi(x)\|_{\cH}=\left(\sum_{i=1}^d \|\partial_{i} \Phi(x)\|^2_{\cH_0}\right)^{\frac{1}{2}}\le B$$
+hold for all $x \in \X$.
 %\asnote{+ Mercer kernel and conditions to do the integration by part?}
 \end{assumption}
 Under Assumption~\ref{ass:k_bounded}, $\cH \subset L^2(\mu)$ for every probability distribution on $\X$, and the inclusion map $\iota_{\mu}: \cH \to L^2(\mu)$ is continuous. We denote by $P_{\mu}: L^2(\mu) \to \cH$ its adjoint defined by the relation: for every $f \in L^2(\mu)$, $g \in \cH$, \begin{equation}
     \ps{f, \iota g}_{L^2(\mu)} = \ps{P_{\mu} f, g}_{\cH}.
 \end{equation}
-Then, $P_\mu$ can be expressed as a convolution with $k$~\cite[Proposition 3]{carmeli2010vector}:
+Then, $P_\mu$ can be expressed as a convolution with $k$~\cite[Proposition~3]{carmeli2010vector}:
 \begin{equation}
     P_{\mu} f(x) = \int k(x,y)f(y)d\mu(y), \qquad \text{or}  \qquad P_{\mu} f = \int \Phi(y)f(y)d\mu(y)
 \end{equation}
@@ -405,6 +428,7 @@ where
 \begin{equation*}
     h_{\mu} \coloneqq \int \nabla F(x) \Phi(x) - \nabla \Phi(x) d\mu(x).
 \end{equation*}
+
 %\asnote{Relationship with Wasserstein gradient here. Check: definition of Wass grad. Conditions IPP. $\cP_1$ or $\cP_2$?}
 %In this section we study the behavior of the Kullback-Leibler divergence along the Stein Variational Gradient Descent algorithm in discrete time.
 
@@ -419,143 +443,7 @@ where
 
 %  Under \Cref{ass:V_Lipschitz,ass:k_bounded}, a sufficient condition for~\Cref{ass:bounded_I_Stein} is $\sup_n \int \Vert x \Vert \mu_n(x)dx < \infty$. Bounded moment assumptions such as these are commonly used in stochastic optimization, for instance in some analysis of the stochastic gradient descent~\citep{moulines2011non}. Given our assumptions, we quantify the decreasing of the KL along the SVGD algorithm, also called a descent lemma in optimization.
  
-
-\begin{theorem}
-\label{th:svgd}
-  Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded}  hold true. Let $\alpha > 1$.   If 
-  \begin{equation}
-  \label{eq:condition-step}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},
-  \end{equation}
-or if \Cref{ass:stationary} holds and
-  \begin{equation}
-  \label{eq:condition-step-2}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
-  \end{equation}
-  then
-  \begin{equation}
-    \label{eq:TL-svgd-cst}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right)I_{\st}(\mu_n|\pi).
-    \end{equation}
-\end{theorem}
-%  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
-%  for the complete proof.
-
-\subsection{Weak convergence}
-\label{sec:weak}
-\begin{corollary}[Convergence]
-Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
-  If 
-  \begin{equation*}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1}\quad \text{and} \quad \gamma < \frac{2}{B (\alpha^2 + L)},
-  \end{equation*}
-  then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
-\end{corollary}
-\begin{proof}
-    Using Theorem~\ref{th:svgd} and iterating, 
-    \begin{equation*}
-        \cF(\mu_{n}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi),
-    \end{equation*}
-    therefore, for every $n \geq 0$,
-    \begin{equation*}
-    \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \cF(\mu_0).
-    \end{equation*}
-    Consequently, $\sum_{n=0}^{+\infty} I_{\st}(\mu_n|\pi) < \infty$. Therefore $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ and $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
-\end{proof}
-Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem 8]{gorham2017measuring}. In particular, a sufficient condition is the combination the two following properties:
-\begin{itemize}
-    \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
-    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check this!}
-\end{itemize}  
-%(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
-
-\section{Complexity}
-\begin{corollary}[Convergence rate]
-\label{cor:conv}
-Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$. 
-  If 
-  \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
-  \end{equation*}
-  OR if \Cref{ass:stationary} holds and
-  \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
-  \end{equation*}
-  then,
-  \begin{equation}
-      \frac{1}{n} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \frac{2\cF(\mu_0)}{n \gamma}.
-  \end{equation}
-\end{corollary}
-\begin{proof}
-    Using Theorem~\ref{th:svgd}, 
-    \begin{equation*}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2} I_{\st}(\mu_n|\pi),
-    \end{equation*}
-    and by iterating,
-    \begin{equation*}
-        0 \leq \cF(\mu_{n}) \leq \cF(\mu_{0}) - \frac{\gamma}{2} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi).
-    \end{equation*}
-    We obtain the result by rearranging the terms.
-\end{proof}
-\begin{corollary}[Complexity]
-\label{cor:comp}
-Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alpha > 1$. If
-\begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
-  \end{equation*}
-  and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
-  then $n = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ iterations of SVGD are sufficient to output $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
-\end{corollary}
-
-
-\subsection{Related works}
-
-
-% We do not have a rate in KL for SVGD but we can have a rate in KSD for Langevin:
-% \begin{proposition}[Comparison to Langevin]
-% Assume LSI. Then, Langevin $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon^2})$
-% \end{proposition}
-% \begin{proof}
-%     Since LSI holds, then T1 holds. Then we can combine Lemma~\ref{lem:T1} with~\cite[Theorem 1]{vempala2019rapid}.
-% \end{proof}
-
-
-Most of the existing results on SVGD deal with the \textit{continuous time} approximation of SVGD (in the population limit)~\cite{lu2019scaling,duncan2019geometry,liu2017stein,nusken2021stein}, or with an approximation of that continuous time dynamics~\cite{chewi2020svgd}. In particular, \cite{duncan2019geometry} proposes a Stein logarithmic Sobolev inequality that implies the linear convergence of the continuous time dynamics. However, it is not yet understood when this inequality holds. Besides, \cite{chewi2020svgd} showed that the Wasserstein gradient flow of the chi-squared divergence can be seen as an approximation of the continuous dynamics behind SVGD, and showed linear convergence of the Wasserstein gradient flow of the chi-squared under Poincaré inequality. Other results~\cite{lu2019scaling,liu2017stein,nusken2021stein} include asymptotic convergence properties of the continuous time SVGD, but do not include convergence rates.
-
-
-To our knowledge, the only existing complexity result (\textit{i.e.}, convergence rate) for SVGD in \textit{discrete time} is~\cite{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. More importantly, this complexity result is established under the assumption that $\sup_n I_{\st}(\mu_n|\pi) < \infty$, and the quantity $C = \sup_n I_{\st}(\mu_n|\pi)$ appears in the hidden constants. In particular, the dependence of $C$ in $d$ and other parameters is not known.
-
-Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \cite{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence, if the target distribution satisfies LSI, which is stronger than T1, see Table~\ref{tab:result}.
-
-
-
-
-% \begin{theorem}
-% \label{th:vrsvsgd}
-%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
-%   \begin{equation}
-%   \label{eq:condition-step}
-%       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}, ? \right)
-%   \end{equation}
-%   Then, 
-%   \begin{equation}
-%     \label{eq:TL-svgd-cst}
-%         \cL_{n+1} \leq \cL_{n} - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right)I_{\st}(\mu_n|\pi).
-%     \end{equation}
-% \end{theorem}
-
-%\asnote{unbiasedness, complexity, computation of full gradient at the beginning}
-\bibliographystyle{plainnat}
-\bibliography{math}
-
-
-\appendix
-
-
-\section{Proofs related to SVGD}
-
-In this section we prove our main results.
-
+ 
 \subsection{Notations}
 %Jac, HS, op, dirac
 %%%%NOTATIONS TO DEFINE IN APPENDIX OR MAIN PAPER:
@@ -567,7 +455,7 @@ In this section we prove our main results.
 %W_1, W_2, Dirac
 The Jacobian of a function $\phi: \X \to \X$ is denoted by $J \phi$. For every $x \in \X$, $J \phi(x)$ can be seen as a $d \times d$ matrix. For any $d \times d$ matrix $A$, $\|A\|_{\HS}$ denotes the Hilbert Schmidt norm of $A$ and by $\|A\|_{\op}$ the operator norm of $A$ viewed as a linear operator $A: \X \to \X$ (where $\X$ is endowed with the standard Euclidean inner product). Finally, $\delta_x$ is the Dirac measure at $x \in \X$.
 
-\subsection{Fundamental inequality}
+\subsection{A fundamental inequality}
 
 We start by stating a fundamental inequality satisfied by $\cF$ for any update of the form
 \begin{equation}
@@ -583,9 +471,9 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
     \end{equation}
     where $K = (\alpha^2 + L)B$.
 \end{proposition}
-Inequality~\eqref{eq:TL} plays the role of a Taylor inequality, where $h_{\mu_n}$ is the Wasserstein gradient of $\cF$ at $\mu_n$ under the metric induced by $\cH$. Proposition~\ref{prop:TL} generalizes \cite[Proposition 5]{korba2020non}. Indeed, \cite[Proposition 5]{korba2020non} can be obtained from our Proposition~\ref{prop:TL} by taking $g = h_{\mu_n}$, by assuming the uniform upper bound $\|h_{\mu_n}\|_{\cH}^2 \leq C$ (see \cite[Assumption A3]{korba2020non}) and by restricting the step size to $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$\footnote{Note that assuming $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$ is more restrictive than assuming $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$.}.
+Inequality~\eqref{eq:TL} plays the role of a Taylor inequality, where $h_{\mu_n}$ is the Wasserstein gradient of $\cF$ at $\mu_n$ under the metric induced by $\cH$. Proposition~\ref{prop:TL} generalizes \cite[Proposition~5]{korba2020non}. Indeed, \cite[Proposition~5]{korba2020non} can be obtained from our Proposition~\ref{prop:TL} by taking $g = h_{\mu_n}$, by assuming the uniform upper bound $\|h_{\mu_n}\|_{\cH}^2 \leq C$ (see \cite[Assumption A3]{korba2020non}) and by restricting the step size to $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$\footnote{Note that assuming $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$ is more restrictive than assuming $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$.}.
 
-Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite[Proposition 5]{korba2020non}, by replacing their $h_{\mu_n}$ by our $g$ and their uniform upper bound $C$ by our $\|g\|_{\cH}^2$. Therefore, we only sketch the main arguments, and further details can be found in \cite[Section 11.2]{korba2020non}.
+Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite[Proposition~5]{korba2020non}, by replacing their $h_{\mu_n}$ by our $g$ and their uniform upper bound $C$ by our $\|g\|_{\cH}^2$. Therefore, we only sketch the main arguments, and further details can be found in \cite[Section 11.2]{korba2020non}.
 \begin{proof}
     Let $\phi_t = I - t g$ for $t \in [0,\gamma]$ and $\rho_t = (\phi_t) \# \mu_n$. Note that $\rho_0 = \mu_n$ and $\rho_{\gamma} = \mu_{n+1}$. 
     First, for every $x \in \X$,
@@ -656,10 +544,11 @@ Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite
     %   $\E_{x \sim \rho_t} \left[\|J v_t(x)\|_{HS}^2\right]= \E_{x \sim \mu_n} \left[\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\right]$. Then,  for any $x$, $ \|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2 \le B^2I_{Stein}(\mu_n|\pi) \| (J\phi_t)^{-1}(x)\|_{op}^2$. On the other hand, $J\phi_t=I-tJg$, and if $t<\frac{1}{B\sqrt{C}}$ then $t\|Jg(x)\|<1$ and it can be shown that $\|(I - t Jg(x))^{-1}\| \le \alpha$ for $\gamma$ chosen as in \Cref{prop:descent}. Therefore $\|Jg(x) (J\phi_t)^{-1}(x)\|_{HS}^2\le \alpha^2 B^2 I_{Stein}(\mu_n|\pi)$ and $\varphi''(t)\le (\alpha^2+L)B^2I_{Stein}(\mu_n|\pi)$. 
     Combining each of the quantity in the Taylor expansion~\eqref{eq:Taylor} gives the desired result.
         %Sufficiently, we shall bound the term $\|Jg)(x) J(\phi_t)^{-1}(x)\|_{HS}^2$. 
-
 \end{proof}
-\subsection{Proof of Theorem~\ref{th:svgd}}
-As mentioned in the last section, Proposition~\ref{prop:TL} can be applied to SVGD, \textit{i.e.}, the update 
+
+ \subsection{Two lemmas}
+ 
+ As mentioned in the last section, Proposition~\ref{prop:TL} can be applied to SVGD, \textit{i.e.}, the update 
 \begin{equation*}
     \mu_{n+1} = (I - \gamma h_{\mu_n}) \# \mu_n,
 \end{equation*}
@@ -703,9 +592,9 @@ Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + L\|x\|$. T
 We obtain the first inequality using \Cref{ass:T1}: $W_1(\mu,\pi) \leq  \sqrt{\frac{2\cF(\mu)}{\lambda}}$.
 
 To prove the second inequality, recall that
-\begin{equation*}
+$
 \|h_\mu\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
-\end{equation*}
+$
 Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq L\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
 \begin{align*}
     \int \|x-x_\star\|d\mu(x) &= W_1(\mu,\delta_{x_\star}) \\
@@ -720,32 +609,170 @@ Therefore,
 \end{align}
 \end{proof}
 
+ 
+\subsection{Main result}
+
+Having established Proposition~\ref{prop:TL} and Lemmas~\ref{lem:svgd} and \ref{lem:T1}, we are now ready to formulate and prove our main result.
+
+\begin{theorem}
+\label{th:svgd}
+  Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded}  hold true. Let $\alpha > 1$.   If 
+  \begin{equation}
+  \label{eq:condition-step}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},
+  \end{equation}
+or if \Cref{ass:stationary} holds and
+  \begin{equation}
+  \label{eq:condition-step-2}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
+  \end{equation}
+  then
+  \begin{equation}
+    \label{eq:TL-svgd-cst}
+      \boxed{  \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right)I_{\st}(\mu_n|\pi).}
+    \end{equation}
+\end{theorem}
+%  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
+%  for the complete proof.
+
+\peter{Explain what the theorem says.}
+
+
+\begin{proof}
 
     We now prove by induction the first implication of Theorem~\ref{th:svgd}: \eqref{eq:condition-step} $\Rightarrow$ \eqref{eq:TL-svgd-cst}.
     First, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then, using Lemma~\ref{lem:T1}, $\gamma \|h_{\mu_0}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Therefore, using Lemma~\ref{lem:svgd}, 
     \begin{equation*}
         \cF(\mu_{1}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_0}\|_{\cH}^2,
     \end{equation*}
-\textit{i.e.}, Inequality~\eqref{eq:TL-svgd-cst} holds with $n = 0$. 
-
-Now, assume that the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} for every $n \in \{0,\ldots,N-1\}$ and let us prove it for $n = N$. First, $\cF(\mu_N) \leq \cF(\mu_0)$. Moreover,
-\begin{align*}
-    &B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \lambda \sqrt{\frac{2\cF(\mu_N)}{\lambda}}\\ \leq &B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \sqrt{\frac{2\cF(\mu_0)}{\lambda}}. 
+\textit{i.e.}, Inequality~\eqref{eq:TL-svgd-cst} holds with $n = 0$.  Now, assume that the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} for every $n \in \{0,\ldots,N-1\}$ and let us prove it for $n = N$. First, $\cF(\mu_N) \leq \cF(\mu_0)$. Letting $A := B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) $, this implies \begin{align*}
+    A + BL \lambda \sqrt{\frac{2\cF(\mu_N)}{\lambda}} \leq A + BL \sqrt{\frac{2\cF(\mu_0)}{\lambda}}. 
 \end{align*}
-Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_N}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. To see this, using Lemma~\ref{lem:T1}
+Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_N}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. To see this, using Lemma~\ref{lem:T1} we obtain
 \begin{align*}
 \gamma \|h_{\mu_N}\|_{\cH}
-&\leq  \gamma \left(B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \lambda \sqrt{\cF(\mu_N)} \right) \\
-       &\leq \gamma \left(B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \lambda \sqrt{\cF(\mu_0)} \right) \\
-       &\leq \frac{\alpha-1}{\alpha B}.
+&\leq  \gamma \left( A + BL \lambda \sqrt{\cF(\mu_N)} \right) \leq \gamma \left( A + BL \lambda \sqrt{\cF(\mu_0)} \right) \leq \frac{\alpha-1}{\alpha B}.
   \end{align*}
-  Therefore, using Lemma~\ref{lem:svgd}, the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} step $N$:
+  Therefore, using Lemma~\ref{lem:svgd}, the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} at step $n=N$:
   \begin{equation*}
         \cF(\mu_{N+1}) \leq \cF(\mu_{N}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_N}\|_{\cH}^2.
     \end{equation*}
     Finally, it remains to recall that $\|h_{\mu_N}\|_{\cH}^2 = I_{\st}(\mu_N|\pi)$.
-    
-    The proof of the second implication of Theorem~\ref{th:svgd} \eqref{eq:condition-step-2} $\Rightarrow$ \eqref{eq:TL-svgd-cst} is similar.
+    The proof of the second implication of Theorem~\ref{th:svgd}, \eqref{eq:condition-step-2} $\Rightarrow$ \eqref{eq:TL-svgd-cst}, is similar.
+    \end{proof}
+
+\section{Weak Convergence and Complexity}
+\label{sec:weak}
+
+\subsection{Weak convergence}
+We now show that Theorem~\ref{th:svgd} implies  weak convergence.
+
+\peter{Comment on the weakness of the assumption $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$.}
+
+\begin{corollary}[Weak convergence]
+Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
+  If 
+  \begin{equation*}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1}\quad \text{and} \quad \gamma < \frac{2}{B (\alpha^2 + L)},
+  \end{equation*}
+  then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
+\end{corollary}
+\begin{proof}
+    Using Theorem~\ref{th:svgd} and iterating, 
+    \begin{equation*}
+        \cF(\mu_{n}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi),
+    \end{equation*}
+    therefore, for every $n \geq 0$,
+    \begin{equation*}
+    \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \cF(\mu_0).
+    \end{equation*}
+    Consequently, $\sum_{n=0}^{+\infty} I_{\st}(\mu_n|\pi) < \infty$. Therefore $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ and $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
+\end{proof}
+
+Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem~8]{gorham2017measuring}. In particular, a sufficient condition is the combination the two following properties:
+\begin{itemize}
+    \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
+    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check this!}
+\end{itemize}  
+%(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
+
+
+
+
+\subsection{Complexity}
+
+\peter{add some text}
+
+\begin{corollary}[Convergence rate]
+\label{cor:conv}
+Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$. 
+  If 
+  \begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+  \end{equation*}
+  or if \Cref{ass:stationary} holds and
+  \begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+  \end{equation*}
+  then
+  \begin{equation}
+    \boxed{  \frac{1}{n} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \frac{2\cF(\mu_0)}{n \gamma}.}
+  \end{equation}
+\end{corollary}
+\begin{proof}
+    Using Theorem~\ref{th:svgd}, 
+$
+        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \frac{\gamma}{2} I_{\st}(\mu_n|\pi),
+$
+    and by iterating, we get
+    \begin{equation*}
+        0 \leq \cF(\mu_{n}) \leq \cF(\mu_{0}) - \frac{\gamma}{2} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi).
+    \end{equation*}
+    We obtain the result by rearranging the terms.
+\end{proof}
+
+\peter{add some text}
+
+\begin{corollary}[Complexity]
+\label{cor:comp}
+Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alpha > 1$. If
+\begin{equation*}
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+  \end{equation*}
+  and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
+  then $n = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ iterations of SVGD are sufficient to output $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
+\end{corollary}
+
+
+
+
+
+
+% \begin{theorem}
+% \label{th:vrsvsgd}
+%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz} and \ref{ass:T1} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+%   \begin{equation}
+%   \label{eq:condition-step}
+%       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \lambda \sqrt{\KL(\mu_0|\pi)} \right)\right)^{-1}, ? \right)
+%   \end{equation}
+%   Then, 
+%   \begin{equation}
+%     \label{eq:TL-svgd-cst}
+%         \cL_{n+1} \leq \cL_{n} - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right)I_{\st}(\mu_n|\pi).
+%     \end{equation}
+% \end{theorem}
+
+%\asnote{unbiasedness, complexity, computation of full gradient at the beginning}
+\bibliographystyle{plainnat}
+\bibliography{math}
+
+
+\appendix
+
+
+\section{Proofs related to SVGD}
+
+
     
     \subsection{Proof of Corollary~\ref{cor:comp}}
 %     The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
