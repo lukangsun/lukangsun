@@ -205,7 +205,7 @@ Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an
 % \end{proof}
 
 
-Most of the existing results on SVGD deal with the \textit{continuous time} approximation of SVGD (in the population limit)~\citep{lu2019scaling,duncan2019geometry,liu2017stein,nusken2021stein}, or with an approximation of that continuous time dynamics~\cite{chewi2020svgd}. In particular, \citet{duncan2019geometry} propose a Stein logarithmic Sobolev inequality that implies the linear convergence of the continuous time dynamics. However, it is not yet understood when this inequality holds. Besides, \citet{chewi2020svgd} showed that the Wasserstein gradient flow of the chi-squared divergence can be seen as an approximation of the continuous dynamics behind SVGD, and showed linear convergence of the Wasserstein gradient flow of the chi-squared under Poincaré inequality. Other results~\citep{lu2019scaling,liu2017stein,nusken2021stein} include asymptotic convergence properties of the continuous time SVGD, but do not include convergence rates.
+Most of the existing results on SVGD deal with the \textit{continuous time} approximation of SVGD (in the population limit)~\citep{lu2019scaling,duncan2019geometry,liu2017stein,nusken2021stein}, or with an approximation of that continuous time dynamics~\cite{chewi2020svgd}. In particular, \citet{duncan2019geometry} propose a Stein logarithmic Sobolev inequality that implies the linear convergence of the continuous time dynamics. However, it is not yet understood when this inequality holds. Besides, \citet{chewi2020svgd} showed that the Wasserstein gradient flow of the chi-squared divergence can be seen as an approximation of the continuous dynamics behind SVGD, and showed linear convergence of the Wasserstein gradient flow of the chi-squared under Poincaré inequality. Other results, such as those of~\citet{lu2019scaling,liu2017stein,nusken2021stein}, include asymptotic convergence properties of the continuous time SVGD, but do not include convergence rates.
 
 
 To our knowledge, the only existing complexity result (\textit{i.e.}, convergence rate) for SVGD in \textit{discrete time} is due to~\citet{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. More importantly, this complexity result is established under the assumption that $\sup_n I_{\st}(\mu_n|\pi) < \infty$, and the quantity $C = \sup_n I_{\st}(\mu_n|\pi)$ appears in the hidden constants. In particular, the dependence of $C$ in $d$ and other parameters is not known.
@@ -227,7 +227,7 @@ All these results hold without assuming $F$ to be convex. Our main complexity re
 
 \begin{table}[t!]
 \centering
-\caption{Comparison of {\color{blue}known complexity results} for SVGD and {\color{red}our complexity results.} Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
+\caption{Comparison of {\color{blue}known complexity results for Langevin} and {\color{red}our complexity results for SVGD.} Recall that the Logarithmic Sobolev Inequality (LSI) implies T1 with the same constant $\lambda$; see~\citet[Theorem 22.17]{villani2008optimal}.}
 \label{tab:result}
 \begin{tabular}{ |c||c|c|} 
  \hline
