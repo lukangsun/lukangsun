@@ -213,7 +213,7 @@ To our knowledge, the only existing complexity result (\textit{i.e.}, convergenc
 Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \citet{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence, if the target distribution satisfies LSI, which is stronger than T1; see Table~\ref{tab:result}.
 
 \subsection{Contributions}
-Our paper intends to provide a clean analysis of SVGD, without any assumptions on the trajectory, and with complexity bounds depending on $\varepsilon$ and $d$. Instead, our key assumption is that the target distribution $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution~\cite[Theorem 22.10]{villani2008optimal}, and is implied, for example, by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. 
+Our paper intends to provide a clean analysis of SVGD, without any assumptions on the trajectory, and with complexity bounds depending on $\varepsilon$ and $d$. Instead, our key assumption is that the target distribution $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution; see~\citet[Theorem 22.10]{villani2008optimal}. Moreover, T1 is implied, for example, by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. 
 
 
 Assuming that the T1 inequality holds, we provide 
@@ -274,7 +274,8 @@ Complexity  &  \color{blue}$\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ & 
 % \asnote{Add the log terms to compare to Wibisono Vempala} 
 
 \subsection{Paper structure}
-The remainder of the paper is organized as follows. In Section~\ref{sec:background} we introduce the necessary mathematical and notational background on optimal transport, reproducing kernel Hilbert spaces and SVGD in order to be able to describe and explain our results.
+The remainder of the paper is organized as follows. In Section~\ref{sec:background} we introduce the necessary mathematical and notational background on optimal transport, reproducing kernel Hilbert spaces and SVGD in order to be able to describe and explain our results. Section~\ref{sec:svgd} is devoted to the development of our theory. Since this is a theoretical work, we include all key proofs in the paper. Finally, in Section~\ref{sec:weak} we formulate three corollaries of our key result, capturing weak convergence and complexity estimates for SVGD. We include the  proofs of the first two corollaries here, and only leave the proof of Corollary~\ref{cor:comp} to the appendix.
+
 %Change F, L, \lambda in the proof !!!!!!!!!
 
 \section{Background and Notation} \label{sec:background}
@@ -467,7 +468,7 @@ where $g \in \cH$.
 Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
     \label{eq:TL}
-        \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g}_{\cH} +  \frac{\gamma^2 K}{2}\|g\|_{\cH}^2,
+       \boxed{ \cF(\mu_{n+1}) \leq \cF(\mu_{n}) - \gamma\ps{h_{\mu_n},g}_{\cH} +  \frac{\gamma^2 K}{2}\|g\|_{\cH}^2,}
     \end{equation}
     where $K = (\alpha^2 + L)B$.
 \end{proposition}
@@ -498,8 +499,7 @@ Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite
 		\|(J\phi_t(x))^{-1}\|_{\op} \leq \sum_{k=0}^\infty \|t Jg(x)\|_{\op}^k \leq \sum_{k=0}^\infty \left(\frac{\alpha-1}{\alpha}\right)^k = \alpha.
     \end{equation}
     Using~\cite[Theorem 5.34]{villani2003topics}, the velocity field ruling the time evolution of $\rho_t$ is $w_t \in L^2(\rho_t)$ defined by $w_t(x) = -g(\phi_t^{-1}(x))$. %Note that $w_0 = -g\in \cH$.    
-    
-    Denote $\varphi(t) = \cF(\rho_t)$. Using a Taylor expansion,
+     Denote $\varphi(t) = \cF(\rho_t)$. Using a Taylor expansion,
         \begin{equation}
         \label{eq:Taylor}
             \varphi(\gamma) = \varphi(0) + \gamma \varphi'(0) + \int_{0}^{\gamma} (\gamma - t)\varphi''(t)dt.
@@ -580,14 +580,12 @@ Using \Cref{ass:k_bounded}
         \|h_{\mu}\|_{\cH} &= \left\|\E_{x \sim \mu} \left(\nabla F(x)\Phi(x) - \nabla \Phi(x)\right) \right\|_{\cH} \\
         &\leq \E_{x \sim \mu} \left\| \nabla F(x)\Phi(x) - \nabla \Phi(x) \right\|_{\cH}\\
         &\leq \E_{x \sim \mu} \left\| \nabla F(x)\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH}\\
-        &= \E_{x \sim \mu} \left\|\nabla F(x)\right\|\left\|\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH}\\
-        &\leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
+        &= \E_{x \sim \mu} \left\|\nabla F(x)\right\|\left\|\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
     \end{align*}
 Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + L\|x\|$. Therefore, using the triangle inequality for the metric $W_1$,
     \begin{align*}
         \|h_{\mu}\|_{\cH} &\leq B \left(1 + \|\nabla F(0)\| + L\int \|x\|d\mu(x) \right)\\
-        &= B \left(1 + \|\nabla F(0)\| + L W_1(\mu,\delta_0) \right)\\
-        &\leq B \left(1 + \|\nabla F(0)\| + L W_1(\pi,\delta_0) \right) + BL W_1(\mu,\pi).
+        &= B \left(1 + \|\nabla F(0)\| + L W_1(\mu,\delta_0) \right) \leq B \left(1 + \|\nabla F(0)\| + L W_1(\pi,\delta_0) \right) + BL W_1(\mu,\pi).
     \end{align*}
 We obtain the first inequality using \Cref{ass:T1}: $W_1(\mu,\pi) \leq  \sqrt{\frac{2\cF(\mu)}{\lambda}}$.
 
@@ -682,7 +680,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
     \begin{equation*}
         \cF(\mu_{n}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi),
     \end{equation*}
-    therefore, for every $n \geq 0$,
+    therefore, for every $n \geq 1$,
     \begin{equation*}
     \gamma\left(1 - \frac{\gamma B (\alpha^2 + L)}{2}\right) \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \cF(\mu_0).
     \end{equation*}
@@ -766,15 +764,15 @@ Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alph
 \bibliographystyle{plainnat}
 \bibliography{math}
 
-
+\clearpage
 \appendix
 
+\part*{Appendix: Complexity Analysis of Stein Variational Gradient Descent Under Talagrand's Inequality T1}
 
-\section{Proofs related to SVGD}
 
 
     
-    \subsection{Proof of Corollary~\ref{cor:comp}}
+    \section{Proof of Corollary~\ref{cor:comp}}
 %     The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
 %     \begin{theorem}
 % \label{th:svgd2}
