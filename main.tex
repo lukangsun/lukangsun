@@ -88,6 +88,7 @@
 \newcommand{\lsnote}[1]{\todo[color=magenta]{#1}}
 \newcommand{\adil}[1]{{\color{green!}Adil: #1}}
 \newcommand{\peter}[1]{{\color{green!}Peter: #1}}
+\newcommand{\Sun}[1]{{\color{red!} #1}}
 \newcommand{\cF}{{\mathcal F}}
 \newcommand{\mcG}{{\mathscr G}}
 \newcommand{\cB}{{\mathcal B}}
@@ -301,11 +302,11 @@ In this paper, we consider a target probability distribution $\pi$ proportional 
 \begin{assumption}
 \label{ass:V_Lipschitz} The Hessian $H_{F}$ is well-defined and $\exists L \geq 0$ such that $\|H_{F}\|_{\op} \le L$.
 \end{assumption}
-To specify the dependence in the dimension $d$ of our complexity bounds, we shall sometimes assume the following.
-\begin{assumption}
-\label{ass:stationary} 
+To specify the dependence in the dimension $d$ of our complexity bounds, we \Sun{need the following proposition.}
+\Sun{\begin{proposition}
+\label{ass:stationary} Under Assumptions~\ref{ass:V_Lipschitz} ,
 $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
-\end{assumption}
+\end{proposition}}
 
 The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler (KL) divergence as 
 \begin{equation}
@@ -563,11 +564,11 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
 
 \begin{lemma}
 \label{lem:T1}
-     Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Then, for every $\mu \in \cP_2(\X)$,
+     Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Then, for every $\mu \in \cP_2(\X)$,\Sun{we have}
 \begin{equation*}
     \|h_{\mu}\|_{\cH} \leq B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \sqrt{\frac{2\cF(\mu)}{\lambda}}.
 \end{equation*}
-Moreover, if \Cref{ass:stationary} holds, then
+\Sun{we also have}
 \begin{equation*}
 \|h_\mu\|_{\cH} \leq B \left(1 + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \sqrt{\frac{2\cF(\mu)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x)\right).
 \end{equation*}
@@ -617,7 +618,7 @@ Having established Proposition~\ref{prop:TL} and Lemmas~\ref{lem:svgd} and \ref{
   \label{eq:condition-step}
       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},
   \end{equation}
-or if \Cref{ass:stationary} holds and
+or 
   \begin{equation}
   \label{eq:condition-step-2}
       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
@@ -706,7 +707,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and  \ref{ass:k_bounded} hol
   \begin{equation*}
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
-  or if \Cref{ass:stationary} holds and
+  or 
   \begin{equation*}
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
@@ -767,6 +768,33 @@ Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alph
 
 \part*{Appendix: Complexity Analysis of Stein Variational Gradient Descent Under Talagrand's Inequality T1}
 
+
+	\Sun{
+	
+	\section{Proof of Propostion~\ref{ass:stationary}}
+	\asnote{Check this proof (should be OK)}
+	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
+	\begin{equation*}
+		\begin{split}
+		F(x_n+\alpha p)-F(x_n)&=\nabla F(x_n+\alpha'p)\alpha p\\
+		&=\nabla F(x_n)\alpha p+(\nabla F(x_n+\alpha'p)-\nabla F(x_n))\alpha p\\
+		&\leq \nabla F(x_n)\alpha p+L\epsilon^2,
+		\end{split}
+	\end{equation*} 
+	where $\|p\|_2=1, \alpha\leq \epsilon$. By Jessen inequality, we have
+	\begin{equation*}
+		\begin{split}
+			\int_{B_{\epsilon}(x_n)} e^{-F(x)}dx&\geq \int_{B_{\epsilon}(x_n)}e^{-F(x_n)-\nabla F(x_n)(x-x_n)-L\epsilon^2}dx\\
+			&\geq e^{-F(x_n)-L\epsilon^2}\int_{B_{\epsilon}(0)}e^{-\nabla F(x_n)x}dx\\
+			&\geq e^{-C-L\epsilon^2}|B_{\epsilon}(0)|e^{\int_{B_{\epsilon}(0)}-\nabla F(x_n)x\frac{dx}{|B_{\epsilon}(0)|}}=e^{-C-L\epsilon^2}|B_{\epsilon}(0)|.
+		\end{split}
+	\end{equation*}
+	Since $|x_n|\mapsto +\infty$, we can assume $B_{\epsilon}(x_i)\cap B_{\epsilon}(x_j)=\emptyset,i\neq j$, so
+	\begin{equation*}
+		\int e^{-F(x)}dx\geq \int_{\cup_i B_{\epsilon}(x_i)}e^{-F(x)}dx\geq +\infty\cdot e^{-C-L\epsilon^2}|B_{\epsilon}(0)|=+\infty,
+	\end{equation*}
+	this indicates $\pi$ can't be normalized, so we have proved the first assertion. Since  $|x|\mapsto +\infty$, $F\mapsto +\infty$, we can find radius $R$ such that outside $B_R(0)$, $F\geq 2|F(0)|$, so inside $B_{R}(0)$, there must be a minimum point $x^{*}$, which is also a global minimum point( $|x^*|< R$ since on the boundary $F\geq 2|F(0)|$, but $F(x^*)\leq F(0)$) so at this point $\nabla F(x^*)=0$.
+	}
 
 
     
