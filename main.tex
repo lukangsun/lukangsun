@@ -569,7 +569,7 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
 \end{equation*}
 Moreover, if \Cref{ass:stationary} holds, then
 \begin{equation*}
-\|h_\mu\|_{\cH} \leq B \left(1 + L\lambda \sqrt{\cF(\mu_0)} + L\lambda \sqrt{\cF(\mu)} + L \int \|x-x_\star\|d\mu_0(x)\right).
+\|h_\mu\|_{\cH} \leq B \left(1 + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \sqrt{\frac{2\cF(\mu)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x)\right).
 \end{equation*}
 \end{lemma}
 \begin{proof}
@@ -642,7 +642,7 @@ or if \Cref{ass:stationary} holds and
         \cF(\mu_{1}) \leq \cF(\mu_{0}) - \gamma\left(1 - \frac{\gamma K}{2}\right)\|h_{\mu_0}\|_{\cH}^2,
     \end{equation*}
 \textit{i.e.}, Inequality~\eqref{eq:TL-svgd-cst} holds with $n = 0$.  Now, assume that the condition~\eqref{eq:condition-step} implies Inequality~\eqref{eq:TL-svgd-cst} for every $n \in \{0,\ldots,N-1\}$ and let us prove it for $n = N$. First, $\cF(\mu_N) \leq \cF(\mu_0)$. Letting $A := B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) $, this implies \begin{align*}
-    A + BL \lambda \sqrt{\frac{2\cF(\mu_N)}{\lambda}} \leq A + BL \sqrt{\frac{2\cF(\mu_0)}{\lambda}}. 
+    A + BL \sqrt{\frac{2\cF(\mu_N)}{\lambda}} \leq A + BL \sqrt{\frac{2\cF(\mu_0)}{\lambda}}. 
 \end{align*}
 Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h_{\mu_N}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. To see this, using Lemma~\ref{lem:T1} we obtain
 \begin{align*}
@@ -688,7 +688,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem~8]{gorham2017measuring}. In particular, a sufficient condition is the combination the two following properties:
 \begin{itemize}
     \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
-    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (0,1)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check this!}
+    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in [-1,0]$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check this!}
 \end{itemize}  
 %(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
 
@@ -704,11 +704,11 @@ Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Righta
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and  \ref{ass:k_bounded} hold true. Let $\alpha > 1$. 
   If 
   \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
   or if \Cref{ass:stationary} holds and
   \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
   then
   \begin{equation}
@@ -733,7 +733,7 @@ $
 \label{cor:comp}
 Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alpha > 1$. If
 \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
   and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
   then $n = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ iterations of SVGD are sufficient to output $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
@@ -792,7 +792,7 @@ Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alph
 \asnote{Check this proof (should be OK)}
 Using Corollary~\ref{cor:conv}, if
   \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{1}{B (\alpha^2 + L)}\right),
+      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
   then, denoting $p = \argmin_{k \in \{0,\ldots,n-1\}} I_{\st}(\mu_k|\pi)$,
   \begin{equation}
