@@ -302,11 +302,11 @@ In this paper, we consider a target probability distribution $\pi$ proportional 
 \begin{assumption}
 \label{ass:V_Lipschitz} The Hessian $H_{F}$ is well-defined and $\exists L \geq 0$ such that $\|H_{F}\|_{\op} \le L$.
 \end{assumption}
-To specify the dependence in the dimension $d$ of our complexity bounds, we \Sun{need the following proposition.}
-\Sun{\begin{proposition}
+To specify the dependence in the dimension $d$ of our complexity bounds, we need the following proposition.
+\begin{proposition}
 \label{ass:stationary} Under Assumptions~\ref{ass:V_Lipschitz} ,
-$\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
-\end{proposition}}
+there exists $x_\star \in \X$ for which $\nabla F(x_\star) = 0$, \textit{i.e.}, $F$ admits a stationary point.
+\end{proposition}
 
 The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler (KL) divergence as 
 \begin{equation}
@@ -331,10 +331,10 @@ The analysis of sampling algorithm in the case where $F$ is nonconvex often goes
 The distribution $\pi$ satisfies the Logarithmic Sobolev Inequality if $\exists \lambda > 0$ s.t. for all $\mu \in \cP_2(\X)$, $\cF(\mu) \leq \frac{2}{\lambda}\|\nabla_W \cF(\mu)\|_{L^2(\mu)}^2$.
 \end{definition}
 
-LSI is the key assumption in the analysis of Langevin algorithm in the case where $F$ is not convex~\cite{vempala2019rapid}.
+LSI is the key assumption in the analysis of Langevin algorithm in the case wheen $F$ is not convex~\cite{vempala2019rapid}.
 
 \begin{definition}[Talagrand's Inequality T$p$]
-Let $p \geq 1$. The distribution $\pi$ satisfies the Talagrand's Inequality T$p$ if $\exists \lambda > 0$ s.t. for all $\mu \in \cP_p(\X)$, $W_p(\mu,\pi) \leq \sqrt{\frac{2 \cF(\mu)}{\lambda}}$.
+Let $p \geq 1$. The distribution $\pi$ satisfies the Talagrand's Inequality T$p$ if there exists $\lambda > 0$ such that for all $\mu \in \cP_p(\X)$, we have $W_p(\mu,\pi) \leq \sqrt{\frac{2 \cF(\mu)}{\lambda}}$.
 \end{definition}
 
 \textit{T1 is milder than LSI.} Indeed, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T2 implies T1 with the same constant $\lambda$. Moreover, using~\cite[Theorem 22.17]{villani2008optimal}, LSI implies T2 with the same constant $\lambda$. In conclusion, LSI$\Rightarrow$T2$\Rightarrow$T1 with the same constant $\lambda$.
@@ -387,7 +387,7 @@ where
 
 \paragraph{Our point of view on SVGD.} We now provide the intuition behind our results on SVGD.
 
-\textit{In the population limit, SVGD can be seen as a Riemannian gradient descent, thanks to the two following reasons.} 
+\begin{quote}\em In the population limit, SVGD can be seen as a Riemannian gradient descent, thanks to the following two reasons. \end{quote}
 
 First, in a Riemannian interpretation of the Wasserstein space~\cite{villani2008optimal}, for every $\mu \in \cP_2(\X)$, the map $\exp_{\mu} : \phi \mapsto (I + \phi)\#\mu$ can be seen as the exponential map at $\mu$. SVGD~\eqref{eq:svgdpopulation} can be rewritten as $\mu_{n+1} = \exp_{\mu_n}(-\gamma h_{\mu_n})$. 
 
@@ -483,7 +483,7 @@ Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite
     \label{eq:gbound}
 	\|g(x)\|^2=\sum_{i=1}^d \ps{k(x,.),g_i}^2_{\cH_0} \le \|k(x,.)\|_{\cH_0}^2 \|g\|_{\cH}^2\le B^2 \|g\|_{\cH}^2,
 	\end{equation}
-	and,
+	and
 	\begin{align}
 	\label{eq:Jgbound}
 	\|Jg(x)\|_{\HS}^2&=\sum_{i,j=1}^d \left|\frac{\partial g_i(x)}{\partial x_j} \right|^2=\sum_{i,j=1}^d \ps{\partial_{x_j}k(x,.), g_i}_{\cH_0}^2\le \sum_{i,j=1}^d \| \partial_{x_j}k(x,.)\|^2_{\cH_0} \|g_i\|_{\cH_0}^2 \nonumber\\
@@ -517,7 +517,7 @@ $\varphi(0) = \cF(\mu_n)$ and $\varphi(\gamma) = \cF(\mu_{n+1})$.
         \label{eq:chainrule1}
             \varphi'(0) = -\ps{h_{\mu_n},g}_{\cH},
         \end{equation}
-        and, $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where\footnote{Equations~\eqref{eq:chainrule1} and~\eqref{eq:chainrule2} are the equations that would deserve more explanations. We only sketch the proof, see~\cite[Lemma 11]{korba2020non} more for details.}
+        and $\varphi''(t) = \psi_1(t) + \psi_2(t)$, where\footnote{Equations~\eqref{eq:chainrule1} and~\eqref{eq:chainrule2} are the equations that would deserve more explanations. We only sketch the proof, see~\cite[Lemma 11]{korba2020non} more for details.}
         \begin{equation}
         \label{eq:chainrule2}
         \psi_1(t) = \E_{x \sim \rho_t} \left[ \ps{w_t(x), H_F(x) w_t(x)}\right] \; \text{ and } \; \psi_2(t) = \E_{x \sim \rho_t} \left[ \|J w_t(x)\|_{\HS}^2 \right].
@@ -564,11 +564,11 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
 
 \begin{lemma}
 \label{lem:T1}
-     Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Then, for every $\mu \in \cP_2(\X)$,\Sun{we have}
+     Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Then, for every $\mu \in \cP_2(\X)$, we have
 \begin{equation*}
-    \|h_{\mu}\|_{\cH} \leq B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \sqrt{\frac{2\cF(\mu)}{\lambda}}.
+    \|h_{\mu}\|_{\cH} \leq B \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x)\right) + BL \sqrt{\frac{2\cF(\mu)}{\lambda}}
 \end{equation*}
-\Sun{we also have}
+and
 \begin{equation*}
 \|h_\mu\|_{\cH} \leq B \left(1 + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \sqrt{\frac{2\cF(\mu)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x)\right).
 \end{equation*}
@@ -594,8 +594,7 @@ $
 $
 Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq L\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
 \begin{align*}
-    \int \|x-x_\star\|d\mu(x) &= W_1(\mu,\delta_{x_\star}) \\
-    &\leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
+    \int \|x-x_\star\|d\mu(x) = W_1(\mu,\delta_{x_\star}) & \leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
     &\leq \sqrt{\frac{2\cF(\mu_0)}{\lambda}} + \sqrt{\frac{2\cF(\mu)}{\lambda}} + W_1(\mu_0,\delta_{x_\star}).
 \end{align*}
 Therefore, 
