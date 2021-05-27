@@ -184,7 +184,7 @@ Sampling from a given target distribution $\pi$ is a fundamental task of many Ma
     \label{eq:target}
     \pi(x) \propto \exp(-F(x)),
 \end{equation}
-where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$.
+where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$ such that $\int \exp(-F(x))dx < \infty$.
 
 As sampling algorithms are intended to be applied to large scale problems, it has become increasingly important to understand their theoretical properties, such as their complexity, as a function of the dimension of the problem $d$, and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.} the works of~\citet{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
@@ -369,7 +369,7 @@ hold for all $x \in \X$.
 %\asnote{+ Mercer kernel and conditions to do the integration by part?}
 \end{assumption}
 Under Assumption~\ref{ass:k_bounded}, $\cH \subset L^2(\mu)$ for every probability distribution on $\X$, and the inclusion map $\iota_{\mu}: \cH \to L^2(\mu)$ is continuous. We denote by $P_{\mu}: L^2(\mu) \to \cH$ its adjoint defined by the relation: for every $f \in L^2(\mu)$, $g \in \cH$, \begin{equation}
-    \ps{f, \iota g}_{L^2(\mu)} = \ps{P_{\mu} f, g}_{\cH}.
+    \ps{f, \iota_{\mu} g}_{L^2(\mu)} = \ps{P_{\mu} f, g}_{\cH}.
 \end{equation}
 Then, $P_\mu$ can be expressed as a convolution with $k$~\cite[Proposition~3]{carmeli2010vector}:
 \begin{equation}
@@ -675,9 +675,13 @@ We now show that Theorem~\ref{th:svgd} implies  weak convergence.
 
 \begin{corollary}[Weak convergence]
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
-  If 
+  If $\gamma < \frac{2}{B (\alpha^2 + L)}$, and
   \begin{equation*}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1}\quad \text{and} \quad \gamma < \frac{2}{B (\alpha^2 + L)},
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1}
+  \end{equation*}
+  or 
+  \begin{equation*}
+      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
   \end{equation*}
   then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
 \end{corollary}
@@ -739,7 +743,7 @@ $
 
 \begin{corollary}[Complexity]
 \label{cor:comp}
-Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alpha > 1$. If
+Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Let $\alpha > 1$. If
 \begin{equation*}
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
@@ -776,10 +780,39 @@ Let Assumptions~\ref{ass:V_Lipschitz}--\ref{ass:k_bounded} hold true. Let $\alph
 \part*{Appendix: Complexity Analysis of Stein Variational Gradient Descent Under Talagrand's Inequality T1}
 
 
+\section{Proof of Propostion~\ref{ass:stationary}}
+\asnote{I rewrote Lukang's proof and it seems to work.}
+First, we prove that $F$ is coercive, \textit{i.e.}, for every $C>0$, the set $S = \{x \in \sX : F(x) \leq C\}$ is compact. 
+
+Assume that $S$ is not compact. Since $F$ is continuous, $S$ is closed. Hence, $S$ is not bounded. Therefore, there exists a sequence $(x_n)$ of points in $\X$ such that $F(x_n) \leq C$, $\|x_n\| \to \infty$ and $B(x_n) \cap B(x_m) = \emptyset$ for every $n \neq m$, where $B(x)$ denotes and the unit ball centered at $x$. 
+
+Let $n \geq 0$. Using the smoothness of $F$ (\Cref{ass:V_Lipschitz}), for every $x \in B(x_n)$
+\begin{equation*}
+    F(x) \leq F(x_n) + \ps{\nabla F(x_n),x-x_n} + \frac{L}{2}.
+\end{equation*}
+Denote by $V$ the volume of the unit ball centered at $x$, \textit{i.e.} its Lebesgue measure. The positive number $V$ does not depend on $x$.
+
+\begin{align*}
+    &\int_{B(x_n)} \exp(-F(x))dx \\
+    \geq& \int_{B(x_n)} \exp \left(-F(x_n) -\ps{\nabla F(x_n),x-x_n} - \frac{L}{2}\right)dx \\
+    =& V \exp \left(-F(x_n)-\frac{L}{2}\right) \int_{B(x_n)} \exp\left(\ps{\nabla F(x_n),x_n-x}\right)\frac{dx}{V}\\
+    =& V \exp \left(-F(x_n)-\frac{L}{2}\right) \int_{B(0)} \exp\left(\ps{\nabla F(x_n),u}\right)\frac{du}{V}\\
+    \geq& V \exp \left(-F(x_n)-\frac{L}{2}\right)  \exp\left( \int_{B(0)} \ps{\nabla F(x_n),u} \frac{du}{V}\right)\\
+    =& V \exp \left(-F(x_n)-\frac{L}{2}\right)\\
+    \geq& V \exp \left(-C-\frac{L}{2}\right).
+\end{align*}
+where we used Jensen's inequality thanks to the convexity of $\exp$. Finally, 
+\begin{equation*}
+\int \exp(-F(x))dx \geq \sum_{n = 0}^{\infty} \int_{B(x_n)} \exp(-F(x))dx \geq \sum_{n = 0}^{\infty} V \exp \left(-C-\frac{L}{2}\right) = +\infty.
+\end{equation*}
+and $\exp(-F)$ is not integrable. This contradicts the definition of $F$.
+
+Therefore, the set $S$ is compact. Since $F$ is continuous, $F$ admits a minimizer $x_\star$ on the compact set $\{x \in \sX : F(x) \leq 1\}$, and $x_\star$ is a stationary point (the point $x_\star$ is actually a global minimizer of $F$).
+
 	\Sun{
 	
 	\section{Proof of Propostion~\ref{ass:stationary}}
-	\asnote{Check this proof (should be OK)}
+	\lsnote{Check this proof (should be OK)}
 	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
 	\begin{equation*}
 		\begin{split}
