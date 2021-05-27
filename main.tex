@@ -474,7 +474,7 @@ We start by stating a fundamental inequality satisfied by $\cF$ for any update o
 \end{equation}
 where $g \in \cH$.
 \begin{proposition}
-\label{prop:TL}
+\label{prop:TL}\asnote{we don't need this proposition, lemma1 is enough}
 Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
     \label{eq:TL}
@@ -701,7 +701,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem~8]{gorham2017measuring}. In particular, a sufficient condition is the combination the two following properties:
 \begin{itemize}
     \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
-    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in [-1,0]$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{Check this!}
+    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (-1,0)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{it's ok.}
 \end{itemize}  
 %(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
 
@@ -877,33 +877,33 @@ and $\exp(-F)$ is not integrable. This contradicts the definition of $F$.
 
 Therefore, the set $S$ is compact and $F$ is coercive. Since $F$ is continuous, $F$ admits a minimizer $x_\star$ on the compact set $\{x \in \sX : F(x) \leq 1\}$, and $x_\star$ is a stationary point (the point $x_\star$ is actually a global minimizer of $F$).
 
-	\Sun{
-	
-	\section{Proof of Propostion~\ref{ass:stationary}}
-	\lsnote{Check this proof (should be OK)}
-	\asnote{I rewrote this proof above so we can discard it.}
-	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
-	\begin{equation*}
-		\begin{split}
-		F(x_n+\alpha p)-F(x_n)&=\nabla F(x_n+\alpha'p)\alpha p\\
-		&=\nabla F(x_n)\alpha p+(\nabla F(x_n+\alpha'p)-\nabla F(x_n))\alpha p\\
-		&\leq \nabla F(x_n)\alpha p+L\epsilon^2,
-		\end{split}
-	\end{equation*} 
-	where $\|p\|_2=1, \alpha\leq \epsilon$. By Jessen inequality, we have
-	\begin{equation*}
-		\begin{split}
-			\int_{B_{\epsilon}(x_n)} e^{-F(x)}dx&\geq \int_{B_{\epsilon}(x_n)}e^{-F(x_n)-\nabla F(x_n)(x-x_n)-L\epsilon^2}dx\\
-			&\geq e^{-F(x_n)-L\epsilon^2}\int_{B_{\epsilon}(0)}e^{-\nabla F(x_n)x}dx\\
-			&\geq e^{-C-L\epsilon^2}|B_{\epsilon}(0)|e^{\int_{B_{\epsilon}(0)}-\nabla F(x_n)x\frac{dx}{|B_{\epsilon}(0)|}}=e^{-C-L\epsilon^2}|B_{\epsilon}(0)|.
-		\end{split}
-	\end{equation*}
-	Since $|x_n|\mapsto +\infty$, we can assume $B_{\epsilon}(x_i)\cap B_{\epsilon}(x_j)=\emptyset,i\neq j$, so
-	\begin{equation*}
-		\int e^{-F(x)}dx\geq \int_{\cup_i B_{\epsilon}(x_i)}e^{-F(x)}dx\geq +\infty\cdot e^{-C-L\epsilon^2}|B_{\epsilon}(0)|=+\infty,
-	\end{equation*}
-	this indicates $e^{-F}$ can't be normalized, so we have proved the first assertion. Since  $|x|\mapsto +\infty$, $F\mapsto +\infty$, we can find radius $R$ such that outside $B_R(0)$, $F\geq |F(0)|+1$, so inside $B_{R}(0)$, there must be a minimum point $x^{*}$( $|x^*|< R$ since on the boundary $F\geq |F(0)|+1$) so at this point $\nabla F(x^*)=0$ .
-	}
+%	\Sun{
+%	
+%	\section{Proof of Propostion~\ref{ass:stationary}}
+%	\lsnote{Check this proof (should be OK)}
+%	\asnote{I rewrote this proof above so we can discard it.}
+%	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
+%	\begin{equation*}
+%		\begin{split}
+%		F(x_n+\alpha p)-F(x_n)&=\nabla F(x_n+\alpha'p)\alpha p\\
+%		&=\nabla F(x_n)\alpha p+(\nabla F(x_n+\alpha'p)-\nabla F(x_n))\alpha p\\
+%		&\leq \nabla F(x_n)\alpha p+L\epsilon^2,
+%		\end{split}
+%	\end{equation*} 
+%	where $\|p\|_2=1, \alpha\leq \epsilon$. By Jessen inequality, we have
+%	\begin{equation*}
+%		\begin{split}
+%			\int_{B_{\epsilon}(x_n)} e^{-F(x)}dx&\geq \int_{B_{\epsilon}(x_n)}e^{-F(x_n)-\nabla F(x_n)(x-x_n)-L\epsilon^2}dx\\
+%			&\geq e^{-F(x_n)-L\epsilon^2}\int_{B_{\epsilon}(0)}e^{-\nabla F(x_n)x}dx\\
+%			&\geq e^{-C-L\epsilon^2}|B_{\epsilon}(0)|e^{\int_{B_{\epsilon}(0)}-\nabla F(x_n)x\frac{dx}{|B_{\epsilon}(0)|}}=e^{-C-L\epsilon^2}|B_{\epsilon}(0)|.
+%		\end{split}
+%	\end{equation*}
+%	Since $|x_n|\mapsto +\infty$, we can assume $B_{\epsilon}(x_i)\cap B_{\epsilon}(x_j)=\emptyset,i\neq j$, so
+%	\begin{equation*}
+%		\int e^{-F(x)}dx\geq \int_{\cup_i B_{\epsilon}(x_i)}e^{-F(x)}dx\geq +\infty\cdot e^{-C-L\epsilon^2}|B_{\epsilon}(0)|=+\infty,
+%	\end{equation*}
+%	this indicates $e^{-F}$ can't be normalized, so we have proved the first assertion. Since  $|x|\mapsto +\infty$, $F\mapsto +\infty$, we can find radius $R$ such that outside $B_R(0)$, $F\geq |F(0)|+1$, so inside $B_{R}(0)$, there must be a minimum point $x^{*}$( $|x^*|< R$ since on the boundary $F\geq |F(0)|+1$) so at this point $\nabla F(x^*)=0$ .
+%	}
 
 
     
@@ -926,7 +926,7 @@ Therefore, the set $S$ is compact and $F$ is coercive. Since $F$ is continuous, 
      
 
 
-\asnote{Check this proof (should be OK)}
+\asnote{is it the tradition that to ignore the $\log L$ term? I see \cite{vempala2019rapid} also ignore it. The proof is ok if you don't consider $\log L$.}
 Using Corollary~\ref{cor:conv}, if
   \begin{equation*}
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
