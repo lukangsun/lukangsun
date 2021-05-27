@@ -188,7 +188,7 @@ where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d
 
 As sampling algorithms are intended to be applied to large scale problems, it has become increasingly important to understand their theoretical properties, such as their complexity, as a function of the dimension of the problem $d$, and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.} the works of~\citet{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
-\subsection{SVGD}
+\subsection{Stein Variational Gradient Descent (SVGD)}
 
 Stein Variational Gradient Descent (SVGD)~\cite{liu2016stein,liu2017stein} is an alternative to the Langevin algorithm\Sun{ which is by discretizing the following Langevin dynamics:
 	\begin{equation*}
@@ -222,6 +222,7 @@ To our knowledge, the only existing complexity result (\textit{i.e.}, convergenc
 Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \citet{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence, if the target distribution satisfies LSI, which is stronger than T1; see Table~\ref{tab:result}.
 
 \subsection{Contributions}
+\label{sec:contrib}
 Our paper intends to provide a clean analysis of SVGD, without any assumptions on the trajectory, and with complexity bounds depending on $\varepsilon$ and $d$. Instead, our key assumption is that the target distribution $\pi$ satisfies T1, the mildest of the Talagrand's inequalities, which is satisfied under mild assumptions on the tail of the distribution; see~\citet[Theorem 22.10]{villani2008optimal}. Moreover, T1 is implied, for example, by the Logarithmic Sobolev Inequality (LSI)~\cite[Theorem 22.17]{villani2008optimal}. 
 
 
@@ -379,7 +380,7 @@ where the integral converges in norm.
 
 
 \subsection{Stein Variational Gradient Descent}
-
+\label{sec:svgd-desc}
 Stein Variational Gradient Descent (SVGD) is an algorithm to sample from $\pi \propto \exp(-F)$. SVGD proceeds by maintaining a set of particles over $\R^d$, whose empirical distribution $\mu_n$ at time $n$ aims to approximate $\pi$ as $n \to \infty$, see~\cite{liu2016stein}. In this paper, we analyze SVGD in the so-called population limit, where the number of particles is infinite. In this limit, the distribution $\mu_n$ follows the dynamics
 \begin{equation}
 \label{eq:svgdpopulation}
@@ -784,7 +785,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
   \item Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
     \answerYes{}
   \item Did you describe the limitations of your work?
-    \answerYes{} : Our main limitation is that we study SVGD \textit{in the population limit}, this is explicitly stated in the abstract. 
+    \answerYes{} : Our main limitation is that we study SVGD \textit{in the population limit}, this is explicitly stated in the abstract, in the contributions (Section~\ref{sec:contrib}) and in the presentation of SVGD (Section~\ref{sec:svgd-desc}). 
     
   \item Did you discuss any potential negative societal impacts of your work?
     \answerNA{} : Our work is of theoretical nature and we do not see any societal impact of our results.
@@ -848,7 +849,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 
 
 \section{Proof of Propostion~\ref{ass:stationary}}
-\asnote{I rewrote Lukang's proof and it seems to work.}
+
 First, we prove that $F$ is coercive, \textit{i.e.}, for every $C>0$, the set $S = \{x \in \sX : F(x) \leq C\}$ is compact. 
 
 Assume that $S$ is not compact. Since $F$ is continuous, $S$ is closed. Hence, $S$ is not bounded. Therefore, there exists a sequence $(x_n)$ of points in $\X$ such that $F(x_n) \leq C$, $\|x_n\| \to \infty$ and $B(x_n) \cap B(x_m) = \emptyset$ for every $n \neq m$, where $B(x)$ denotes and the unit ball centered at $x$. 
@@ -874,12 +875,13 @@ where we used Jensen's inequality thanks to the convexity of $\exp$. Finally,
 \end{equation*}
 and $\exp(-F)$ is not integrable. This contradicts the definition of $F$.
 
-Therefore, the set $S$ is compact. Since $F$ is continuous, $F$ admits a minimizer $x_\star$ on the compact set $\{x \in \sX : F(x) \leq 1\}$, and $x_\star$ is a stationary point (the point $x_\star$ is actually a global minimizer of $F$).
+Therefore, the set $S$ is compact and $F$ is coercive. Since $F$ is continuous, $F$ admits a minimizer $x_\star$ on the compact set $\{x \in \sX : F(x) \leq 1\}$, and $x_\star$ is a stationary point (the point $x_\star$ is actually a global minimizer of $F$).
 
 	\Sun{
 	
 	\section{Proof of Propostion~\ref{ass:stationary}}
 	\lsnote{Check this proof (should be OK)}
+	\asnote{I rewrote this proof above so we can discard it.}
 	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
 	\begin{equation*}
 		\begin{split}
