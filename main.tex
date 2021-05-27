@@ -83,12 +83,12 @@
 
 \usepackage[textwidth=2cm, textsize=footnotesize]{todonotes}  
 %\setlength{\marginparwidth}{1.5cm}               %  this goes with todonoteshttps://fr.overleaf.com/project/5cc847f1dc86b619ccf2295b
-\newcommand{\prnote}[1]{\todo[color=cyan!20]{#1}}
+\newcommand{\prnote}[1]{\todo[color=cyan!]{#1}}
 \newcommand{\asnote}[1]{\todo[color=green!]{#1}}
 \newcommand{\lsnote}[1]{\todo[color=magenta]{#1}}
 \newcommand{\adil}[1]{{\color{green!}Adil: #1}}
-\newcommand{\peter}[1]{{\color{green!}Peter: #1}}
-\newcommand{\Sun}[1]{{\color{red!} #1}}
+\newcommand{\peter}[1]{{\color{cyan!}Peter: #1}}
+\newcommand{\Sun}[1]{{\color{magenta} #1}}
 \newcommand{\cF}{{\mathcal F}}
 \newcommand{\mcG}{{\mathscr G}}
 \newcommand{\cB}{{\mathcal B}}
@@ -289,7 +289,8 @@ The remainder of the paper is organized as follows. In Section~\ref{sec:backgrou
 %Change F, L, \lambda in the proof !!!!!!!!!
 
 \section{Background and Notation} \label{sec:background}
-For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm. Moreover, $\|\cdot\|_{\op}$ denotes the operator norm on the set of matrices. In Section~\ref{sec:svgd} we describe our theoretical results.
+For any Hilbert space $H$, we denote by $\ps{\cdot,\cdot}_{H}$ the inner product of $H$ and by $\|\cdot\|_{H}$ its norm. Moreover, $\|\cdot\|_{\op}$ denotes the operator norm on the set of matrices. 
+%In Section~\ref{sec:svgd} we describe our theoretical results.
 
 \subsection{Optimal transport}
 %L^2(\mu,\R^d), pushforward, W_1, W_2, wass gradient, \cF
@@ -474,7 +475,8 @@ We start by stating a fundamental inequality satisfied by $\cF$ for any update o
 \end{equation}
 where $g \in \cH$.
 \begin{proposition}
-\label{prop:TL}\asnote{we don't need this proposition, lemma1 is enough}
+\label{prop:TL}\lsnote{we don't need this proposition, lemma1 is enough}
+\asnote{True. We only need Lemma 1. But let us keep Proposition 2 as it could be the entry point to study VR-SVGD later on... We will be able to call Prop 2 directly from this paper. Moreover, Prop 2 is a property of the \textbf{functional} $\cF$ (basically a Taylor inequality) whereas Lemma 1 is a descent property of the \textbf{algorithm}}
 Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
     \label{eq:TL}
@@ -482,7 +484,7 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
     \end{equation}
     where $K = (\alpha^2 + L)B$.
 \end{proposition}
-Inequality~\eqref{eq:TL} plays the role of a Taylor inequality, where $h_{\mu_n}$ is the Wasserstein gradient of $\cF$ at $\mu_n$ under the metric induced by $\cH$. Proposition~\ref{prop:TL} generalizes \cite[Proposition~5]{korba2020non}. Indeed, \cite[Proposition~5]{korba2020non} can be obtained from our Proposition~\ref{prop:TL} by taking $g = h_{\mu_n}$, by assuming the uniform upper bound $\|h_{\mu_n}\|_{\cH}^2 \leq C$ (see \cite[Assumption A3]{korba2020non}) and by restricting the step size to $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$\footnote{Note that assuming $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$ is more restrictive than assuming $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$.}.
+Inequality~\eqref{eq:TL} is a property of \textit{the functional $\cF$}, and not a property of the SVGD algorithm. Inequality~\eqref{eq:TL} plays the role of a \textit{Taylor inequality}, where $h_{\mu_n}$ is the Wasserstein gradient of $\cF$ at $\mu_n$ under the metric induced by $\cH$. Proposition~\ref{prop:TL} generalizes \cite[Proposition~5]{korba2020non}. Indeed, \cite[Proposition~5]{korba2020non} can be obtained from our Proposition~\ref{prop:TL} by taking $g = h_{\mu_n}$, by assuming the uniform upper bound $\|h_{\mu_n}\|_{\cH}^2 \leq C$ (see \cite[Assumption A3]{korba2020non}) and by restricting the step size to $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$\footnote{Note that assuming $\gamma C^{\frac{1}{2}} \leq \frac{\alpha-1}{\alpha B}$ is more restrictive than assuming $\gamma \|h_{\mu_n}\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$.}.
 
 Yet, the proof of our Proposition~\ref{prop:TL} is similar to the proof of \cite[Proposition~5]{korba2020non}, by replacing their $h_{\mu_n}$ by our $g$ and their uniform upper bound $C$ by our $\|g\|_{\cH}^2$. Therefore, we only sketch the main arguments, and further details can be found in \cite[Section 11.2]{korba2020non}.
 \begin{proof}
@@ -570,7 +572,7 @@ Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\a
     \end{equation}
     where $K = (\alpha^2 + L)B$.
 \end{lemma}
-
+Contrary to Inequality~\eqref{eq:TL}, Inequality~\eqref{eq:TL-svgd} is a property of \textit{the SVGD algorithm.} In the language of the gradient descent algorithms, Inequality~\eqref{eq:TL-svgd} is called a descent property.
 \begin{lemma}
 \label{lem:T1}
      Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Then, for every $\mu \in \cP_2(\X)$, we have
@@ -701,7 +703,8 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ can be found in~\cite[Theorem~8]{gorham2017measuring}. In particular, a sufficient condition is the combination the two following properties:
 \begin{itemize}
     \item $\pi$ being distant dissipative. For instance, $\pi$ is a finite Gaussian mixture with common covariance or $F$ is strongly convex outside a compact set (note that in this case, \Cref{ass:T1} is satisfied using~\cite[Theorem 22.10]{villani2008optimal})
-    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (-1,0)$ (note that \Cref{ass:k_bounded} is satisfied).\asnote{ assumption 3 is satisfied. $\beta\in[-1,0] or (-1,0)$? in ~\cite[Theorem~8]{gorham2017measuring} it is (-1,0)}
+    \item $k$ is an inverse multiquadratic kernel, \textit{i.e.}, $k(x,y) = (c^2 + \|x-y\|^2)^\beta$ for some $c > 0$ and $\beta \in (-1,0)$ (note that \Cref{ass:k_bounded} is satisfied).\lsnote{ assumption 3 is satisfied. $\beta\in[-1,0] or (-1,0)$? in ~\cite[Theorem~8]{gorham2017measuring} it is (-1,0)}
+    \asnote{OK! thanks}
 \end{itemize}  
 %(note that such kernel satisfies \Cref{ass:k_bounded})\asnote{Check this}.
 
@@ -926,7 +929,8 @@ Therefore, the set $S$ is compact and $F$ is coercive. Since $F$ is continuous, 
      
 
 
-\asnote{is it the tradition that to ignore the $\log L$ term? I see \cite{vempala2019rapid} also ignore it. The proof is ok if you don't consider $\log L$.}
+\lsnote{is it the tradition that to ignore the $\log L$ term? I see \cite{vempala2019rapid} also ignore it. The proof is ok if you don't consider $\log L$.}
+\asnote{OK, thanks for checking. The notation $\tilde{\cO}$ means that some log terms are hidden, so when we use $\tilde{\cO}$ instead of $\cO$, it means that we ignore log terms.}
 Using Corollary~\ref{cor:conv}, if
   \begin{equation*}
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
