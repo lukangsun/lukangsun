@@ -235,7 +235,7 @@ All these results hold without assuming $F$ to be convex. Our main complexity re
  \hline
  Algorithm  &  \color{blue} Langevin &\color{red}SVGD \\ 
   \hline
- Reference &  \color{blue}\citet[Theorem 1]{vempala2019rapid} &\color{red}This paper, Theorem~\ref{th:svgd}  \\
+ Reference &  \color{blue}\citet[Theorem 1]{vempala2019rapid} & \begin{tabular}{c}\color{red} This paper \\ \color{red} Theorem~\ref{th:svgd} \\ \color{red} Corollary~\ref{cor:comp} \end{tabular} \\
    \hline
  Assumptions & \color{blue} \begin{tabular}{c}LSI with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular} &  \color{red} \begin{tabular}{c}T1 with constant $\lambda$\\ $F$ is $L$-smooth \end{tabular}  \\
    \hline
@@ -393,7 +393,7 @@ where
 
 First, in a Riemannian interpretation of the Wasserstein space~\cite{villani2008optimal}, for every $\mu \in \cP_2(\X)$, the map $\exp_{\mu} : \phi \mapsto (I + \phi)\#\mu$ can be seen as the exponential map at $\mu$. SVGD~\eqref{eq:svgdpopulation} can be rewritten as $\mu_{n+1} = \exp_{\mu_n}(-\gamma h_{\mu_n})$. 
 
-Second, $-h_{\mu}$ can be seen as the negative gradient of $\cF$ at $\mu$ under a certain metric. Indeed, using an integration by parts, $h_{\mu} = P_{\mu} \nabla_W \cF(\mu)$, see \textit{e.g.}~\cite{korba2020non,duncan2019geometry}. Therefore, for every $g \in \cH$, $\ps{h_{\mu},g}_{\cH} = \ps{\nabla_W \cF(\mu),g}_{L^2(\mu)}$, hence $h_{\mu}$ can be seen as a Wasserstein gradient of $\cF$ under the inner product of $\cH$.
+Second, $-h_{\mu}$ can be seen as the negative gradient of $\cF$ at $\mu$ under a certain metric. Indeed, using  integration by parts, $h_{\mu} = P_{\mu} \nabla_W \cF(\mu)$, see \textit{e.g.}~\cite{korba2020non,duncan2019geometry}. Therefore, for every $g \in \cH$, $\ps{h_{\mu},g}_{\cH} = \ps{\nabla_W \cF(\mu),g}_{L^2(\mu)}$, hence $h_{\mu}$ can be seen as a Wasserstein gradient of $\cF$ under the inner product of $\cH$.
 % SVGD can be interpreted as a Riemannian gradient descent thanks to two interpretations. First, the Wasserstein space can be interpreted as a Riemannian space~\cite{villani2008optimal} and the exponential map at $\mu$ is $\phi \mapsto (I + \phi)\#\mu$. Second, $\nabla \log \left(\frac{\mu}{\pi}\right)$ can be identified as $\nabla \cF(\mu)$ and $P_{\mu}\nabla \cF(\mu)$ is the ...
 % Combining these two interpretations, SVGD can be interpreted as a Riemannian gradient descent.
 
@@ -448,7 +448,7 @@ where
 %  Under \Cref{ass:V_Lipschitz,ass:k_bounded}, a sufficient condition for~\Cref{ass:bounded_I_Stein} is $\sup_n \int \Vert x \Vert \mu_n(x)dx < \infty$. Bounded moment assumptions such as these are commonly used in stochastic optimization, for instance in some analysis of the stochastic gradient descent~\citep{moulines2011non}. Given our assumptions, we quantify the decreasing of the KL along the SVGD algorithm, also called a descent lemma in optimization.
  
  
-\subsection{Notations}
+\subsection{Notation}
 %Jac, HS, op, dirac
 %%%%NOTATIONS TO DEFINE IN APPENDIX OR MAIN PAPER:
 %\cF
@@ -585,6 +585,7 @@ Using \Cref{ass:k_bounded}
         &\leq \E_{x \sim \mu} \left\| \nabla F(x)\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH}\\
         &= \E_{x \sim \mu} \left\|\nabla F(x)\right\|\left\|\Phi(x)\right\|_{\cH} + \E_{x \sim \mu} \left\|\nabla \Phi(x) \right\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
     \end{align*}
+    
 Using \Cref{ass:V_Lipschitz}, $\|\nabla F(x)\| \leq \|\nabla F(0)\| + L\|x\|$. Therefore, using the triangle inequality for the metric $W_1$,
     \begin{align*}
         \|h_{\mu}\|_{\cH} &\leq B \left(1 + \|\nabla F(0)\| + L\int \|x\|d\mu(x) \right)\\
@@ -635,9 +636,8 @@ or
 %  We provide here a sketch of the proof and the main ideas, the reader may refer to the \Cref{sec:proof_descent}  %\Cref{sec:proof_descent} 
 %  for the complete proof.
 
-%\peter{Explain what the theorem says.}
-\Sun{We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of $KL-divergence$. Unlike in \cite{korba2020non}, under Assumption
-	 \ref{ass:T1}, we prove that $\gamma$ doesn't rely on the path information which makes our descent lemma self-contained. }
+
+We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of the KL-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
 
 
 \begin{proof}
@@ -668,22 +668,14 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
 
 \subsection{Weak convergence}
 We now show that Theorem~\ref{th:svgd} implies  weak convergence.
-
 %\peter{Comment on the weakness of the assumption $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$.}
-\Sun{To prove the weak convergence result, we need $(\mu_n)_{n\geq 1}$ to be uniformly tight which means for every $\epsilon$, there exists a finite radius $R_{\epsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\epsilon})\leq \epsilon$. So we need assumptions on kernel $k(\cdot,\cdot)$ and $\pi$ to enforce uniform tightness. }
+To prove our weak convergence result, we need $(\mu_n)_{n\geq 1}$ to be uniformly tight, which means for every $\epsilon$, there exists a finite radius $R_{\epsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\epsilon})\leq \epsilon$. Hence,  we need assumptions on the kernel $k(\cdot,\cdot)$ and $\pi$ to enforce uniform tightness. 
 
 \begin{corollary}[Weak convergence]
-Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
-  If $\gamma < \frac{2}{B (\alpha^2 + L)}$, and
-  \begin{equation*}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1}
-  \end{equation*}
-  or 
-  \begin{equation*}
-      \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},
-  \end{equation*}
-  then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
+Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ implies that $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
+  If $\gamma < \frac{2}{B (\alpha^2 + L)}$, and $\gamma $ further satisfies either \eqref{eq:condition-step} or \eqref{eq:condition-step-2},  then $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly.
 \end{corollary}
+
 \begin{proof}
     Using Theorem~\ref{th:svgd} and iterating, 
     \begin{equation*}
@@ -710,23 +702,14 @@ Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Righta
 
 \subsection{Complexity}
 
-%\peter{add some text}
-\Sun{We provide the convergence rate for the arithmetic mean of the Kernel Stein Discrepancy
-	(KSD) which is $\cO(\frac{1}{n})$, under some assumptions on kernel and $\pi$, this can further
-	 used to prove the weak convergence of $\mu_n$. However we can not guarantee the convergence under $KL-divergence$. }
+Next, we provide a convergence rate for the arithmetic mean of the Kernel Stein Discrepancy
+	(KSD) $\cO(\frac{1}{n})$ under some assumptions on kernel and $\pi$. This can be further
+	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under KL-divergence. 
 
 \begin{corollary}[Convergence rate]
 \label{cor:conv}
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and  \ref{ass:k_bounded} hold true. Let $\alpha > 1$. 
-  If 
-  \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + \|\nabla F(0)\| + L \int \|x\|d\pi(x) + L \sqrt{\frac{2\cF(\mu_0)}{\lambda}} \right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
-  \end{equation*}
-  or 
-  \begin{equation*}
-      \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2\cF(\mu_0)}{\lambda}} + L \int \|x-x_\star\|d\mu_0(x))\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
-  \end{equation*}
-  then
+  If $\gamma < \frac{2}{B (\alpha^2 + L)}$, and $\gamma $ further satisfies either \eqref{eq:condition-step} or \eqref{eq:condition-step-2},   then
   \begin{equation}
     \boxed{  \frac{1}{n} \sum_{k=0}^{n-1} I_{\st}(\mu_k|\pi) \leq \frac{2\cF(\mu_0)}{n \gamma}.}
   \end{equation}
@@ -743,11 +726,11 @@ $
     We obtain the result by rearranging the terms.
 \end{proof}
 
-%\peter{add some text}
-\Sun{Comparing with Langevin algorithm(under LSI and complexity is
-	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$), our complexity result for SVGD is better in
-	  terms of $\lambda$ and $L$ and our result is only under T1 which is weaker than LSI with the 
-	  same constant $\lambda$.  }
+
+Compared with the Langevin algorithm, whose complexity under LSI  is
+	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$, our complexity result for SVGD is better in
+	  terms of $\lambda$ and $L$, and moreover, our result applies under T1 only, which is weaker than LSI with the 
+	  same constant $\lambda$.  
 
 \begin{corollary}[Complexity]
 \label{cor:comp}
