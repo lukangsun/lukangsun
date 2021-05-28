@@ -184,7 +184,7 @@ Sampling from a given target distribution $\pi$ is a fundamental task of many Ma
     \label{eq:target}
     \pi(x) \propto \exp(-F(x)),
 \end{equation}
-where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$ such that $\int \exp(-F(x))dx < \infty$.
+where $F:\X \to \R$ is a smooth nonconvex function defined on $\X \coloneqq \R^d$ satisfying $$\int \exp(-F(x))dx < \infty.$$
 
 As sampling algorithms are intended to be applied to large scale problems, it has become increasingly important to understand their theoretical properties, such as their complexity, as a function of the dimension of the problem $d$, and the desired accuracy $\varepsilon$. In this regard, most of the Machine Learning literature has concentrated on understanding the complexity (in terms of $d$ and $\varepsilon$) of (variants of) the Langevin algorithm in various settings, see \textit{e.g.} the works of~\citet{durmus2018analysis,bernton2018langevin,wibisono2018sampling,cheng2017underdamped,salim2020primal,hsieh2018mirrored,dalalyan2017theoretical,durmus2017nonasymptotic,rolland2020double,vempala2019rapid,zou2019sampling,csimvsekli2017fractional,shen2019randomized,bubeck2018sampling,durmus2018efficient}. 
 
