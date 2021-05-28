@@ -329,7 +329,7 @@ Indeed, the Wasserstein space can be endowed with a differential structure. In p
 
 The analysis of sampling algorithm in the case where $F$ is nonconvex often goes through functional inequalities.
 
-\begin{definition}[Logarithmic Sobolev inequality (LSI)]
+\begin{definition}[Logarithmic Sobolev Inequality (LSI)]
 The distribution $\pi$ satisfies the Logarithmic Sobolev Inequality if $\exists \lambda > 0$ s.t. for all $\mu \in \cP_2(\X)$, $\cF(\mu) \leq \frac{2}{\lambda}\|\nabla_W \cF(\mu)\|_{L^2(\mu)}^2$.
 \end{definition}
 
@@ -637,7 +637,7 @@ or
 %  for the complete proof.
 
 
-We need to have $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ in order to bound the Wasserstein Hessian of the $\KL$-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
+Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
 
 
 \begin{proof}
@@ -667,9 +667,9 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
 \label{sec:weak}
 
 \subsection{Weak convergence}
-We now show that Theorem~\ref{th:svgd} implies  weak convergence.
+We now show that Theorem~\ref{th:svgd} implies  weak convergence if $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ implies $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly. This condition is studied in~\cite{gorham2017measuring}.
 %\peter{Comment on the weakness of the assumption $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$.}
-To prove our weak convergence result, we need the sequence $(\mu_n)_{n\geq 1}$ to be uniformly tight, which means for every $\varepsilon >0$, there exists a finite radius $R_{\varepsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\varepsilon})\leq \varepsilon$. Hence, we make assumptions on the kernel $k$ and $\pi$ to enforce uniform tightness. 
+% To prove our weak convergence result, we need the sequence $(\mu_n)_{n\geq 1}$ to be uniformly tight, which means for every $\varepsilon >0$, there exists a finite radius $R_{\varepsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\varepsilon})\leq \varepsilon$. Hence, we make assumptions on the kernel $k$ and $\pi$ to enforce uniform tightness. 
 
 \begin{corollary}[Weak convergence]
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ implies that $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
@@ -702,7 +702,7 @@ Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Righta
 
 \subsection{Complexity}
 
-Next, we provide a $\cO(\frac{1}{n})$ convergence rate for the empirical mean of the squared Kernel Stein Discrepancy. 
+Next, we provide a $\cO(1/n)$ convergence rate for the empirical mean of the squared Kernel Stein Discrepancy, obtained from our descent lemma (Theorem~\ref{th:svgd}). 
 % 	This can be further
 % 	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under $\KL$-divergence. 
 
@@ -728,7 +728,7 @@ $
 
 
 Compared with the Langevin algorithm, whose complexity under LSI is
-	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$ in terms of $\KL$, our complexity result $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ for SVGD applies under T1 only, which is weaker than LSI.  
+	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$ in terms of $\KL$, our complexity result $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ for SVGD applies under T1 only, which is weaker than LSI, see Table~\ref{tab:result}.  
 
 \begin{corollary}[Complexity]
 \label{cor:comp}
