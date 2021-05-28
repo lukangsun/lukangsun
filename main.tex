@@ -475,7 +475,8 @@ We start by stating a fundamental inequality satisfied by $\cF$ for any update o
 \end{equation}
 where $g \in \cH$.
 \begin{proposition}
-%\label{prop:TL}\lsnote{we don't need this proposition, lemma1 is enough}
+\label{prop:TL}
+%\lsnote{we don't need this proposition, lemma1 is enough}
 %\asnote{True. We only need Lemma 1. But let us keep Proposition 2 as it could be the entry point to study VR-SVGD later on... We will be able to call Prop 2 directly from this paper. Moreover, Prop 2 is a property of the \textbf{functional} $\cF$ (basically a Taylor inequality) whereas Lemma 1 is a descent property of the \textbf{algorithm}}
 Let Assumptions~\ref{ass:V_Lipschitz} and~\ref{ass:k_bounded} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that $\gamma \|g\|_{\cH} \leq \frac{\alpha-1}{\alpha B}$. Then,
     \begin{equation}
@@ -643,6 +644,8 @@ or
 %  for the complete proof.
 
 \peter{Explain what the theorem says.}
+\Sun{We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of $KL-divergence$. Unlike in \cite{korba2020non}, under Assumption
+	 \ref{ass:T1}, we prove that $\gamma$ doesn't rely on the path information which makes our descent lemma self-contained. }
 
 
 \begin{proof}
@@ -675,6 +678,7 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
 We now show that Theorem~\ref{th:svgd} implies  weak convergence.
 
 \peter{Comment on the weakness of the assumption $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$.}
+\Sun{To prove the weak convergence result, we need $(\mu_n)_{n\geq 1}$ to be uniformly tight which means for every $\epsilon$, there exists a finite radius $R_{\epsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\epsilon})\leq \epsilon$. So we need assumptions on kernel $k(\cdot,\cdot)$ and $\pi$ to enforce uniform tightness. }
 
 \begin{corollary}[Weak convergence]
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
