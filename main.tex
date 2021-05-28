@@ -615,7 +615,7 @@ Therefore,
 
 Having established Proposition~\ref{prop:TL} and Lemmas~\ref{lem:svgd} and \ref{lem:T1}, we are now ready to formulate and prove our main result.
 
-\begin{theorem}
+\begin{theorem}[Descent lemma]
 \label{th:svgd}
   Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded}  hold true. Let $\alpha > 1$.   If 
   \begin{equation}
@@ -637,7 +637,7 @@ or
 %  for the complete proof.
 
 
-We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of the $\KL$-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
+We need to have $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ in order to bound the Wasserstein Hessian of the $\KL$-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
 
 
 \begin{proof}
@@ -669,7 +669,7 @@ Therefore, if $\gamma > 0$ satisfies \eqref{eq:condition-step}, then $\gamma \|h
 \subsection{Weak convergence}
 We now show that Theorem~\ref{th:svgd} implies  weak convergence.
 %\peter{Comment on the weakness of the assumption $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Rightarrow \mu_n \rightarrow_{n \to +\infty} \pi$.}
-To prove our weak convergence result, we need $(\mu_n)_{n\geq 1}$ to be uniformly tight, which means for every $\epsilon$, there exists a finite radius $R_{\epsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\epsilon})\leq \epsilon$. Hence,  we need assumptions on the kernel $k(\cdot,\cdot)$ and $\pi$ to enforce uniform tightness. 
+To prove our weak convergence result, we need the sequence $(\mu_n)_{n\geq 1}$ to be uniformly tight, which means for every $\varepsilon >0$, there exists a finite radius $R_{\varepsilon}$ such that $\limsup_n \mu_n(\|x\|>R_{\varepsilon})\leq \varepsilon$. Hence, we make assumptions on the kernel $k$ and $\pi$ to enforce uniform tightness. 
 
 \begin{corollary}[Weak convergence]
 Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold true. Assume moreover that $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0$ implies that $\mu_n \rightarrow_{n \to +\infty} \pi$ weakly. Let $\alpha > 1$. 
@@ -702,9 +702,9 @@ Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Righta
 
 \subsection{Complexity}
 
-Next, we provide a convergence rate for the arithmetic mean of the Kernel Stein Discrepancy
-	(KSD) $\cO(\frac{1}{n})$ under some assumptions on kernel and $\pi$. This can be further
-	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under $\KL$-divergence. 
+Next, we provide a $\cO(\frac{1}{n})$ convergence rate for the empirical mean of the squared Kernel Stein Discrepancy. 
+% 	This can be further
+% 	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under $\KL$-divergence. 
 
 \begin{corollary}[Convergence rate]
 \label{cor:conv}
@@ -727,10 +727,8 @@ $
 \end{proof}
 
 
-Compared with the Langevin algorithm, whose complexity under LSI  is
-	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$, our complexity result $\tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ for SVGD, shown in the next corollary,  is better in
-	  terms of $\lambda$ and $L$, and moreover, our result applies under T1 only, which is weaker than LSI with the 
-	  same constant $\lambda$.  
+Compared with the Langevin algorithm, whose complexity under LSI is
+	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$ in terms of $\KL$, our complexity result $\tilde{\cO}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ for SVGD applies under T1 only, which is weaker than LSI.  
 
 \begin{corollary}[Complexity]
 \label{cor:comp}
