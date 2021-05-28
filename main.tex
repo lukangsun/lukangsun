@@ -211,7 +211,7 @@ Most of the existing results on SVGD deal with the \textit{continuous time} appr
 
 To our knowledge, the only existing complexity result (\textit{i.e.}, convergence rate) for SVGD in \textit{discrete time} is due to~\citet{korba2020non}. They showed that, in the population limit, $\cO(\frac{L}{\varepsilon})$ iterations of SVGD algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the Stein Fisher Information. However, this complexity result does not express the dependence in the dimension $d$. More importantly, this complexity result is established under the assumption that $\sup_n I_{\st}(\mu_n|\pi) < \infty$, and the quantity $C = \sup_n I_{\st}(\mu_n|\pi)$ appears in the hidden constants. In particular, the dependence of $C$ in $d$ and other parameters is not known.
 
-Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \citet{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of KL divergence, if the target distribution satisfies LSI, which is stronger than T1; see Table~\ref{tab:result}.
+Finally, the ML literature on the complexity of sampling from a non logconcave target distribution has many focused on the Langevin algorithm. In particular, \citet{vempala2019rapid} showed that $\tilde{\cO}(\frac{L^2 d}{\lambda^2 \varepsilon})$ iterations of Langevin algorithm are sufficient to achieve $\varepsilon$ accuracy in terms of the $\KL$-divergence, if the target distribution satisfies LSI, which is stronger than T1; see Table~\ref{tab:result}.
 
 \subsection{Contributions}
 \label{sec:contrib}
@@ -310,12 +310,12 @@ To specify the dependence in the dimension $d$ of our complexity bounds, we need
 there exists $x_\star \in \X$ for which $\nabla F(x_\star) = 0$, \textit{i.e.}, $F$ admits a stationary point.
 \end{proposition}
 
-The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler (KL) divergence as 
+The task of sampling from $\pi$ can be formalized as an optimization problem. Indeed, define the Kullback-Leibler ($\KL$) divergence as 
 \begin{equation}
 \label{eq:KL}
     \KL(\mu|\pi) = \int \log\left(\frac{d\mu}{d\pi}(x)\right)d\mu(x),
 \end{equation}
-if $\mu$ admits the density $\frac{d\mu}{d\pi}$ w.r.t. $\pi$, and $\KL(\mu|\pi) = +\infty$ else. Then, $\KL(\mu|\pi) \geq 0$ and $\KL(\mu|\pi) = 0$ if and only if $\mu = \pi$. Therefore, assuming $\pi \in \cP_2(\X)$, the optimization problem
+if $\mu$ admits the density $\frac{d\mu}{d\pi}$ with respect to $\pi$, and $\KL(\mu|\pi) = +\infty$ else. Then, $\KL(\mu|\pi) \geq 0$ and $\KL(\mu|\pi) = 0$ if and only if $\mu = \pi$. Therefore, assuming $\pi \in \cP_2(\X)$, the optimization problem
 \begin{equation}
     \label{eq:optim-pb}
     \min_{\mu \in \cP_2(\X)} \cF(\mu) \coloneqq \KL(\mu|\pi),
@@ -339,7 +339,7 @@ LSI is the key assumption in the analysis of Langevin algorithm in the case whee
 Let $p \geq 1$. The distribution $\pi$ satisfies the Talagrand's Inequality T$p$ if there exists $\lambda > 0$ such that for all $\mu \in \cP_p(\X)$, we have $W_p(\mu,\pi) \leq \sqrt{\frac{2 \cF(\mu)}{\lambda}}$.
 \end{definition}
 
-\textit{T1 is milder than LSI.} Indeed, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T2 implies T1 with the same constant $\lambda$. Moreover, using~\cite[Theorem 22.17]{villani2008optimal}, LSI implies T2 with the same constant $\lambda$. In conclusion, LSI$\Rightarrow$T2$\Rightarrow$T1 with the same constant $\lambda$.
+We now claim that T1 is milder than LSI. Indeed, using $W_1(\mu,\pi) \leq W_2(\mu,\pi)$, T2 implies T1 with the same constant $\lambda$. Moreover, using~\cite[Theorem 22.17]{villani2008optimal}, LSI implies T2 with the same constant $\lambda$. In conclusion, LSI $\Rightarrow$ T2 $\Rightarrow$ T1, with the same constant $\lambda$.
 
 Our key assumption on $\pi$ is that it satisfies the Talagrand's inequality T1~\cite[Definition 22.1]{villani2003topics}.
 \begin{assumption}
@@ -347,7 +347,7 @@ Our key assumption on $\pi$ is that it satisfies the Talagrand's inequality T1~\
 The target distribution $\pi$ satisfies T1.
 \end{assumption}
 
-The target distribution $\pi$ satisfies T1 if and only if there exist $a \in \X$ and $\beta > 0$ s.t. $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption on the tails of $\pi$. In particular, $\pi \in \cP_2(\X)$.
+The target distribution $\pi$ satisfies T1 if and only if there exist $a \in \X$ and $\beta > 0$ such that $\int \exp(\beta \|x-a\|^2)d\pi(x) < \infty,$ see~\cite[Theorem 22.10]{villani2008optimal}. Therefore, \Cref{ass:T1} is essentially an assumption on the tails of $\pi$. In particular, $\pi \in \cP_2(\X)$.
 
 Somehow, T1 allows $F$ to be "more nonconvex" than LSI. Moreover, if $F$ is $\lambda$-strongly convex, then LSI and T2 hold with constant $\lambda$.
 
@@ -637,7 +637,7 @@ or
 %  for the complete proof.
 
 
-We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of the KL-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
+We need $\gamma\|h_{\mu_n}\|_{\cH}\leq \frac{\alpha-1}{\alpha B}$ to bound the Wasserstein Hessian of the $\KL$-divergence. Unlike in the work of \citet{korba2020non}, under Assumption~\ref{ass:T1} we prove that $\gamma$ does not rely on the path information which makes our descent lemma self-contained. 
 
 
 \begin{proof}
@@ -704,7 +704,7 @@ Conditions under which $I_{\st}(\mu_n|\pi) \rightarrow_{n \to +\infty} 0 \Righta
 
 Next, we provide a convergence rate for the arithmetic mean of the Kernel Stein Discrepancy
 	(KSD) $\cO(\frac{1}{n})$ under some assumptions on kernel and $\pi$. This can be further
-	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under KL-divergence. 
+	 used to prove weak convergence of $\mu_n$. However, we can not guarantee the convergence under $\KL$-divergence. 
 
 \begin{corollary}[Convergence rate]
 \label{cor:conv}
@@ -728,7 +728,7 @@ $
 
 
 Compared with the Langevin algorithm, whose complexity under LSI  is
-	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$, our complexity result for SVGD is better in
+	 $\tilde{\cO}(\frac{L^2d}{\lambda^2\epsilon})$, our complexity result $\tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ for SVGD, shown in the next corollary,  is better in
 	  terms of $\lambda$ and $L$, and moreover, our result applies under T1 only, which is weaker than LSI with the 
 	  same constant $\lambda$.  
 
@@ -739,7 +739,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
       \gamma \leq \min\left((\alpha-1)\left(\alpha B^2 \left(1 + 2L\sqrt{\frac{2}{\lambda}}\sqrt{F(x_\star) + \frac{d}{2}\log \left(\frac{L}{2\pi}\right)} + \sqrt{L d}\right)\right)^{-1},\frac{2}{B (\alpha^2 + L)}\right),
   \end{equation*}
   and if $\mu_0 = \cN(x_\star,\frac{1}{L} I)$,
-  then $n = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$ iterations of SVGD are sufficient to output $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
+  then $$n = \tilde{\Omega}\left(\frac{L{d}^{3/2}}{\lambda^{1/2}\varepsilon}\right)$$ iterations of SVGD are sufficient to output $\mu$ such that $I_{\st}(\mu|\pi) \leq \varepsilon.$
 \end{corollary}
 
 
