@@ -840,9 +840,11 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 
 First, we prove that $F$ is coercive, \textit{i.e.}, for every $C>0$, the set $S = \{x \in \sX : F(x) \leq C\}$ is compact. 
 
-Assume that $S$ is not compact. Since $F$ is continuous, $S$ is closed. Hence, $S$ is not bounded. Therefore, there exists a sequence $(x_n)$ of points in $\X$ such that $F(x_n) \leq C$, $\|x_n\| \to \infty$ and $B(x_n) \cap B(x_m) = \emptyset$ for every $n \neq m$, where $B(x)$ denotes and the unit ball centered at $x$. 
+Since $F$ is continuous, $S$ is closed. It remains to prove that $S$ is bounded. 
 
-Let $n \geq 0$. Using the smoothness of $F$ (\Cref{ass:V_Lipschitz}), for every $x \in B(x_n)$
+Assume that $S$ is not bounded. Then, there exists a sequence $(x_n)$ of points in $\X$ such that $F(x_n) \leq C$, $\|x_n\| \to +\infty$ and $B(x_n) \cap B(x_m) = \emptyset$ for every $n \neq m$, where $B(x)$ denotes and the unit ball centered at $x$. 
+
+Let $n \geq 0$. Using the smoothness of $F$ (\Cref{ass:V_Lipschitz}), for every $x \in B(x_n)$,
 \begin{equation*}
     F(x) \leq F(x_n) + \ps{\nabla F(x_n),x-x_n} + \frac{L}{2}.
 \end{equation*}
@@ -857,13 +859,15 @@ Denote by $V$ the volume of the unit ball centered at $x$, \textit{i.e.} its Leb
     =& V \exp \left(-F(x_n)-\frac{L}{2}\right)\\
     \geq& V \exp \left(-C-\frac{L}{2}\right).
 \end{align*}
-where we used Jensen's inequality thanks to the convexity of $\exp$. Finally, 
+where we used Jensen's inequality for the uniform distribution over $B(0)$, thanks to the convexity of $\exp$. Finally, 
 \begin{equation*}
 \int \exp(-F(x))dx \geq \sum_{n = 0}^{\infty} \int_{B(x_n)} \exp(-F(x))dx \geq \sum_{n = 0}^{\infty} V \exp \left(-C-\frac{L}{2}\right) = +\infty.
 \end{equation*}
-and $\exp(-F)$ is not integrable. This contradicts the definition of $F$.
+and $\exp(-F)$ is not integrable. This contradicts the definition of $F$. Therefore, $S$ is bounded.
 
-Therefore, the set $S$ is compact and $F$ is coercive. Since $F$ is continuous, $F$ admits a minimizer $x_\star$ on the compact set $\{x \in \sX : F(x) \leq 1\}$, and $x_\star$ is a stationary point (the point $x_\star$ is actually a global minimizer of $F$).
+Finally, the set $S$ is compact and $F$ is coercive. Consequently, $F$ admits a stationary point.
+
+Indeed, $F$ is continuous over the compact set $\{x \in \sX : F(x) \leq 1\}$, therefore, $F$ admits a minimizer $x_\star$ over this set. Moreover, this point $x_\star$ is a stationary point \textit{i.e.}, $\nabla F(x_\star) = 0$ (note that the point $x_\star$ is actually a global minimizer of $F$).
 
 %	\Sun{
 %	
