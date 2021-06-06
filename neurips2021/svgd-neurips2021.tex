@@ -306,7 +306,7 @@ In this paper, we consider a target probability distribution $\pi$ proportional 
 \end{assumption}
 To specify the dependence in the dimension $d$ of our complexity bounds, we need the following proposition.
 \begin{proposition}
-\label{ass:stationary} Under Assumptions~\ref{ass:V_Lipschitz} ,
+\label{prop:stationary} Under Assumption~\ref{ass:V_Lipschitz} ,
 there exists $x_\star \in \X$ for which $\nabla F(x_\star) = 0$, \textit{i.e.}, $F$ admits a stationary point.
 \end{proposition}
 
@@ -415,7 +415,7 @@ In this paper, we study the complexity of SVGD in terms of the Stein Fisher Info
 	
 % 	%Assume  that $\nabla \log \pi$ is $M$-Lipschitz : \\$\|\nabla \log \pi (x) - \nabla \log \pi(y)\|\le M \|x-y\|$ for any $x,y\in \X$.
 % 	\item \label{ass:T1} $\exists \lambda > 0$ s.t. for all $\mu \in \cP_1(\X)$,\asnote{Actually, we only need it for all $\mu \in \cP_2(\X)$? Check this. CHANGE THE DEFINITION OF THE CONSTANT!} $W_1(\mu,\pi) \leq \lambda \sqrt{\KL(\mu|\pi)}$.
-% 	\item 	\label{ass:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
+% 	\item 	\label{prop:stationary} $\exists x_\star \in \X$ s.t. $\nabla F(x_\star) = 0$ \textit{i.e.}, $F$ admits a stationary point.
 % \end{assumplist}
 % \setcounter{contlist}{\value{enumi}}
 % % \asnote{Can we extend outside of the population limit? no, locally sobolev}
@@ -597,7 +597,7 @@ To prove the second inequality, recall that
 $
 \|h_\mu\|_{\cH} \leq B \left( \E_{x \sim \mu} \left\|\nabla F(x)\right\| + 1 \right).
 $
-Using \Cref{ass:V_Lipschitz} and \ref{ass:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq L\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
+Using \Cref{ass:V_Lipschitz} and \Cref{prop:stationary}, $\|\nabla F(x)\| = \|\nabla F(x) - \nabla F(x_\star)\| \leq L\|x- x_\star\|$. Therefore, using the triangle inequality for the metric $W_1$,
 \begin{align*}
     \int \|x-x_\star\|d\mu(x) = W_1(\mu,\delta_{x_\star}) & \leq W_1(\mu,\pi) + W_1(\pi,\mu_0) + W_1(\mu_0,\delta_{x_\star})\\
     &\leq \sqrt{\frac{2\cF(\mu_0)}{\lambda}} + \sqrt{\frac{2\cF(\mu)}{\lambda}} + W_1(\mu_0,\delta_{x_\star}).
@@ -836,7 +836,7 @@ Let Assumptions \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:k_bounded} hold
 \part*{Appendix: Complexity Analysis of Stein Variational Gradient Descent Under Talagrand's Inequality T1}
 
 
-\section{Proof of Proposition~\ref{ass:stationary}}
+\section{Proof of Proposition~\ref{prop:stationary}}
 
 First, we prove that $F$ is coercive, \textit{i.e.}, for every $C>0$, the set $S = \{x \in \X : F(x) \leq C\}$ is compact. Since $F$ is continuous, $S$ is closed. It remains to prove that $S$ is bounded. Assume, by contradiction, that $S$ is unbounded. Then, there exists a sequence $(x_n)$ of points in $\X$ such that $F(x_n) \leq C$, $\|x_n\| \to +\infty$ and $B(x_n) \cap B(x_m) = \emptyset$ for every $n \neq m$, where $B(x)$ denotes  the unit ball centered at $x$. 
 
@@ -864,7 +864,7 @@ Next, since the set $S$ is compact,  $F$ is coercive, and hence $F$ admits a sta
 
 %	\Sun{
 %	
-%	\section{Proof of Propostion~\ref{ass:stationary}}
+%	\section{Proof of Propostion~\ref{prop:stationary}}
 %	\lsnote{Check this proof (should be OK)}
 %	\asnote{I rewrote this proof above so we can discard it.}
 %	First prove as $|x|\mapsto +\infty$, $F\mapsto +\infty$: if not, then there is a sequence $\{x_n\}, |x_n|\mapsto +\infty$, but $F(x_n)\leq C$, since under Assumption \ref{ass:V_Lipschitz}, $\nabla F$ is $L-Lipschitz$, so
@@ -896,7 +896,7 @@ Next, since the set $S$ is compact,  $F$ is coercive, and hence $F$ admits a sta
 %     The proof of Corollary~\ref{cor:comp} relies on the following 2nd version of Theorem~\ref{th:svgd}.
 %     \begin{theorem}
 % \label{th:svgd2}
-%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{ass:stationary} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
+%   Let Assumptions \ref{ass:k_bounded}, \ref{ass:V_Lipschitz}, \ref{ass:T1} and \ref{prop:stationary} hold true. Let $\alpha > 1$ and choose $\gamma > 0$ such that 
 %   \begin{equation}
 %   \label{eq:condition-step-2}
 %       \gamma \leq (\alpha-1)\left(\alpha B^2 \left(1 + 2L\lambda \sqrt{\cF(\mu_0)} + L W_1(\mu_0,\delta_{x_\star})\right)\right)^{-1}.
